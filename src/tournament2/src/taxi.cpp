@@ -4,6 +4,8 @@
 #include <visualization_msgs/MarkerArray.h>
 #include <tf/transform_listener.h>
 #include <geometry_msgs/Twist.h>
+#include <geometry_msgs/Pose.h>
+#include <math.h> 
 using namespace std;
 
 typedef actionlib::SimpleActionClient<move_base_msgs::MoveBaseAction> MoveBaseClient;
@@ -24,8 +26,39 @@ void callback (const visualization_msgs::MarkerArrayConstPtr& markerArray) {
   goal.target_pose.header.frame_id = "map";
   goal.target_pose.header.stamp = ros::Time::now();
 
-  goal.target_pose.pose = markerArray->markers[0].pose;
+  tf::TransformListener listener;
+  tf::StampedTransform transform;
+  listener.waitForTransform("/map", "/base_link", ros::Time(0), ros::Duration(10.0) );
+  listener.lookupTransform("/map", "/base_link",ros::Time(0), transform);
 
+  float xRobot = transform.getOrigin().x();
+  float yRobot = transform.getOrigin().y();
+ // geometry_msgs::pose = markerArray->markers[0].pose;
+
+  float xFace = markerArray->markers[0].pose.position.x;
+  float yFace = markerArray->markers[0].pose.position.y;
+
+  float xTarget,yTarget;
+
+  xTarget=xFace-xRobot;
+  yTarget=yTarget-yRobot;
+  //xTarget -= 0.3;
+  //yTarget -= 0.3;
+  float dolzina = sqrt(pow(xTarget,2)+pow(yTarget,2));
+  xTarget /= dolzina;
+  yTarget /= dolzina;
+
+  xTarget *= (dolzina-0.3);
+  yTarget *= (dolzina-0.3);
+
+  xTarget+=xRobot;
+  yTarget+=yRobot;
+
+goal.target_pose.pose =  markerArray->markers[0].pose;
+  goal.target_pose.pose.position.x = xTarget;
+  goal.target_pose.pose.position.y = yTarget;
+ //goal.target_pose.pose =  markerArray->markers[0].pose;
+  printf("%f %f",xTarget,yTarget);
   ROS_INFO("Sending goal");
   ac.sendGoal(goal);
 
