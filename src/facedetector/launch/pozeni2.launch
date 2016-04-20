@@ -1,0 +1,7 @@
+<launch>
+	
+	<include file="$(find facedetector)/launch/facemapper.launch">
+	<arg name="camera_topic" value="/camera/rgb/camera_info" />
+  </include>
+
+</launch>
