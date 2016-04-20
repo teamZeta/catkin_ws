@@ -1,9 +1,14 @@
 #include <ros/ros.h>
 #include <move_base_msgs/MoveBaseAction.h>
 #include <actionlib/client/simple_action_client.h>
+#include <visualization_msgs/MarkerArray.h>
+#include <tf/transform_listener.h>
+#include <geometry_msgs/Twist.h>
+using namespace std;
 
 typedef actionlib::SimpleActionClient<move_base_msgs::MoveBaseAction> MoveBaseClient;
-void callback (const visualization_msgs::MarkerArray& markers) {
+
+void callback (const visualization_msgs::MarkerArrayConstPtr& markerArray) {
 
 	
 
@@ -19,7 +24,7 @@ void callback (const visualization_msgs::MarkerArray& markers) {
   goal.target_pose.header.frame_id = "map";
   goal.target_pose.header.stamp = ros::Time::now();
 
-  goal.target_pose.pose = markers.pop(0).pose;
+  goal.target_pose.pose = markerArray->markers[0].pose;
 
   ROS_INFO("Sending goal");
   ac.sendGoal(goal);
@@ -34,12 +39,12 @@ void callback (const visualization_msgs::MarkerArray& markers) {
 }
 
 int main(int argc, char** argv){
-  ros::init(argc, argv, "taxi");
+  	ros::init(argc, argv, "taxi");
 	ros::NodeHandle nh;
 
-  // Create a ROS subscriber for the input point cloud
-  ros::Subscriber sub = nh.subscribe<visualization_msgs::MarkerArray> ("markers_topic", 1, callback);
+  	// Create a ROS subscriber for the input point cloud
+  	ros::Subscriber sub = nh.subscribe<visualization_msgs::MarkerArray> ("/facemapper/markers", 1, callback);
 	ros::spin();
 
-  return 0;
+  	//return 0;
 }
