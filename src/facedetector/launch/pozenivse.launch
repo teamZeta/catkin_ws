@@ -18,6 +18,6 @@
 	<arg name="camera_topic" value="/camera/rgb/camera_info" />
   </include>
 
-	<node name="map_server" pkg="map_server" type="map_server" args="/home/team_zeta/Azeroth.yaml" />
+	<node name="map_server" pkg="map_server" type="map_server" args="/home/team_zeta/catkin_ws/Azeroth.yaml" />
 
 </launch>
