@@ -8,8 +8,10 @@ find_package(catkin REQUIRED COMPONENTS
   roscpp
   rospy
   tf
-	actionlib
+  actionlib
   move_base_msgs
+  std_msgs
+  genmsg
 )
 
 ## System dependencies are found with CMake's conventions
@@ -188,6 +190,8 @@ catkin_package(
 
 add_executable(taxi src/taxi.cpp)
 target_link_libraries(taxi ${catkin_LIBRARIES})
+add_dependencies(taxi taxi_generate_message_cpp)
 
 add_executable(path src/path.cpp)
 target_link_libraries(path ${catkin_LIBRARIES})
+add_dependencies(path taxi_generate_message_cpp)

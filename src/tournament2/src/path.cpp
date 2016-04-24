@@ -7,6 +7,7 @@
 #include <geometry_msgs/Pose.h>
 #include <math.h>
 #include <std_msgs/String.h>
+#include <sstream>
 
 using namespace std;
 
@@ -36,7 +37,7 @@ return goal;
 
 void callback (const std_msgs::String::ConstPtr& msg) {
 
-	if (!strcmp(msg->data.c_str(),"search")) {
+	if (!strcmp(msg->data.c_str(),"search") && nGoal < 47) {
 		printf("Grem do naslednjega gola!\n");
 
 		MoveBaseClient ac("move_base", true);
@@ -62,7 +63,10 @@ void callback (const std_msgs::String::ConstPtr& msg) {
 
 		nGoal++;
 
-	}	
+	}
+	if (nGoal > 46) {
+		ros::shutdown();
+	}
 
 }
 
@@ -135,19 +139,32 @@ void goalInit() {
 int main(int argc, char** argv){
   	ros::init(argc, argv, "path");
 	ros::NodeHandle nh;
+	ros::NodeHandle nh2;
 	//printf("asdas");
 
   	goalInit();
 
-  	ros::Subscriber sub = nh.subscribe("/tournament2/search", 1, callback);
-  	pathEnded = nh.advertise<std_msgs::String>("/tournament2/talk", 2);
+  	ros::Subscriber sub = nh.subscribe<std_msgs::String>("/tournament2/search", 100, callback);
+  	pathEnded = nh2.advertise<std_msgs::String>("/tournament2/talk", 100);
 
-  	std_msgs::String msg;
-    std::stringstream ss;
-    ss << "pathStart";
-    msg.data = ss.str();
-    pathEnded.publish(msg);
-    printf("posiljam pathStart\n");
+  	ros::Rate loop_rate(10);
+
+  	while (ros::ok()) {
+
+  		std_msgs::String msg;
+    	std::stringstream ss;
+    	ss << "pathStart";
+    	msg.data = ss.str();
+    	pathEnded.publish(msg);
+    	printf("posiljam pathStart\n");
+
+    	ros::spinOnce();
+
+    	loop_rate.sleep();
+
+  	}
+
+  	
 
   	ros::spin();
 

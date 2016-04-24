@@ -7,6 +7,7 @@
 #include <geometry_msgs/Pose.h>
 #include <math.h> 
 #include <std_msgs/String.h>
+#include <sstream>
 using namespace std;
 
 static int size2 = 27;
@@ -138,8 +139,8 @@ void callback (const visualization_msgs::MarkerArrayConstPtr& markerArray) {
 				printf("Face: %f %f\n",xFace,yFace);
 				if (zFace < 0.5 && zFace > 0.2)
 					addToList(xFace,yFace);
-				
-				if(goalApproved && goToFace){
+	// TODO: goal approved za pravi marker			
+				if(goalApproved){
 					
 					float xTarget,yTarget;
 
@@ -212,11 +213,22 @@ void callback (const visualization_msgs::MarkerArrayConstPtr& markerArray) {
 					    goToFace = false;
 					    goalApproved=false;
 
-					    std_msgs::String msg;
+
+					    while (ros::ok()) {
+					    printf("prisu sem do face, isci naprej\n");
+						std_msgs::String msg;
 				    	std::stringstream ss;
 				    	ss << "search";
 				    	msg.data = ss.str();
 				    	pathSearch.publish(msg);
+	    				ros::Rate loop_rate(10);
+
+					    	ros::spinOnce();
+
+					    	loop_rate.sleep();
+					  	}
+
+					    
 				}
 
 	 	 }
@@ -227,36 +239,55 @@ void callback (const visualization_msgs::MarkerArrayConstPtr& markerArray) {
 }
 
 void callbackTalk (const std_msgs::String::ConstPtr& msg) {
+	//printf("TAXI: dobil sem msg\n");
 
 	if (!strcmp(msg->data.c_str(),"pathEnded") && faceFound)
 		goToFace = true;
 
 	if (!faceFound) {
-		printf("posiljam search\n");
-		std_msgs::String msg;
-    	std::stringstream ss;
-    	ss << "search";
-    	msg.data = ss.str();
-    	pathSearch.publish(msg);
+		//printf("posiljam search\n");
+	  	while (ros::ok()) {
+	  		std_msgs::String msg;
+	    	std::stringstream ss;
+	    	ss << "search";
+	    	msg.data = ss.str();
+	    	pathSearch.publish(msg);
+	    	ros::Rate loop_rate(10);
+
+	    	ros::spinOnce();
+
+	    	loop_rate.sleep();
+	  	}
+
 	} else {
-		printf("posiljam stop\n");
-		std_msgs::String msg;
-    	std::stringstream ss;
-    	ss << "stop";
-    	msg.data = ss.str();
-    	pathSearch.publish(msg);
+		
+		while (ros::ok()) {
+			printf("posiljam stop\n");
+	  		std_msgs::String msg;
+	    	std::stringstream ss;
+	    	ss << "stop";
+	    	msg.data = ss.str();
+	    	pathSearch.publish(msg);
+	    	ros::Rate loop_rate(10);
+
+	    	ros::spinOnce();
+
+	    	loop_rate.sleep();
+	  	}
 	}
 }
 
 int main(int argc, char** argv){
   	ros::init(argc, argv, "taxi");
 	ros::NodeHandle nh;
+	ros::NodeHandle nh2;
+	ros::NodeHandle nh3;
 	initList();
   	// Create a ROS subscriber for the input point cloud
-  	pathSearch = nh.advertise<std_msgs::String>("/tournament2/search", 2);
+  	pathSearch = nh2.advertise<std_msgs::String>("/tournament2/search", 100);
   	ros::Subscriber sub = nh.subscribe<visualization_msgs::MarkerArray> ("/facemapper/markers", 50, callback);	
-  	ros::Subscriber subTalk = nh.subscribe("/tournament2/talk", 1, callbackTalk);
-
+  	ros::Subscriber subTalk = nh3.subscribe<std_msgs::String>("/tournament2/talk", 100, callbackTalk);
+  	//printf("sem pred spinom\n");
 	ros::spin();
 
   	//return 0;
