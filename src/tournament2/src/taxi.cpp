@@ -15,11 +15,13 @@ static float listArray[27][4];//=9;
 static bool goalApproved = false;
 static ros::Publisher pathSearch;
 static bool faceFound = false;
-static bool goToFace = false;
+//static bool pocakaj = false;
+//static bool goToFace = false;
+static move_base_msgs::MoveBaseGoal goal;
 
 typedef actionlib::SimpleActionClient<move_base_msgs::MoveBaseAction> MoveBaseClient;
 bool inRange(float originalPoint, float point){
-	float range = 0.25;
+	float range = 0.3;
 	if(originalPoint-range<point&&originalPoint+range>point)
 		return true;
 	return false;
@@ -37,15 +39,17 @@ void addToList(float x, float y){
 	bool pointFound = false;
 		for(int i=0;i<size2;i++){
 			if(inRange(listArray[i][0],x)&&inRange(listArray[i][1],y)){
+
+				int entries = 4;
 				if(listArray[i][3]==1){
 					pointFound = true;
 					continue;
 				}
-				if(listArray[i][2]>3){
+				if(listArray[i][2]>=entries){
 					listArray[i][3]=1;
 					goalApproved = true;
 					faceFound = true;
-					printf("10 entries found: %f %f \n",x,y);
+					printf("%d entries found: %f %f \n",entries,x,y);
 				}
 				listArray[i][2]++;
 				pointFound = true;
@@ -79,17 +83,17 @@ void callback (const visualization_msgs::MarkerArrayConstPtr& markerArray) {
 	ros::NodeHandle node;
 	ros::Publisher vis_pub = node.advertise<visualization_msgs::Marker>( "visualization_marker", 1 );
 
-	MoveBaseClient ac("move_base", true);
+	/*MoveBaseClient ac("move_base", true);
 	//wait for the action server to come up
 	while(!ac.waitForServer(ros::Duration(5.0))){
 		ROS_INFO("Waiting for the move_base action server to come up");
-	}
+	}*/
 	
 		for(int i=0; i < markerArray->markers.size(); i++){
 
-		printf("%d marker\n",(int)markerArray->markers.size());
+		//printf("%d marker\n",(int)markerArray->markers.size());
 
-			move_base_msgs::MoveBaseGoal goal;
+			//move_base_msgs::MoveBaseGoal goal;
 			goal.target_pose.header.frame_id = "/map";
 			goal.target_pose.header.stamp = ros::Time::now();
 
@@ -103,7 +107,7 @@ void callback (const visualization_msgs::MarkerArrayConstPtr& markerArray) {
 				float xRobot = transform.getOrigin().x();
 				float yRobot = transform.getOrigin().y();
 
-				printf("Robot: %f %f\n",xRobot,yRobot);
+				//printf("Robot: %f %f\n",xRobot,yRobot);
 
 				
 
@@ -136,18 +140,18 @@ void callback (const visualization_msgs::MarkerArrayConstPtr& markerArray) {
 				xFace = poseMarkerMap.getOrigin().x();
 				yFace = poseMarkerMap.getOrigin().y();
 				zFace = poseMarkerMap.getOrigin().z();
-				printf("Face: %f %f\n",xFace,yFace);
+				printf("I see a face: %f %f\n",xFace,yFace);
 				if (zFace < 0.5 && zFace > 0.2)
 					addToList(xFace,yFace);
 	// TODO: goal approved za pravi marker			
 				if(goalApproved){
-					
+
 					float xTarget,yTarget;
 
 					xTarget=xFace-xRobot;
 					yTarget=yFace-yRobot;
 					float dolzina = sqrt(pow(xTarget,2)+pow(yTarget,2));
-					if(dolzina > 0.2 && zFace < 0.5 && zFace > 0.2){
+					if(zFace < 0.5 && zFace > 0.2){
 						xTarget /= dolzina;
 						yTarget /= dolzina;
 
@@ -194,41 +198,8 @@ void callback (const visualization_msgs::MarkerArrayConstPtr& markerArray) {
 						marker.lifetime = ros::Duration();
 						vis_pub.publish(marker);
 						// konec markerja kje je goal
-
-
-						printf("Goal: %f %f\n",xTarget,yTarget);
-
-						ROS_INFO("Sending goal");
-						ac.sendGoal(goal);
-
-						ac.waitForResult();
-						if(ac.getState() == actionlib::SimpleClientGoalState::SUCCEEDED){
-							ROS_INFO("Hello Potter");
-						}
-			    
-					 	else
-					    	ROS_INFO("Goal unreachable");
-
-					    faceFound = false;
-					    goToFace = false;
-					    goalApproved=false;
-
-
-					    while (ros::ok()) {
-					    printf("prisu sem do face, isci naprej\n");
-						std_msgs::String msg;
-				    	std::stringstream ss;
-				    	ss << "search";
-				    	msg.data = ss.str();
-				    	pathSearch.publish(msg);
-	    				ros::Rate loop_rate(10);
-
-					    	ros::spinOnce();
-
-					    	loop_rate.sleep();
-					  	}
-
-					    
+					    printf("\nSetting Goal: %f %f\n\n",xTarget,yTarget);
+					    goalApproved = false;
 				}
 
 	 	 }
@@ -238,55 +209,122 @@ void callback (const visualization_msgs::MarkerArrayConstPtr& markerArray) {
 
 }
 
-void callbackTalk (const std_msgs::String::ConstPtr& msg) {
+void callbackTalk (const std_msgs::String::ConstPtr& msg1) {
 	//printf("TAXI: dobil sem msg\n");
 
-	if (!strcmp(msg->data.c_str(),"pathEnded") && faceFound)
-		goToFace = true;
 
-	if (!faceFound) {
-		//printf("posiljam search\n");
-	  	while (ros::ok()) {
-	  		std_msgs::String msg;
-	    	std::stringstream ss;
-	    	ss << "search";
-	    	msg.data = ss.str();
-	    	pathSearch.publish(msg);
-	    	ros::Rate loop_rate(10);
 
-	    	ros::spinOnce();
+	printf("Dobil sem %s\n",msg1->data.c_str());
+	if (!strcmp(msg1->data.c_str(),"pathEnded") && faceFound){
 
-	    	loop_rate.sleep();
-	  	}
-
-	} else {
-		
-		while (ros::ok()) {
+		//ros::Rate loop_rate(10);
+		//while (ros::ok()) {
 			printf("posiljam stop\n");
 	  		std_msgs::String msg;
 	    	std::stringstream ss;
 	    	ss << "stop";
 	    	msg.data = ss.str();
 	    	pathSearch.publish(msg);
-	    	ros::Rate loop_rate(10);
+	    	
+	    	//ros::spinOnce();
 
-	    	ros::spinOnce();
+	  //  	loop_rate.sleep();
+	  //	}
+
+		MoveBaseClient ac("move_base", true);
+		//wait for the action server to come up
+		while(!ac.waitForServer(ros::Duration(5.0))){
+			ROS_INFO("Waiting for the move_base action server to come up");
+		}
+
+
+
+		ROS_INFO("Sending goal");
+		ac.sendGoal(goal);
+
+		ac.waitForResult(ros::Duration(5.0));
+		if(ac.getState() == actionlib::SimpleClientGoalState::SUCCEEDED) {
+			printf("\n::::::::::::::::::::::::::::::::::::::\n");
+			ROS_INFO("Hello Potter");
+			printf("::::::::::::::::::::::::::::::::::::::\n");
+			sleep(2);
+		}else{
+			ROS_INFO("Goal unreachable: %s\n",ac.getState().toString().c_str());
+
+			ac.sendGoal(goal);
+			ac.waitForResult(ros::Duration(5.0));
+			if(ac.getState() == actionlib::SimpleClientGoalState::SUCCEEDED) {
+				printf("\n::::::::::::::::::::::::::::::::::::::\n");
+				ROS_INFO("Hello Potter2");
+				printf("::::::::::::::::::::::::::::::::::::::\n");
+				sleep(2);
+			}else{
+				ROS_INFO("Goal unreachable2: %s\n",ac.getState().toString().c_str());
+			}
+
+			sleep(2);
+		}
+
+		faceFound = false;
+
+		/*while (ros::ok()) {
+		    printf("prisu sem do face, isci naprej\n");
+			std_msgs::String msg;
+	    	std::stringstream ss;
+	    	ss << "search";
+	    	msg.data = ss.str();
+			pathSearch.publish(msg);
+	    	ros::Rate loop_rate(10);
+			ros::spinOnce();
+			loop_rate.sleep();
+		}*/
+
+	}
+
+	if (!faceFound) {
+		//printf("posiljam search\n");
+		ros::Rate loop_rate(10);
+	  	while (ros::ok()) {
+	  		printf("posiljam search\n");
+	  		std_msgs::String msg;
+	    	std::stringstream ss;
+	    	ss << "search";
+	    	msg.data = ss.str();
+	    	pathSearch.publish(msg);
+	    	
+    		ros::spinOnce();
 
 	    	loop_rate.sleep();
 	  	}
+
+	}
+		if (faceFound) {
+			ros::Rate loop_rate(10);
+			while (ros::ok()) {
+				printf("posiljam stop\n");
+		  		std_msgs::String msg;
+		    	std::stringstream ss;
+		    	ss << "stop";
+		    	msg.data = ss.str();
+		    	pathSearch.publish(msg);
+		    	
+		    	ros::spinOnce();
+
+		    	loop_rate.sleep();
+		  	}
 	}
 }
 
 int main(int argc, char** argv){
   	ros::init(argc, argv, "taxi");
-	ros::NodeHandle nh;
+  	ros::NodeHandle nh3("nh3");
 	ros::NodeHandle nh2;
-	ros::NodeHandle nh3;
+	ros::NodeHandle nh(nh3, "nh");
 	initList();
   	// Create a ROS subscriber for the input point cloud
-  	pathSearch = nh2.advertise<std_msgs::String>("/tournament2/search", 100);
-  	ros::Subscriber sub = nh.subscribe<visualization_msgs::MarkerArray> ("/facemapper/markers", 50, callback);	
-  	ros::Subscriber subTalk = nh3.subscribe<std_msgs::String>("/tournament2/talk", 100, callbackTalk);
+  	pathSearch = nh2.advertise<std_msgs::String>("/tournament2/search", 1);
+  	ros::Subscriber subTalk = nh3.subscribe<std_msgs::String>("/tournament2/talk", 1, callbackTalk);
+  	ros::Subscriber sub = nh.subscribe<visualization_msgs::MarkerArray> ("/facemapper/markers", 1, callback);	
   	//printf("sem pred spinom\n");
 	ros::spin();
 

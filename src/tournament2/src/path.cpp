@@ -13,7 +13,8 @@ using namespace std;
 
 static bool goalApproved = false;
 static int nGoal=0;
-static move_base_msgs::MoveBaseGoal goal[47];
+static move_base_msgs::MoveBaseGoal goal[50];
+static int maxGoal = 50;
 static ros::Publisher pathEnded;
 
 typedef actionlib::SimpleActionClient<move_base_msgs::MoveBaseAction> MoveBaseClient;
@@ -37,7 +38,7 @@ return goal;
 
 void callback (const std_msgs::String::ConstPtr& msg) {
 
-	if (!strcmp(msg->data.c_str(),"search") && nGoal < 47) {
+	if (!strcmp(msg->data.c_str(),"search") && nGoal < maxGoal) {
 		printf("Grem do naslednjega gola!\n");
 
 		MoveBaseClient ac("move_base", true);
@@ -46,93 +47,121 @@ void callback (const std_msgs::String::ConstPtr& msg) {
 		}
   		//printf("Goal: %f %f\n",xTarget,yTarget);
 		ROS_INFO("Sending path goal %d",nGoal);
-		ac.sendGoal(goal[nGoal]);
+		ac.sendGoal(goal[nGoal++]);
 		ac.waitForResult();
 		if(ac.getState() == actionlib::SimpleClientGoalState::SUCCEEDED){
 			ROS_INFO("Reached goal %d",nGoal);
-			sleep(0.1);
+			sleep(1.1);
 		} else
 			ROS_INFO("No go");
 
-		std_msgs::String msg;
-    	std::stringstream ss;
-    	ss << "pathEnded";
-    	msg.data = ss.str();
-    	pathEnded.publish(msg);
-    	printf("posiljam pathEnded\n");
+		ros::Rate loop_rate(10);
+		while (ros::ok()) {
+			std_msgs::String msg;
+	    	std::stringstream ss;
+	    	ss << "pathEnded";
+	    	msg.data = ss.str();
+	    	pathEnded.publish(msg);
+	    	printf("posiljam pathEnded\n");
+			sleep(6);
 
-		nGoal++;
+			ros::spinOnce();
+			
+			loop_rate.sleep();
+    	}
 
+	} else if (!strcmp(msg->data.c_str(),"stop")) {
+		ros::Rate loop_rate(10);
+		while (ros::ok()) {
+			std_msgs::String msg;
+	    	std::stringstream ss;
+	    	ss << "pathEnded";
+	    	msg.data = ss.str();
+	    	pathEnded.publish(msg);
+	    	printf("posiljam pathEnded\n");
+			sleep(6);
+
+			ros::spinOnce();
+			
+			loop_rate.sleep();
+    	}
+		
 	}
-	if (nGoal > 46) {
+	if (nGoal > maxGoal) {
 		ros::shutdown();
 	}
 
 }
 
 void goalInit() {
+	int i=0;
+  	goal[i++]=createGoal(-0.2,0.2,0,-1);
+  	goal[i++]=createGoal(-0.2,0.2,-1,0);
+  	goal[i++]=createGoal(-0.2,0.2,-1,1);
+//3
+  	goal[i++]=createGoal(0.4,0.2,1,-1);
+  	goal[i++]=createGoal(0.4,0.2,-1,-1);
+//5
+  	goal[i++]=createGoal(1,0.2,1,-1);
+  	goal[i++]=createGoal(1,0.2,0,-1);
+  	goal[i++]=createGoal(1,0.2,-1,-1);
+//8
+  	goal[i++]=createGoal(1.8,0.2,-1,-1);
 
-  	goal[0]=createGoal(0,0,1,-1);
-  	goal[1]=createGoal(0,0,0,-1);
-  	goal[2]=createGoal(0,0,-1,-1);
-  	goal[3]=createGoal(0,0,-1,0);
-  	goal[4]=createGoal(0,0,-1,1);
+  	goal[i++]=createGoal(2.2,0.2,0,-1);
 
-  	goal[5]=createGoal(1.2,0,1,-1);
-  	goal[6]=createGoal(1.2,0,0,-1);
-  	goal[7]=createGoal(1.2,0,-1,-1);
+  	goal[i++]=createGoal(2.8,0.2,1,-1);
+  	goal[i++]=createGoal(2.8,0.2,-1,-1);
 
-  	goal[8]=createGoal(2.0,0,1,-1);
-  	goal[9]=createGoal(2.0,0,0,-1);
-  	goal[10]=createGoal(2.0,0,-1,-1);
+  	goal[i++]=createGoal(3,0.2,0,-1);
 
-  	goal[11]=createGoal(3.2,0,1,-1);
-  	goal[12]=createGoal(3.2,0,0,-1);
-  	goal[13]=createGoal(3.2,0,-1,-1);
+  	goal[i++]=createGoal(3.9,0,1,1);
+  	goal[i++]=createGoal(3.9,0,1,-1);
+  	goal[i++]=createGoal(3.9,0,0,-1);
+  	goal[i++]=createGoal(3.9,0,-1,-1);
 
-  	goal[14]=createGoal(3.9,0,1,-1);
-  	goal[15]=createGoal(3.9,0,0,-1);
-  	goal[16]=createGoal(3.9,0,-1,-1);
-
-  	goal[17]=createGoal(4.5,0,1,-1);
-  	goal[18]=createGoal(4.5,0,0,-1);
-  	goal[19]=createGoal(4.5,0,-1,-1);
-  	goal[20]=createGoal(4.5,0,-1,0);
-  	goal[21]=createGoal(4.5,0,0,1);
-  	goal[22]=createGoal(4.5,0,1,1);
-
-
-  	goal[23]=createGoal(3.3,1.1,0,1);
-  	goal[24]=createGoal(3.3,1.1,1,1);
-  	goal[25]=createGoal(3.3,1.1,1,0);
-  	goal[26]=createGoal(3.3,1.1,-1,1);
-
-  	goal[27]=createGoal(2.2,1,1,1);
-  	goal[28]=createGoal(2.2,1,0,1);
-  	goal[29]=createGoal(2.2,1,-1,1);
-
-  	goal[30]=createGoal(1.1,1,1,1);
-  	goal[31]=createGoal(1.1,1,0,1);
-  	goal[32]=createGoal(1.1,1,-1,1);
+  	goal[i++]=createGoal(4.5,0,1,-1);
+  	goal[i++]=createGoal(4.5,0,0,-1);
+  	goal[i++]=createGoal(4.5,0,-1,-1);
+  	goal[i++]=createGoal(4.5,0,-1,0);
+  	goal[i++]=createGoal(4.5,0,0,1);
+  	goal[i++]=createGoal(4.5,0,1,1);
 
 
-  	goal[33]=createGoal(0.1,0.8,1,1);
-  	goal[34]=createGoal(0.1,0.8,0,1);
-  	goal[35]=createGoal(0.1,0.8,-1,1);
-  	goal[36]=createGoal(0.1,0.8,-1,0);
-  	goal[37]=createGoal(0.1,0.8,-1,-1);
+  	goal[i++]=createGoal(3.3,0.9,0,1);
+  	goal[i++]=createGoal(3.3,0.9,1,1);
+  	goal[i++]=createGoal(3.3,0.9,1,0);
+  	goal[i++]=createGoal(3.3,0.9,-1,1);
+
+	goal[i++]=createGoal(2.8,0.9,1,0);
+  	goal[i++]=createGoal(2.8,0.9,1,1);
+  	goal[i++]=createGoal(2.8,0.9,-1,1);
+
+  	goal[i++]=createGoal(2.2,0.8,0,1);
+
+  	goal[i++]=createGoal(1.7,0.8,1,1);
+  	goal[i++]=createGoal(1.7,0.8,-1,1);
+
+  	goal[i++]=createGoal(0.9,0.8,0,1);
 
 
-  	goal[38]=createGoal(-0.5,2,1,0);
-  	goal[39]=createGoal(-0.5,2,1,-1);
-  	goal[40]=createGoal(-0.5,2,-1,1);
-  	goal[41]=createGoal(-0.5,2,-1,0);
-  	goal[42]=createGoal(-0.5,2,-1,-1);
+  	goal[i++]=createGoal(0.1,0.8,1,1);
+  	goal[i++]=createGoal(0.1,0.8,0,1);
+  	goal[i++]=createGoal(0.1,0.8,-1,1);
+  	goal[i++]=createGoal(0.1,0.8,-1,0);
+  	goal[i++]=createGoal(0.1,0.8,-1,-1);
 
-  	goal[43]=createGoal(-0.8,3,1,0);
-  	goal[44]=createGoal(-0.8,3,0,1);
-  	goal[45]=createGoal(-0.8,3,-1,1);
-  	goal[46]=createGoal(-0.8,3,0,-1);
+
+  	goal[i++]=createGoal(-0.5,2,1,0);
+  	goal[i++]=createGoal(-0.5,2,1,-1);
+  	goal[i++]=createGoal(-0.5,2,-1,1);
+  	goal[i++]=createGoal(-0.5,2,-1,0);
+  	goal[i++]=createGoal(-0.5,2,-1,-1);
+
+  	goal[i++]=createGoal(-0.8,3,1,0);
+  	goal[i++]=createGoal(-0.8,3,0,1);
+  	goal[i++]=createGoal(-0.8,3,-1,1);
+  	goal[i++]=createGoal(-0.8,3,0,-1);
 
 }
 
@@ -144,8 +173,8 @@ int main(int argc, char** argv){
 
   	goalInit();
 
-  	ros::Subscriber sub = nh.subscribe<std_msgs::String>("/tournament2/search", 100, callback);
-  	pathEnded = nh2.advertise<std_msgs::String>("/tournament2/talk", 100);
+  	ros::Subscriber sub = nh.subscribe<std_msgs::String>("/tournament2/search", 1, callback);
+  	pathEnded = nh2.advertise<std_msgs::String>("/tournament2/talk", 1);
 
   	ros::Rate loop_rate(10);
 
