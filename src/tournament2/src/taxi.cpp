@@ -6,15 +6,15 @@
 #include <geometry_msgs/Twist.h>
 #include <geometry_msgs/Pose.h>
 #include <math.h> 
+#include <std_msgs/String.h>
 using namespace std;
 
-static int s_id = 0;
-static int m_id = -1;
-static int countm = 0;
 static int size2 = 27;
 static float listArray[27][4];//=9;
 static bool goalApproved = false;
-static int pathGoals=0;
+static ros::Publisher pathSearch;
+static bool faceFound = false;
+static bool goToFace = false;
 
 typedef actionlib::SimpleActionClient<move_base_msgs::MoveBaseAction> MoveBaseClient;
 bool inRange(float originalPoint, float point){
@@ -43,6 +43,7 @@ void addToList(float x, float y){
 				if(listArray[i][2]>3){
 					listArray[i][3]=1;
 					goalApproved = true;
+					faceFound = true;
 					printf("10 entries found: %f %f \n",x,y);
 				}
 				listArray[i][2]++;
@@ -71,23 +72,6 @@ void addToList(float x, float y){
 		}
 	
 }
-			static move_base_msgs::MoveBaseGoal createGoal(float xRobot, float yRobot, float xDirection, float yDirection){
-				move_base_msgs::MoveBaseGoal goal;
-				goal.target_pose.header.frame_id = "/map";
-				tf::Vector3 v1 = tf::Vector3(1, 0 ,0);
-				tf::Vector3 v2 = tf::Vector3(xDirection, yDirection+0.0000001,0);
-				tf::Vector3 a = v1.cross(v2);
-				tf::Quaternion q(a.x(), a.y(), a.z(), sqrt(v1.length2() * v2.length2()) + v1.dot(v2));
-				q.normalize();
-				goal.target_pose.pose.orientation.x = q.x();
-				goal.target_pose.pose.orientation.y = q.y();
-				goal.target_pose.pose.orientation.z = q.z();
-				goal.target_pose.pose.orientation.w = q.w();
-				goal.target_pose.pose.position.x = xRobot;
-				goal.target_pose.pose.position.y = yRobot;
-			return goal;
-			}
-
 
 void callback (const visualization_msgs::MarkerArrayConstPtr& markerArray) {
 
@@ -155,15 +139,14 @@ void callback (const visualization_msgs::MarkerArrayConstPtr& markerArray) {
 				if (zFace < 0.5 && zFace > 0.2)
 					addToList(xFace,yFace);
 				
-				if(goalApproved){
-					goalApproved=false;
+				if(goalApproved && goToFace){
+					
 					float xTarget,yTarget;
 
 					xTarget=xFace-xRobot;
 					yTarget=yFace-yRobot;
 					float dolzina = sqrt(pow(xTarget,2)+pow(yTarget,2));
 					if(dolzina > 0.2 && zFace < 0.5 && zFace > 0.2){
-						s_id = 1;
 						xTarget /= dolzina;
 						yTarget /= dolzina;
 
@@ -213,18 +196,27 @@ void callback (const visualization_msgs::MarkerArrayConstPtr& markerArray) {
 
 
 						printf("Goal: %f %f\n",xTarget,yTarget);
+
 						ROS_INFO("Sending goal");
 						ac.sendGoal(goal);
 
 						ac.waitForResult();
 						if(ac.getState() == actionlib::SimpleClientGoalState::SUCCEEDED){
 							ROS_INFO("Hello Potter");
-							s_id = 0;
-							countm = 0;
 						}
 			    
 					 	else
 					    	ROS_INFO("Goal unreachable");
+
+					    faceFound = false;
+					    goToFace = false;
+					    goalApproved=false;
+
+					    std_msgs::String msg;
+				    	std::stringstream ss;
+				    	ss << "search";
+				    	msg.data = ss.str();
+				    	pathSearch.publish(msg);
 				}
 
 	 	 }
@@ -233,27 +225,27 @@ void callback (const visualization_msgs::MarkerArrayConstPtr& markerArray) {
 	}
 
 }
-void pathMaker(move_base_msgs::MoveBaseGoal goal[]){
-	for(;pathGoals<47;pathGoals++){
-		//ros::spinOnce();
-		//ros::getGlobalCallbackQueue()->callAvailable(ros::WallDuration(0));
-		MoveBaseClient ac("move_base", true);
-		while(!ac.waitForServer(ros::Duration(5.0))){
-			ROS_INFO("Waiting for the move_base action server to come up");
-		}
-  		//printf("Goal: %f %f\n",xTarget,yTarget);
-		ROS_INFO("Sending path goal %d",pathGoals);
-		ac.sendGoal(goal[pathGoals]);
-		ac.waitForResult();
-		if(ac.getState() == actionlib::SimpleClientGoalState::SUCCEEDED){
-			ROS_INFO("Reached goal %d",pathGoals);
-			
-			sleep(0.1);
-			}
-		else
-			ROS_INFO("No go");
-  	}
 
+void callbackTalk (const std_msgs::String::ConstPtr& msg) {
+
+	if (!strcmp(msg->data.c_str(),"pathEnded") && faceFound)
+		goToFace = true;
+
+	if (!faceFound) {
+		printf("posiljam search\n");
+		std_msgs::String msg;
+    	std::stringstream ss;
+    	ss << "search";
+    	msg.data = ss.str();
+    	pathSearch.publish(msg);
+	} else {
+		printf("posiljam stop\n");
+		std_msgs::String msg;
+    	std::stringstream ss;
+    	ss << "stop";
+    	msg.data = ss.str();
+    	pathSearch.publish(msg);
+	}
 }
 
 int main(int argc, char** argv){
@@ -261,75 +253,11 @@ int main(int argc, char** argv){
 	ros::NodeHandle nh;
 	initList();
   	// Create a ROS subscriber for the input point cloud
-  	ros::Subscriber sub = nh.subscribe<visualization_msgs::MarkerArray> ("/facemapper/markers", 50, callback);
-	//ros::spinOnce();
+  	pathSearch = nh.advertise<std_msgs::String>("/tournament2/search", 2);
+  	ros::Subscriber sub = nh.subscribe<visualization_msgs::MarkerArray> ("/facemapper/markers", 50, callback);	
+  	ros::Subscriber subTalk = nh.subscribe("/tournament2/talk", 1, callbackTalk);
 
-  	move_base_msgs::MoveBaseGoal goal[47];
-  	goal[0]=createGoal(0,0,1,-1);
-  	goal[1]=createGoal(0,0,0,-1);
-  	goal[2]=createGoal(0,0,-1,-1);
-  	goal[3]=createGoal(0,0,-1,0);
-  	goal[4]=createGoal(0,0,-1,1);
-
-  	goal[5]=createGoal(1.2,0,1,-1);
-  	goal[6]=createGoal(1.2,0,0,-1);
-  	goal[7]=createGoal(1.2,0,-1,-1);
-
-  	goal[8]=createGoal(2.0,0,1,-1);
-  	goal[9]=createGoal(2.0,0,0,-1);
-  	goal[10]=createGoal(2.0,0,-1,-1);
-
-  	goal[11]=createGoal(3.2,0,1,-1);
-  	goal[12]=createGoal(3.2,0,0,-1);
-  	goal[13]=createGoal(3.2,0,-1,-1);
-
-  	goal[14]=createGoal(3.9,0,1,-1);
-  	goal[15]=createGoal(3.9,0,0,-1);
-  	goal[16]=createGoal(3.9,0,-1,-1);
-
-  	goal[17]=createGoal(4.5,0,1,-1);
-  	goal[18]=createGoal(4.5,0,0,-1);
-  	goal[19]=createGoal(4.5,0,-1,-1);
-  	goal[20]=createGoal(4.5,0,-1,0);
-  	goal[21]=createGoal(4.5,0,0,1);
-  	goal[22]=createGoal(4.5,0,1,1);
-
-
-  	goal[23]=createGoal(3.3,1.1,0,1);
-  	goal[24]=createGoal(3.3,1.1,1,1);
-  	goal[25]=createGoal(3.3,1.1,1,0);
-  	goal[26]=createGoal(3.3,1.1,-1,1);
-
-  	goal[27]=createGoal(2.2,1,1,1);
-  	goal[28]=createGoal(2.2,1,0,1);
-  	goal[29]=createGoal(2.2,1,-1,1);
-
-  	goal[30]=createGoal(1.1,1,1,1);
-  	goal[31]=createGoal(1.1,1,0,1);
-  	goal[32]=createGoal(1.1,1,-1,1);
-
-
-  	goal[33]=createGoal(0.1,0.8,1,1);
-  	goal[34]=createGoal(0.1,0.8,0,1);
-  	goal[35]=createGoal(0.1,0.8,-1,1);
-  	goal[36]=createGoal(0.1,0.8,-1,0);
-  	goal[37]=createGoal(0.1,0.8,-1,-1);
-
-
-  	goal[38]=createGoal(-0.5,2,1,0);
-  	goal[39]=createGoal(-0.5,2,1,-1);
-  	goal[40]=createGoal(-0.5,2,-1,1);
-  	goal[41]=createGoal(-0.5,2,-1,0);
-  	goal[42]=createGoal(-0.5,2,-1,-1);
-
-  	goal[43]=createGoal(-0.8,3,1,0);
-  	goal[44]=createGoal(-0.8,3,0,1);
-  	goal[45]=createGoal(-0.8,3,-1,1);
-  	goal[46]=createGoal(-0.8,3,0,-1);
-
-  	pathMaker(goal);
-
-	
+	ros::spin();
 
   	//return 0;
 }

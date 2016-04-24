@@ -188,3 +188,6 @@ catkin_package(
 
 add_executable(taxi src/taxi.cpp)
 target_link_libraries(taxi ${catkin_LIBRARIES})
+
+add_executable(path src/path.cpp)
+target_link_libraries(path ${catkin_LIBRARIES})
