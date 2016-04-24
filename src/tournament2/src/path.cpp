@@ -23,7 +23,7 @@ static move_base_msgs::MoveBaseGoal createGoal(float xRobot, float yRobot, float
 	move_base_msgs::MoveBaseGoal goal;
 	goal.target_pose.header.frame_id = "/map";
 	tf::Vector3 v1 = tf::Vector3(1, 0 ,0);
-	tf::Vector3 v2 = tf::Vector3(xDirection, yDirection+0.0000001,0);
+	tf::Vector3 v2 = tf::Vector3(xDirection+0.0000001, yDirection+0.0000001,0.00000001);
 	tf::Vector3 a = v1.cross(v2);
 	tf::Quaternion q(a.x(), a.y(), a.z(), sqrt(v1.length2() * v2.length2()) + v1.dot(v2));
 	q.normalize();
@@ -56,6 +56,7 @@ void callback (const std_msgs::String::ConstPtr& msg) {
 			ROS_INFO("No go");
 
 		ros::Rate loop_rate(10);
+		int slip=5;
 		while (ros::ok()) {
 			std_msgs::String msg;
 	    	std::stringstream ss;
@@ -63,7 +64,9 @@ void callback (const std_msgs::String::ConstPtr& msg) {
 	    	msg.data = ss.str();
 	    	pathEnded.publish(msg);
 	    	printf("posiljam pathEnded\n");
-			sleep(6);
+			sleep(slip);
+			//if(slip<6)
+			//	slip+=2;
 
 			ros::spinOnce();
 			

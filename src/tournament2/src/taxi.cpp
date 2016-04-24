@@ -17,6 +17,7 @@ static ros::Publisher pathSearch;
 static bool faceFound = false;
 //static bool pocakaj = false;
 //static bool goToFace = false;
+static int faceCount =0;
 static move_base_msgs::MoveBaseGoal goal;
 
 typedef actionlib::SimpleActionClient<move_base_msgs::MoveBaseAction> MoveBaseClient;
@@ -99,6 +100,8 @@ void callback (const visualization_msgs::MarkerArrayConstPtr& markerArray) {
 
 				tf::TransformListener listener;
 				tf::StampedTransform transform;
+				//listener.waitForTransform("/map", "/base_link", ros::Time::now(), ros::Duration(10.0) );
+				//listener.lookupTransform("/map", "/base_link", ros::Time::now(), transform);
 				listener.waitForTransform("/map", "/base_link", ros::Time(0), ros::Duration(10.0) );
 				listener.lookupTransform("/map", "/base_link", ros::Time(0), transform);
 				//listener.waitForTransform("/map", "/base_link", markerArray->markers[0].header.stamp, ros::Duration(10.0) );
@@ -244,9 +247,12 @@ void callbackTalk (const std_msgs::String::ConstPtr& msg1) {
 
 		ac.waitForResult(ros::Duration(5.0));
 		if(ac.getState() == actionlib::SimpleClientGoalState::SUCCEEDED) {
+			faceCount++;
 			printf("\n::::::::::::::::::::::::::::::::::::::\n");
 			ROS_INFO("Hello Potter");
 			printf("::::::::::::::::::::::::::::::::::::::\n");
+			if(faceCount>=4)
+				ros::shutdown();
 			sleep(2);
 		}else{
 			ROS_INFO("Goal unreachable: %s\n",ac.getState().toString().c_str());
@@ -254,9 +260,12 @@ void callbackTalk (const std_msgs::String::ConstPtr& msg1) {
 			ac.sendGoal(goal);
 			ac.waitForResult(ros::Duration(5.0));
 			if(ac.getState() == actionlib::SimpleClientGoalState::SUCCEEDED) {
+				faceCount++;
 				printf("\n::::::::::::::::::::::::::::::::::::::\n");
 				ROS_INFO("Hello Potter2");
 				printf("::::::::::::::::::::::::::::::::::::::\n");
+				if(faceCount>=3)
+					ros::shutdown();
 				sleep(2);
 			}else{
 				ROS_INFO("Goal unreachable2: %s\n",ac.getState().toString().c_str());
