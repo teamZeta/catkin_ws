@@ -22,7 +22,7 @@ static move_base_msgs::MoveBaseGoal goal;
 
 typedef actionlib::SimpleActionClient<move_base_msgs::MoveBaseAction> MoveBaseClient;
 bool inRange(float originalPoint, float point){
-	float range = 0.3;
+	float range = 0.4;
 	if(originalPoint-range<point&&originalPoint+range>point)
 		return true;
 	return false;
@@ -41,7 +41,7 @@ void addToList(float x, float y){
 		for(int i=0;i<size2;i++){
 			if(inRange(listArray[i][0],x)&&inRange(listArray[i][1],y)){
 
-				int entries = 4;
+				int entries = 6;
 				if(listArray[i][3]==1){
 					pointFound = true;
 					continue;
@@ -143,18 +143,19 @@ void callback (const visualization_msgs::MarkerArrayConstPtr& markerArray) {
 				xFace = poseMarkerMap.getOrigin().x();
 				yFace = poseMarkerMap.getOrigin().y();
 				zFace = poseMarkerMap.getOrigin().z();
+
+				float xTarget,yTarget;
+
+				xTarget=xFace-xRobot;
+				yTarget=yFace-yRobot;
+				float dolzina = sqrt(pow(xTarget,2)+pow(yTarget,2));
+
 				printf("I see a face: %f %f\n",xFace,yFace);
-				if (zFace < 0.5 && zFace > 0.2)
+				if (zFace < 0.45 && zFace > 0.2 && dolzina<1.8)
 					addToList(xFace,yFace);
 	// TODO: goal approved za pravi marker			
-				if(goalApproved){
-
-					float xTarget,yTarget;
-
-					xTarget=xFace-xRobot;
-					yTarget=yFace-yRobot;
-					float dolzina = sqrt(pow(xTarget,2)+pow(yTarget,2));
-					if(zFace < 0.5 && zFace > 0.2){
+				if(goalApproved && dolzina<1.8){
+					if(zFace < 0.45 && zFace > 0.2 && dolzina<1.8){
 						xTarget /= dolzina;
 						yTarget /= dolzina;
 
@@ -251,8 +252,8 @@ void callbackTalk (const std_msgs::String::ConstPtr& msg1) {
 			printf("\n::::::::::::::::::::::::::::::::::::::\n");
 			ROS_INFO("Hello Potter");
 			printf("::::::::::::::::::::::::::::::::::::::\n");
-			if(faceCount>=4)
-				ros::shutdown();
+			//if(faceCount>=4)
+			//	ros::shutdown();
 			sleep(2);
 		}else{
 			ROS_INFO("Goal unreachable: %s\n",ac.getState().toString().c_str());
@@ -262,10 +263,10 @@ void callbackTalk (const std_msgs::String::ConstPtr& msg1) {
 			if(ac.getState() == actionlib::SimpleClientGoalState::SUCCEEDED) {
 				faceCount++;
 				printf("\n::::::::::::::::::::::::::::::::::::::\n");
-				ROS_INFO("Hello Potter2");
+				ROS_INFO("Hello Potter");
 				printf("::::::::::::::::::::::::::::::::::::::\n");
-				if(faceCount>=3)
-					ros::shutdown();
+				//if(faceCount>=3)
+				//	ros::shutdown();
 				sleep(2);
 			}else{
 				ROS_INFO("Goal unreachable2: %s\n",ac.getState().toString().c_str());

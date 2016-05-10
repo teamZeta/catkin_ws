@@ -1,0 +1,4 @@
+<launch>
+	<node name="taxi" pkg="tournament2" type="taxi" />
+	<node name="path" pkg="tournament2" type="path" />
+</launch>

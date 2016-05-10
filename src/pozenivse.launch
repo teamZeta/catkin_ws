@@ -1,0 +1,23 @@
+<launch>
+	
+	<include file="$(find turtlebot_bringup)/launch/minimal.launch" />
+
+	<include file="$(find turtlebot_bringup)/launch/3dsensor.launch" />
+
+	<include file="$(find working_navigation)/amcl_demo.launch" />
+
+  <include file="$(find facedetector)/launch/facedetector.launch">
+	<arg name="image_topic" value="/camera/rgb/image_color" />
+  </include>
+
+  <include file="$(find facedetector)/launch/facevisualizer.launch" />
+
+	<include file="$(find localizer)/launch/localizer_node.launch" />
+
+	<include file="$(find facedetector)/launch/facemapper.launch">
+	<arg name="camera_topic" value="/camera/rgb/camera_info" />
+  </include>
+
+	<node name="map_server" pkg="map_server" type="map_server" args="/home/team_zeta/catkin_ws/Azeroth.yaml" />
+
+</launch>

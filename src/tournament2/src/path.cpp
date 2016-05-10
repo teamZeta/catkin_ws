@@ -13,8 +13,8 @@ using namespace std;
 
 static bool goalApproved = false;
 static int nGoal=0;
-static move_base_msgs::MoveBaseGoal goal[50];
-static int maxGoal = 50;
+static move_base_msgs::MoveBaseGoal goal[46];
+static int maxGoal = 46;
 static ros::Publisher pathEnded;
 
 typedef actionlib::SimpleActionClient<move_base_msgs::MoveBaseAction> MoveBaseClient;
@@ -23,7 +23,7 @@ static move_base_msgs::MoveBaseGoal createGoal(float xRobot, float yRobot, float
 	move_base_msgs::MoveBaseGoal goal;
 	goal.target_pose.header.frame_id = "/map";
 	tf::Vector3 v1 = tf::Vector3(1, 0 ,0);
-	tf::Vector3 v2 = tf::Vector3(xDirection+0.0000001, yDirection+0.0000001,0.00000001);
+	tf::Vector3 v2 = tf::Vector3(xDirection+0.0000001, yDirection+0.0000001,0);
 	tf::Vector3 a = v1.cross(v2);
 	tf::Quaternion q(a.x(), a.y(), a.z(), sqrt(v1.length2() * v2.length2()) + v1.dot(v2));
 	q.normalize();
@@ -39,7 +39,7 @@ return goal;
 void callback (const std_msgs::String::ConstPtr& msg) {
 
 	if (!strcmp(msg->data.c_str(),"search") && nGoal < maxGoal) {
-		printf("Grem do naslednjega gola!\n");
+		printf("Grem do naslednjega goala!\n");
 
 		MoveBaseClient ac("move_base", true);
 		while(!ac.waitForServer(ros::Duration(5.0))){
@@ -50,10 +50,10 @@ void callback (const std_msgs::String::ConstPtr& msg) {
 		ac.sendGoal(goal[nGoal++]);
 		ac.waitForResult();
 		if(ac.getState() == actionlib::SimpleClientGoalState::SUCCEEDED){
-			ROS_INFO("Reached goal %d",nGoal);
+			ROS_INFO("Reached goal %d",(nGoal-1));
 			sleep(1.1);
 		} else
-			ROS_INFO("No go");
+			printf("No go %s\n",ac.getState().toString().c_str());
 
 		ros::Rate loop_rate(10);
 		int slip=5;
@@ -90,7 +90,7 @@ void callback (const std_msgs::String::ConstPtr& msg) {
     	}
 		
 	}
-	if (nGoal > maxGoal) {
+	if (nGoal >= maxGoal) {
 		ros::shutdown();
 	}
 
@@ -101,17 +101,17 @@ void goalInit() {
   	goal[i++]=createGoal(-0.2,0.2,0,-1);
   	goal[i++]=createGoal(-0.2,0.2,-1,0);
   	goal[i++]=createGoal(-0.2,0.2,-1,1);
-//3
+
   	goal[i++]=createGoal(0.4,0.2,1,-1);
-  	goal[i++]=createGoal(0.4,0.2,-1,-1);
-//5
+  	goal[i++]=createGoal(0.4,0.2,-1,-1);//5
+
   	goal[i++]=createGoal(1,0.2,1,-1);
   	goal[i++]=createGoal(1,0.2,0,-1);
   	goal[i++]=createGoal(1,0.2,-1,-1);
-//8
-  	goal[i++]=createGoal(1.8,0.2,-1,-1);
 
   	goal[i++]=createGoal(2.2,0.2,0,-1);
+  	goal[i++]=createGoal(2.2,0.2,-1,-1);
+  	goal[i++]=createGoal(2.2,0.2,0,-1);//10
 
   	goal[i++]=createGoal(2.8,0.2,1,-1);
   	goal[i++]=createGoal(2.8,0.2,-1,-1);
@@ -119,52 +119,48 @@ void goalInit() {
   	goal[i++]=createGoal(3,0.2,0,-1);
 
   	goal[i++]=createGoal(3.9,0,1,1);
-  	goal[i++]=createGoal(3.9,0,1,-1);
+  	goal[i++]=createGoal(3.9,0,1,-1);//5
   	goal[i++]=createGoal(3.9,0,0,-1);
   	goal[i++]=createGoal(3.9,0,-1,-1);
 
   	goal[i++]=createGoal(4.5,0,1,-1);
   	goal[i++]=createGoal(4.5,0,0,-1);
-  	goal[i++]=createGoal(4.5,0,-1,-1);
   	goal[i++]=createGoal(4.5,0,-1,0);
   	goal[i++]=createGoal(4.5,0,0,1);
-  	goal[i++]=createGoal(4.5,0,1,1);
-
 
   	goal[i++]=createGoal(3.3,0.9,0,1);
-  	goal[i++]=createGoal(3.3,0.9,1,1);
+  	goal[i++]=createGoal(3.3,0.9,1,1);//5
   	goal[i++]=createGoal(3.3,0.9,1,0);
   	goal[i++]=createGoal(3.3,0.9,-1,1);
 
 	goal[i++]=createGoal(2.8,0.9,1,0);
   	goal[i++]=createGoal(2.8,0.9,1,1);
-  	goal[i++]=createGoal(2.8,0.9,-1,1);
+  	goal[i++]=createGoal(2.8,0.9,-1,2);//10
 
   	goal[i++]=createGoal(2.2,0.8,0,1);
 
   	goal[i++]=createGoal(1.7,0.8,1,1);
-  	goal[i++]=createGoal(1.7,0.8,-1,1);
+  	goal[i++]=createGoal(1.7,0.8,-1,2);
 
   	goal[i++]=createGoal(0.9,0.8,0,1);
 
 
-  	goal[i++]=createGoal(0.1,0.8,1,1);
+  	goal[i++]=createGoal(0.1,0.8,1,1);//5
   	goal[i++]=createGoal(0.1,0.8,0,1);
   	goal[i++]=createGoal(0.1,0.8,-1,1);
-  	goal[i++]=createGoal(0.1,0.8,-1,0);
   	goal[i++]=createGoal(0.1,0.8,-1,-1);
 
 
-  	goal[i++]=createGoal(-0.5,2,1,0);
-  	goal[i++]=createGoal(-0.5,2,1,-1);
+  	goal[i++]=createGoal(-0.5,2,1,0);//10
   	goal[i++]=createGoal(-0.5,2,-1,1);
-  	goal[i++]=createGoal(-0.5,2,-1,0);
-  	goal[i++]=createGoal(-0.5,2,-1,-1);
 
-  	goal[i++]=createGoal(-0.8,3,1,0);
+  	goal[i++]=createGoal(-0.8,3,-1,0);
+  	goal[i++]=createGoal(-0.8,3,1,0);//5
   	goal[i++]=createGoal(-0.8,3,0,1);
+  	goal[i++]=createGoal(-0.8,3,-1,0);
   	goal[i++]=createGoal(-0.8,3,-1,1);
   	goal[i++]=createGoal(-0.8,3,0,-1);
+  	goal[i++]=createGoal(-0.8,3,-1,0);//10
 
 }
 
