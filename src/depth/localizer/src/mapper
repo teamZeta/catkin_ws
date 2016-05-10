@@ -64,7 +64,7 @@ class DetectionMapper():
         if not self.markers.markers or len(self.markers.markers) == 0:
             self.markers = MarkerArray()
             return
-        self.markers_pub.publish(markers)
+        self.markers_pub.publish(self.markers)
         self.markers = MarkerArray()
 
     def __init__(self):
