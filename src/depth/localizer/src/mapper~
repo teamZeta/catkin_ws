@@ -19,7 +19,7 @@ class DetectionMapper():
     def camera_callback(self, camera_info):
         self.camera_infos.append(camera_info)
 
-    def detection_callback(self, detection):
+    def detections_callback(self, detection):
 
         u = detection.x + detection.width / 2
         v = detection.y + detection.height / 2
@@ -74,7 +74,7 @@ class DetectionMapper():
         rospy.wait_for_service('localizer/localize')
 
         self.camera_infos = collections.deque(maxlen = self.buffer_size)
-        self.detections_sub = message_filters.Subscriber('detections', Detection, self.detection_callback)
+        self.detections_sub = message_filters.Subscriber('detections', Detection, self.detections_callback)
         self.camera_sub = message_filters.Subscriber('camera_info', CameraInfo, self.camera_callback)
 
         self.localize = rospy.ServiceProxy('localizer/localize', Localize)
