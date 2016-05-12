@@ -89,7 +89,7 @@ void callback (const visualization_msgs::MarkerArrayConstPtr& markerArray) {
 	while(!ac.waitForServer(ros::Duration(5.0))){
 		ROS_INFO("Waiting for the move_base action server to come up");
 	}*/
-	
+		printf("klicem call back face\n");
 		for(int i=0; i < markerArray->markers.size(); i++){
 
 		//printf("%d marker\n",(int)markerArray->markers.size());
