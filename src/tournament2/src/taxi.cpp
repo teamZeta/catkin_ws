@@ -8,6 +8,8 @@
 #include <math.h> 
 #include <std_msgs/String.h>
 #include <sstream>
+#include <cstdlib>
+#include <sys/timeb.h>
 using namespace std;
 
 static int size2 = 27;
@@ -21,6 +23,24 @@ static int faceCount =0;
 static move_base_msgs::MoveBaseGoal goal;
 
 typedef actionlib::SimpleActionClient<move_base_msgs::MoveBaseAction> MoveBaseClient;
+
+
+static int start;
+static int getMilliCount(){
+	timeb tb;
+	ftime(&tb);
+	int nCount = tb.millitm + (tb.time & 0xfffff) * 1000;
+	return nCount;
+}
+
+static int getMilliSpan(int nTimeStart){
+	int nSpan = getMilliCount() - nTimeStart;
+	if(nSpan < 0)
+		nSpan += 0x100000 * 1000;
+	return nSpan;
+}
+
+
 bool inRange(float originalPoint, float point){
 	float range = 0.4;
 	if(originalPoint-range<point&&originalPoint+range>point)
@@ -89,11 +109,13 @@ void callback (const visualization_msgs::MarkerArrayConstPtr& markerArray) {
 	while(!ac.waitForServer(ros::Duration(5.0))){
 		ROS_INFO("Waiting for the move_base action server to come up");
 	}*/
-		printf("klicem call back face %d \n",(int)markerArray->markers.size());
+		printf("Sem v callback in imam -- %d -- obrazov \n", (int)markerArray->markers.size());
+		int milliSecondsElapsed = getMilliSpan(start);
+		printf("Elapsed time = %u milliseconds\n", milliSecondsElapsed);
 		for(int i=0; i < markerArray->markers.size(); i++){
 
 		//printf("%d marker\n",(int)markerArray->markers.size());
-
+			/*
 			//move_base_msgs::MoveBaseGoal goal;
 			goal.target_pose.header.frame_id = "/map";
 			goal.target_pose.header.stamp = ros::Time::now();
@@ -140,6 +162,7 @@ void callback (const visualization_msgs::MarkerArrayConstPtr& markerArray) {
 				    tf::Pose(tf::Quaternion(0, 0, 0, 1), tf::Vector3(0, 0, -1)),
 				    ros::Time(0), markerArray->markers[0].header.frame_id);*/
 				//printf("POSE %f %f\n", poseMarkerMap.getOrigin().x(), poseMarkerMap.getOrigin().y());
+				/*
 				xFace = poseMarkerMap.getOrigin().x();
 				yFace = poseMarkerMap.getOrigin().y();
 				zFace = poseMarkerMap.getOrigin().z();
@@ -208,7 +231,7 @@ void callback (const visualization_msgs::MarkerArrayConstPtr& markerArray) {
 
 	 	 }
 	  
-	  
+	 */ 
 	}
 
 }
@@ -326,6 +349,7 @@ void callbackTalk (const std_msgs::String::ConstPtr& msg1) {
 }
 
 int main(int argc, char** argv){
+	start = getMilliCount();
   	ros::init(argc, argv, "taxi");
   	ros::NodeHandle nh3("nh3");
 	ros::NodeHandle nh2;

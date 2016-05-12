@@ -89,7 +89,7 @@ if __name__ == '__main__':
         rospy.init_node('localizer')
         try:
             mapper = DetectionMapper()
-            r = rospy.Rate(100)
+            r = rospy.Rate(30)
             while not rospy.is_shutdown():
                 mapper.flush()
                 r.sleep()
