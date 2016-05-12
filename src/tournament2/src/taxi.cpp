@@ -334,7 +334,7 @@ int main(int argc, char** argv){
   	// Create a ROS subscriber for the input point cloud
   	pathSearch = nh2.advertise<std_msgs::String>("/tournament2/search", 1);
   	ros::Subscriber subTalk = nh3.subscribe<std_msgs::String>("/tournament2/talk", 1, callbackTalk);
-  	ros::Subscriber sub = nh.subscribe<visualization_msgs::MarkerArray> ("/facemapper/markers", 1, callback);	
+  	ros::Subscriber sub = nh.subscribe<visualization_msgs::MarkerArray> ("/markers", 100, callback);	
   	//printf("sem pred spinom\n");
 	ros::spin();
 
