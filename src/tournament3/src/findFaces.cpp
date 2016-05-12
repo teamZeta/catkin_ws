@@ -33,7 +33,7 @@ void callback (const visualization_msgs::MarkerArrayConstPtr& markerArray) {
 	
 	printf("Sem v callback in imam -- %d -- obrazov \n", (int)markerArray->markers.size());
 	int milliSecondsElapsed = getMilliSpan(start);
-	printf("\n\nElapsed time = %u milliseconds", milliSecondsElapsed);
+	printf("Elapsed time = %u milliseconds\n", milliSecondsElapsed);
 	
 }
 
