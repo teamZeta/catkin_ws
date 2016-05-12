@@ -2,13 +2,9 @@
 	
 	<include file="$(find turtlebot_bringup)/launch/minimal.launch" />
 
-	<include file="$(find working_navigation)/amcl_demo.launch" />
-
-  	<!-- <include file="$(find opencv_detector)/launch/facevisualizer.launch" /> -->
-
 	<include file="$(find opencv_detector)/launch/facedetector_mapper.launch" />
-	<!-- <arg name="camera_topic" value="/camera/rgb/camera_info" />
-  </include> -->
+
+	<include file="$(find working_navigation)/amcl_demo.launch" />
 
 	<node name="map_server" pkg="map_server" type="map_server" args="/home/team_zeta/catkin_ws/Azeroth.yaml" />
 
