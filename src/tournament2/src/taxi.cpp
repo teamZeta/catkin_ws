@@ -83,13 +83,13 @@ void callback (const visualization_msgs::MarkerArrayConstPtr& markerArray) {
 
 	ros::NodeHandle node;
 	ros::Publisher vis_pub = node.advertise<visualization_msgs::Marker>( "visualization_marker", 1 );
-
+	//printf(ros::Time::now());
 	/*MoveBaseClient ac("move_base", true);
 	//wait for the action server to come up
 	while(!ac.waitForServer(ros::Duration(5.0))){
 		ROS_INFO("Waiting for the move_base action server to come up");
 	}*/
-		printf("klicem call back face\n");
+		printf("klicem call back face %d \n",(int)markerArray->markers.size());
 		for(int i=0; i < markerArray->markers.size(); i++){
 
 		//printf("%d marker\n",(int)markerArray->markers.size());
@@ -332,8 +332,8 @@ int main(int argc, char** argv){
 	ros::NodeHandle nh(nh3, "nh");
 	initList();
   	// Create a ROS subscriber for the input point cloud
-  	pathSearch = nh2.advertise<std_msgs::String>("/tournament2/search", 1);
-  	ros::Subscriber subTalk = nh3.subscribe<std_msgs::String>("/tournament2/talk", 1, callbackTalk);
+  	//pathSearch = nh2.advertise<std_msgs::String>("/tournament2/search", 1);
+  //	ros::Subscriber subTalk = nh3.subscribe<std_msgs::String>("/tournament2/talk", 1, callbackTalk);
   	ros::Subscriber sub = nh.subscribe<visualization_msgs::MarkerArray> ("/markers", 100, callback);	
   	//printf("sem pred spinom\n");
 	ros::spin();
