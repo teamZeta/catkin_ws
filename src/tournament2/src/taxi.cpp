@@ -23,6 +23,7 @@ static int faceCount =0;
 static move_base_msgs::MoveBaseGoal goal;
 
 typedef actionlib::SimpleActionClient<move_base_msgs::MoveBaseAction> MoveBaseClient;
+static tf::TransformListener listener;
 
 
 static int start;
@@ -120,11 +121,11 @@ void callback (const visualization_msgs::MarkerArrayConstPtr& markerArray) {
 			goal.target_pose.header.frame_id = "/map";
 			goal.target_pose.header.stamp = ros::Time::now();
 
-				tf::TransformListener listener;
+				//tf::TransformListener listener;
 				tf::StampedTransform transform;
 				//listener.waitForTransform("/map", "/base_link", ros::Time::now(), ros::Duration(10.0) );
 				//listener.lookupTransform("/map", "/base_link", ros::Time::now(), transform);
-				//listener.waitForTransform("/map", "/base_link", ros::Time(0), ros::Duration(10.0) );
+				
 				listener.lookupTransform("/map", "/base_link", ros::Time(0), transform);
 				//listener.waitForTransform("/map", "/base_link", markerArray->markers[0].header.stamp, ros::Duration(10.0) );
 				//listener.lookupTransform("/map", "/base_link", markerArray->markers[0].header.stamp, transform);
@@ -353,6 +354,7 @@ int main(int argc, char** argv){
   	// Create a ROS subscriber for the input point cloud
   	//pathSearch = nh2.advertise<std_msgs::String>("/tournament2/search", 1);
   //	ros::Subscriber subTalk = nh3.subscribe<std_msgs::String>("/tournament2/talk", 1, callbackTalk);
+	listener.waitForTransform("/map", "/base_link", ros::Time(0), ros::Duration(10.0) );
   	ros::Subscriber sub = nh.subscribe<visualization_msgs::MarkerArray> ("/markers", 100, callback);	
   	//printf("sem pred spinom\n");
 	ros::spin();
