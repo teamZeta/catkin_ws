@@ -132,8 +132,8 @@ void callback (const visualization_msgs::MarkerArrayConstPtr& markerArray) {
 				//listener.waitForTransform("/map", "/base_link", markerArray->markers[0].header.stamp, ros::Duration(10.0) );
 				//listener.lookupTransform("/map", "/base_link", markerArray->markers[0].header.stamp, transform);
 				
-				//float xRobot = transform.getOrigin().x();
-				//float yRobot = transform.getOrigin().y();
+				float xRobot = transform.getOrigin().x();
+				float yRobot = transform.getOrigin().y();
 
 				//printf("Robot: %f %f\n",xRobot,yRobot);
 
