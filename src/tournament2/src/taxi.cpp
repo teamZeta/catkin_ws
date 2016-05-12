@@ -126,13 +126,13 @@ void callback (const visualization_msgs::MarkerArrayConstPtr& markerArray) {
 				tf::StampedTransform transform;
 				//listener.waitForTransform("/map", "/base_link", ros::Time::now(), ros::Duration(10.0) );
 				//listener.lookupTransform("/map", "/base_link", ros::Time::now(), transform);
-				//listener.waitForTransform("/map", "/base_link", ros::Time(0), ros::Duration(10.0) );
-				listener.lookupTransform("/map", "/base_link", ros::Time(0), transform);
+				listener.waitForTransform("/map", "/base_link", ros::Time(0), ros::Duration(10.0) );
+				//listener.lookupTransform("/map", "/base_link", ros::Time(0), transform);
 				//listener.waitForTransform("/map", "/base_link", markerArray->markers[0].header.stamp, ros::Duration(10.0) );
 				//listener.lookupTransform("/map", "/base_link", markerArray->markers[0].header.stamp, transform);
 				
-				float xRobot = transform.getOrigin().x();
-				float yRobot = transform.getOrigin().y();
+				//float xRobot = transform.getOrigin().x();
+				//float yRobot = transform.getOrigin().y();
 
 				//printf("Robot: %f %f\n",xRobot,yRobot);
 
@@ -165,7 +165,7 @@ void callback (const visualization_msgs::MarkerArrayConstPtr& markerArray) {
 				zFace = poseMarkerMap.getOrigin().z();
 
 				float xTarget,yTarget;
-
+				/*
 				xTarget=xFace-xRobot;
 				yTarget=yFace-yRobot;
 				float dolzina = sqrt(pow(xTarget,2)+pow(yTarget,2));
@@ -228,7 +228,7 @@ void callback (const visualization_msgs::MarkerArrayConstPtr& markerArray) {
 
 	 	 }
 	  
-	 
+	 */
 	}
 
 }
