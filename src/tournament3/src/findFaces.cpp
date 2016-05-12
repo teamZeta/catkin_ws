@@ -8,10 +8,12 @@
 #include <math.h> 
 #include <std_msgs/String.h>
 #include <sstream>
+#include <ctime>
 using namespace std;
 
 void callback (const visualization_msgs::MarkerArrayConstPtr& markerArray) {
 	printf("Sem v callback in imam -- %d -- obrazov \n", (int)markerArray->markers.size());
+	cout<<"Time Difference: "<<clock()<<endl;
 	
 }
 
