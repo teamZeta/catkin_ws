@@ -125,9 +125,10 @@ void callback (const visualization_msgs::MarkerArrayConstPtr& markerArray) {
 				tf::TransformListener listener;
 				tf::StampedTransform transform;
 				//listener.waitForTransform("/map", "/base_link", ros::Time::now(), ros::Duration(10.0) );
+				
 				//listener.lookupTransform("/map", "/base_link", ros::Time::now(), transform);
-				//listener.waitForTransform("/map", "/base_link", ros::Time(0), ros::Duration(10.0) );
-				//listener.lookupTransform("/map", "/base_link", ros::Time(0), transform);
+				listener.waitForTransform("/map", "/base_link", ros::Time(0), ros::Duration(0.1) );
+				listener.lookupTransform("/map", "/base_link", ros::Time(0), transform);
 				//listener.waitForTransform("/map", "/base_link", markerArray->markers[0].header.stamp, ros::Duration(10.0) );
 				//listener.lookupTransform("/map", "/base_link", markerArray->markers[0].header.stamp, transform);
 				
@@ -165,7 +166,7 @@ void callback (const visualization_msgs::MarkerArrayConstPtr& markerArray) {
 				zFace = poseMarkerMap.getOrigin().z();
 
 				float xTarget,yTarget;
-				/*
+
 				xTarget=xFace-xRobot;
 				yTarget=yFace-yRobot;
 				float dolzina = sqrt(pow(xTarget,2)+pow(yTarget,2));
@@ -228,7 +229,7 @@ void callback (const visualization_msgs::MarkerArrayConstPtr& markerArray) {
 
 	 	 }
 	  
-	 */
+	 
 	}
 
 }
