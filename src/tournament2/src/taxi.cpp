@@ -25,7 +25,6 @@ static bool initlisten = false;
 
 typedef actionlib::SimpleActionClient<move_base_msgs::MoveBaseAction> MoveBaseClient;
 
-static tf::TransformListener listener;
 
 
 static int start;
@@ -122,18 +121,15 @@ void callback (const visualization_msgs::MarkerArrayConstPtr& markerArray) {
 			//move_base_msgs::MoveBaseGoal goal;
 			goal.target_pose.header.frame_id = "/map";
 			goal.target_pose.header.stamp = ros::Time::now();
-			tf::StampedTransform transform;
-			if(initlisten == false){
-				
+
+				tf::TransformListener listener;
+				tf::StampedTransform transform;
 				//listener.waitForTransform("/map", "/base_link", ros::Time::now(), ros::Duration(10.0) );
 				//listener.lookupTransform("/map", "/base_link", ros::Time::now(), transform);
-				listener.waitForTransform("/map", "/base_link", ros::Time(0), ros::Duration(10.0) );
-				
+				//listener.waitForTransform("/map", "/base_link", ros::Time(0), ros::Duration(10.0) );
+				listener.lookupTransform("/map", "/base_link", ros::Time(0), transform);
 				//listener.waitForTransform("/map", "/base_link", markerArray->markers[0].header.stamp, ros::Duration(10.0) );
 				//listener.lookupTransform("/map", "/base_link", markerArray->markers[0].header.stamp, transform);
-				initlisten=true;
-			}
-				listener.lookupTransform("/map", "/base_link", ros::Time(0), transform);
 				
 				float xRobot = transform.getOrigin().x();
 				float yRobot = transform.getOrigin().y();
