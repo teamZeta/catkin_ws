@@ -115,7 +115,7 @@ void callback (const visualization_msgs::MarkerArrayConstPtr& markerArray) {
 		for(int i=0; i < markerArray->markers.size(); i++){
 
 		//printf("%d marker\n",(int)markerArray->markers.size());
-			/*
+			
 			//move_base_msgs::MoveBaseGoal goal;
 			goal.target_pose.header.frame_id = "/map";
 			goal.target_pose.header.stamp = ros::Time::now();
@@ -158,11 +158,6 @@ void callback (const visualization_msgs::MarkerArrayConstPtr& markerArray) {
 					listener.transformPose("/map", poseMarker, poseMarkerMap);
 				}
 
-				/*tf::Stamped<tf::Pose> posev1(
-				    tf::Pose(tf::Quaternion(0, 0, 0, 1), tf::Vector3(0, 0, -1)),
-				    ros::Time(0), markerArray->markers[0].header.frame_id);*/
-				//printf("POSE %f %f\n", poseMarkerMap.getOrigin().x(), poseMarkerMap.getOrigin().y());
-				/*
 				xFace = poseMarkerMap.getOrigin().x();
 				yFace = poseMarkerMap.getOrigin().y();
 				zFace = poseMarkerMap.getOrigin().z();
@@ -231,7 +226,7 @@ void callback (const visualization_msgs::MarkerArrayConstPtr& markerArray) {
 
 	 	 }
 	  
-	 */ 
+	 
 	}
 
 }
