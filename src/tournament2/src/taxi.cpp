@@ -102,7 +102,7 @@ void addToList(float x, float y){
 }
 
 void callback (const visualization_msgs::MarkerArrayConstPtr& markerArray) {
-
+	try {
 	ros::NodeHandle node;
 	ros::Publisher vis_pub = node.advertise<visualization_msgs::Marker>( "visualization_marker", 1 );
 	//printf(ros::Time::now());
@@ -127,7 +127,7 @@ void callback (const visualization_msgs::MarkerArrayConstPtr& markerArray) {
 				//listener.waitForTransform("/map", "/base_link", ros::Time::now(), ros::Duration(10.0) );
 				
 				//listener.lookupTransform("/map", "/base_link", ros::Time::now(), transform);
-				listener.waitForTransform("/map", "/base_link", ros::Time(0), ros::Duration(0.1) );
+				listener.waitForTransform("/map", "/base_link", ros::Time(0), ros::Duration(1));
 				listener.lookupTransform("/map", "/base_link", ros::Time(0), transform);
 				//listener.waitForTransform("/map", "/base_link", markerArray->markers[0].header.stamp, ros::Duration(10.0) );
 				//listener.lookupTransform("/map", "/base_link", markerArray->markers[0].header.stamp, transform);
@@ -230,6 +230,9 @@ void callback (const visualization_msgs::MarkerArrayConstPtr& markerArray) {
 	 	 }
 	  
 	 
+	}
+	} catch(tf2::ExtrapolationException e){
+
 	}
 
 }
@@ -356,7 +359,7 @@ int main(int argc, char** argv){
   	// Create a ROS subscriber for the input point cloud
   	//pathSearch = nh2.advertise<std_msgs::String>("/tournament2/search", 1);
   //	ros::Subscriber subTalk = nh3.subscribe<std_msgs::String>("/tournament2/talk", 1, callbackTalk);
-  	ros::Subscriber sub = nh.subscribe<visualization_msgs::MarkerArray> ("/markers", 100, callback);	
+  	ros::Subscriber sub = nh.subscribe<visualization_msgs::MarkerArray> ("/markers", 1, callback);
   	//printf("sem pred spinom\n");
 	ros::spin();
 

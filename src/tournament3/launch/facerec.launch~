@@ -1,0 +1,5 @@
+<launch>
+	<node name="facestorer" pkg="tournament3" type="storeface" output="screen">
+  	<param name="topic" type="string" value="/facedetector/faces" />
+  </node>
+</launch>
