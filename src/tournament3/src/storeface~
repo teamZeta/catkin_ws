@@ -29,7 +29,7 @@ class Store():
 				for i in xrange(0, n):
 					image = self.bridge.imgmsg_to_cv2(data.image[i], "mono8")
 					equ = cv2.equalizeHist(image)
-					cv2.imwrite("/slike/"+str(time.time())+"-"+str(self.var)+".png", equ)
+					cv2.imwrite("/home/team_zeta/slike/"+str(time.time())+"-"+str(self.var)+".png", equ)
 					print("napisal image")
 				self.cas = time.time()
 			except CvBridgeError, e:
