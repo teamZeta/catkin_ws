@@ -35,7 +35,6 @@ class Faces():
 				for i in xrange(0, n):
 					image = self.bridge.imgmsg_to_cv2(data.image, "mono8")
 					equ = cv2.equalizeHist(image)
-					cv2.imwrite("/home/team_zeta/slike/"+str(100)+".png", equ)
 					self.recognize(equ)
 					self.cas = time.time()
 			except CvBridgeError, e:
