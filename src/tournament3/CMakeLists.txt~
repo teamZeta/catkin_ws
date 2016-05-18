@@ -197,7 +197,8 @@ catkin_package(
 # catkin_add_nosetests(test)
 
 catkin_package(CATKIN_DEPENDS message_runtime)
-
-install(PROGRAMS src/storeface DESTINATION ${CATKIN_PACKAGE_BIN_DESTINATION})
 install(PROGRAMS src/faces DESTINATION ${CATKIN_PACKAGE_BIN_DESTINATION})
+install(PROGRAMS src/storeface DESTINATION ${CATKIN_PACKAGE_BIN_DESTINATION})
+install(PROGRAMS src/storeznak DESTINATION ${CATKIN_PACKAGE_BIN_DESTINATION})
+
 

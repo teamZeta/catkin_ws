@@ -22,5 +22,8 @@
   <run_depend>message_runtime</run_depend>
   <run_depend>storeface</run_depend>
 	<run_depend>faces</run_depend>
+	<run_depend>storeznak</run_depend>
+	<run_depend>znaki</run_depend>
+	
 
 </package>

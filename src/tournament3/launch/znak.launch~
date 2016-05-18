@@ -1,0 +1,5 @@
+<launch>
+	<node name="znakstorer" pkg="tournament3" type="storeznak" output="screen">
+  	<param name="topic" type="string" value="/facedetector/faces" />
+  </node>
+</launch>
