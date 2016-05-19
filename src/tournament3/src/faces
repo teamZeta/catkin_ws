@@ -46,7 +46,7 @@ class Faces():
 					camera_info = None
 			        best_time = 100
 			        for ci in self.camera_infos:
-			            time = abs(ci.header.stamp.to_sec() - detection.header.stamp.to_sec())
+			            time = abs(ci.header.stamp.to_sec() - data.header.stamp.to_sec())
 			            if time < best_time:
 			                camera_info = ci
 			                best_time = time
@@ -60,14 +60,14 @@ class Faces():
 			        point = Point(((u - camera_model.cx()) - camera_model.Tx()) / camera_model.fx(),
 			             ((v - camera_model.cy()) - camera_model.Ty()) / camera_model.fy(), 1)
 
-			        localization = self.localize(detection.header, point, self.region_scope)
+			        localization = self.localize(data.header, point, self.region_scope)
 			        print("sledi ----")
 			        if not localization:
 			            return
 			        print("returnaj")
 			        marker = Marker()
-			        marker.header.stamp = detection.header.stamp
-			        marker.header.frame_id = detection.header.frame_id
+			        marker.header.stamp = data.header.stamp
+			        marker.header.frame_id = data.header.frame_id
 			        marker.pose = localization.pose
 			        marker.type = Marker.CUBE
 			        marker.action = Marker.ADD
