@@ -47,7 +47,7 @@ class Faces():
 			        best_time = 100
 			        for ci in self.camera_infos:
 			            time = abs(ci.header.stamp.to_sec() - data.header.stamp.to_sec())
-						print(data.header.stamp.to_sec())
+									print(data.header.stamp.to_sec())
 			            if time < best_time:
 			                camera_info = ci
 			                best_time = time
