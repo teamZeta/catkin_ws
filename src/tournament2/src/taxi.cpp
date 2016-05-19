@@ -144,14 +144,14 @@ void callback (const visualization_msgs::MarkerArrayConstPtr& markerArray) {
 				float zFace = markerArray->markers[i].pose.position.z;
 
 				tf::Stamped<tf::Pose> poseMarkerMap;
-				try{
+				//try{
 					tf::Stamped<tf::Pose> poseMarker(
 				    tf::Pose(tf::Quaternion(0, 0, 0, 1), tf::Vector3(xFace, 0, markerArray->markers[i].pose.position.z)),
 				    markerArray->markers[i].header.stamp, markerArray->markers[i].header.frame_id);
 
 					listener.transformPose("/map", poseMarker, poseMarkerMap);
-					printf("Time works\n");
-				}catch(tf2::ExtrapolationException e){
+				//	printf("Time works\n");
+				/*}catch(tf2::ExtrapolationException e){
 					//printf("Error\n");
 
 					tf::Stamped<tf::Pose> poseMarker(
@@ -159,7 +159,7 @@ void callback (const visualization_msgs::MarkerArrayConstPtr& markerArray) {
 				    ros::Time(0), markerArray->markers[i].header.frame_id);
 
 					listener.transformPose("/map", poseMarker, poseMarkerMap);
-				}
+				}*/
 
 				xFace = poseMarkerMap.getOrigin().x();
 				yFace = poseMarkerMap.getOrigin().y();
