@@ -13,6 +13,7 @@ import time as tm
 import Image
 import os
 import cv2, numpy
+import message_filters
 from std_msgs.msg import String
 from std_msgs.msg import Bool
 import collections
