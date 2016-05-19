@@ -122,14 +122,17 @@ void callback (const visualization_msgs::MarkerArrayConstPtr& markerArray) {
 			goal.target_pose.header.frame_id = "/map";
 			goal.target_pose.header.stamp = ros::Time::now();
 
-				tf::TransformListener listener;
-				tf::StampedTransform transform;
+				tf::TransformListener listener(ros::Duration(5),true);
+				//listener.TransformListener(ros::Duration(5),true);
+				tf::StampedTransform transform(listener,markerArray->markers[i].header.stamp,"/map",markerArray->markers[i].header.frame_id);
+				//transform.StampedTransform(listener,markerArray->markers[i].header.stamp,"/map",markerArray->markers[i].header.frame_id);
+	 	
 				//listener.waitForTransform("/map", "/base_link", ros::Time::now(), ros::Duration(10.0) );
 				
 				//listener.lookupTransform("/map", "/base_link", ros::Time::now(), transform);
 				//listener.waitForTransform("/map", "/base_link", ros::Time(0), ros::Duration(1));
 				//listener.lookupTransform("/map", "/base_link", ros::Time(0), transform);
-				listener.waitForTransform("/map", markerArray->markers[i].header.frame_id, markerArray->markers[i].header.stamp, ros::Duration(5.0) );
+				listener.waitForTransform("/map", markerArray->markers[i].header.frame_id, markerArray->markers[i].header.stamp, ros::Duration(5.0),ros::Duration(0.01));
 				listener.lookupTransform("/map", markerArray->markers[i].header.frame_id, markerArray->markers[i].header.stamp, transform);
 				
 				float xRobot = transform.getOrigin().x();
