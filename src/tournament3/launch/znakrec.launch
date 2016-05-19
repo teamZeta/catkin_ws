@@ -1,5 +1,5 @@
 <launch>
 	<node name="znakreco" pkg="tournament3" type="znaki" output="screen">
-  	<param name="topic" type="string" value="/facedetector/faces" />
+  	<param name="topic" type="string" value="/detector/traffic_signs" />
   </node>
 </launch>

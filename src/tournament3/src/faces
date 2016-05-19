@@ -35,7 +35,7 @@ class Faces():
 				for i in xrange(0, n):
 					image = self.bridge.imgmsg_to_cv2(data.image, "mono8")
 					equ = cv2.equalizeHist(image)
-					cv2.imwrite("/home/team_zeta/slike/"+str(100)+".png", equ)
+					#cv2.imwrite("/home/team_zeta/slike/"+str(100)+".png", equ)
 					self.recognize(equ)
 					self.cas = time.time()
 			except CvBridgeError, e:
@@ -43,7 +43,10 @@ class Faces():
 
 
 	def read_images(self,urls):
-		image_paths = [os.path.join(urls, f) for f in os.listdir(urls)]
+		try:
+			image_paths = [os.path.join("/home/team_zeta/catkin_ws/src/slike/", f) for f in os.listdir("/home/team_zeta/catkin_ws/src/slike/")]
+		except Exception as inst:
+			image_paths = [os.path.join("/home/boka/catkin_ws/src/slike/", f) for f in os.listdir("/home/boka/catkin_ws/src/slike/")]
 		images = []
 		labels = []
 		print(image_paths[0])
@@ -58,7 +61,13 @@ class Faces():
 
 
 	def learn(self):
-		[images, labels] = self.read_images("/home/team_zeta/slike/")
+		try:
+			[images, labels] = self.read_images("/home/team_zeta/catkin_ws/src/slike/")
+			[images, labels] = self.read_images("/home/boka/catkin_ws/src/slike/")
+		except Exception as inst:
+			[images, labels] = self.read_images("/home/boka/catkin_ws/src/slike/")
+			[images, labels] = self.read_images("/home/team_zeta/catkin_ws/src/slike/")
+			
 		print("ucim se, pocakaj..")
 		print images
 		print labels

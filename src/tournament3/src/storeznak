@@ -20,7 +20,7 @@ from sensor_msgs.msg import Image
 class Store():
 	def face_callback(self, data):
 		print("v call back")
-		if(time.time() - self.cas > 5 ):
+		if(time.time() - self.cas > 3 ):
 			print("berem image")
 			n = 1
 			#image = numpy.zeros((self.face_size * n, self.face_size), dtype=numpy.uint8)
@@ -29,7 +29,12 @@ class Store():
 				for i in xrange(0, n):
 					image = self.bridge.imgmsg_to_cv2(data.image, 'mono8')
 					equ = cv2.equalizeHist(image)
-					cv2.imwrite("/home/team_zeta/slikeZ/"+str(time.time())+"-"+str(self.var)+".png", equ)
+					try:
+						cv2.imwrite("/home/boka/catkin_ws/src/slikeZ/"+str(time.time())+"-"+str(self.var)+".png", equ)
+						cv2.imwrite("/home/team_zeta/catkin_ws/src/slikeZ/"+str(time.time())+"-"+str(self.var)+".png", equ)
+					except Exception as inst:
+						cv2.imwrite("/home/boka/catkin_ws/src/slikeZ/"+str(time.time())+"-"+str(self.var)+".png", equ)
+						cv2.imwrite("/home/team_zeta/catkin_ws/src/slikeZ/"+str(time.time())+"-"+str(self.var)+".png", equ)
 					print("napisal image")
 				self.cas = time.time()
 			except CvBridgeError, e:

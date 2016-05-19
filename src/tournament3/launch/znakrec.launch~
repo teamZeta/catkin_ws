@@ -1,5 +1,5 @@
 <launch>
-	<node name="facereco" pkg="tournament3" type="faces" output="screen">
+	<node name="znakreco" pkg="tournament3" type="znaki" output="screen">
   	<param name="topic" type="string" value="/facedetector/faces" />
   </node>
 </launch>
