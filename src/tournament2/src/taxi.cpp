@@ -127,10 +127,10 @@ void callback (const visualization_msgs::MarkerArrayConstPtr& markerArray) {
 				//listener.waitForTransform("/map", "/base_link", ros::Time::now(), ros::Duration(10.0) );
 				
 				//listener.lookupTransform("/map", "/base_link", ros::Time::now(), transform);
-				listener.waitForTransform("/map", "/base_link", ros::Time(0), ros::Duration(1));
-				listener.lookupTransform("/map", "/base_link", ros::Time(0), transform);
-				//listener.waitForTransform("/map", "/base_link", markerArray->markers[0].header.stamp, ros::Duration(10.0) );
-				//listener.lookupTransform("/map", "/base_link", markerArray->markers[0].header.stamp, transform);
+				//listener.waitForTransform("/map", "/base_link", ros::Time(0), ros::Duration(1));
+				//listener.lookupTransform("/map", "/base_link", ros::Time(0), transform);
+				listener.waitForTransform("/map", markerArray->markers[i].header.frame_id, markerArray->markers[i].header.stamp, ros::Duration(5.0) );
+				listener.lookupTransform("/map", markerArray->markers[i].header.frame_id, markerArray->markers[i].header.stamp, transform);
 				
 				float xRobot = transform.getOrigin().x();
 				float yRobot = transform.getOrigin().y();
