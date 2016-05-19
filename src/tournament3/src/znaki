@@ -25,19 +25,24 @@ from sensor_msgs.msg import Image
 class Faces():
 	def face_callback(self, data):
 		#print("v call back")
-		if(time.time() - self.cas > 3 ):
+		if(time.time() - self.cas > 1 ):
 			#print("berem image")
 
 			n = 1
-			image = numpy.zeros((self.face_size * n, self.face_size), dtype=numpy.uint8)
+			#image = numpy.zeros((self.face_size * n, self.face_size), dtype=numpy.uint8)
 			try:
 
 				for i in xrange(0, n):
-					image = self.bridge.imgmsg_to_cv2(data.image, "mono8")
-					equ = cv2.equalizeHist(image)
-					equ = cv2.resize(equ, (50, 50)) 
+					image = self.bridge.imgmsg_to_cv2(data.image, "bgr8")
+					image = cv2.resize(image, (50, 50)) 
+					equb,equg,equr = cv2.split(image)
+					equb = cv2.equalizeHist(equb)
+					equg = cv2.equalizeHist(equg)
+					equr = cv2.equalizeHist(equr)
+					image = cv2.merge((equb,equg,equr))
+					
 					#cv2.imwrite("/home/team_zeta/slikeZ/"+str(100)+".png", equ)
-					self.recognize(np.array(equ).flatten().tolist())
+					self.recognize(np.array(image).flatten().tolist())
 					self.cas = time.time()
 			except CvBridgeError, e:
 				print e
@@ -53,9 +58,14 @@ class Faces():
 		print(image_paths[0])
 		for url in image_paths:
 			#images += [cv2.imread(url)]
-			equ = cv2.equalizeHist(cv2.cvtColor(cv2.imread(url), cv2.COLOR_BGR2GRAY))
+			equ = cv2.imread(url)
 			equ = cv2.resize(equ, (50, 50)) 
-			images += [np.array(equ).flatten().tolist()]
+			equb,equg,equr = cv2.split(equ)
+			equb = cv2.equalizeHist(equb)
+			equg = cv2.equalizeHist(equg)
+			equr = cv2.equalizeHist(equr)
+			image = cv2.merge((equb,equg,equr))
+			images += [np.array(image).flatten().tolist()]
 			print(os.path.split(url)[1].split(".")[1])
 			nbr = int(os.path.split(url)[1].split(".")[1].split("-")[1])
 			labels += [nbr]
