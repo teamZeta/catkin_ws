@@ -4,46 +4,101 @@ import numpy as np
 from PIL import Image
 import roslib
 
-
-import roslib
 roslib.load_manifest('facedetector')
 import rospy
 import sys, select, termios, tty
 import cv
-import time
+import time as tm
 import Image
 import os
 import cv2, numpy
 from std_msgs.msg import String
 from std_msgs.msg import Bool
+import collections
 import sensor_msgs.msg
 from dynamic_reconfigure.server import Server as DynamicReconfigureServer
 from detection_msgs.msg import Detection
 from cv_bridge import CvBridge, CvBridgeError
 from sensor_msgs.msg import Image
+from localizer.srv import Localize
+from sensor_msgs.msg import CameraInfo
+from visualization_msgs.msg import Marker, MarkerArray
+from image_geometry import PinholeCameraModel
+from geometry_msgs.msg import Point, Vector3
 
 class Faces():
 	def face_callback(self, data):
 		print("v call back")
-		if(time.time() - self.cas > 5 ):
+		if(tm.time() - self.cas > 5 ):
 			print("berem image")
 
 			n = 1
-			image = numpy.zeros((self.face_size * n, self.face_size), dtype=numpy.uint8)
 			try:
-
 				for i in xrange(0, n):
+					u = data.x + data.width / 2
+					v = data.y + data.height / 2
 					image = self.bridge.imgmsg_to_cv2(data.image, "mono8")
 					equ = cv2.equalizeHist(image)
-					cv2.imwrite("/home/team_zeta/slike/"+str(100)+".png", equ)
-					self.recognize(equ)
-					self.cas = time.time()
+					#cv2.imwrite("/home/team_zeta/slike/"+str(100)+".png", equ)
+					[nbr_predicted, conf] = self.recognize(equ)
+					self.cas = tm.time()
+
+					camera_info = None
+			        best_time = 100
+			        for ci in self.camera_infos:
+			            time = abs(ci.header.stamp.to_sec() - data.header.stamp.to_sec())
+						print(data.header.stamp.to_sec())
+			            if time < best_time:
+			                camera_info = ci
+			                best_time = time
+											
+			        print("sledi camera ----")
+			        if not camera_info or best_time > 101:
+			            return
+
+			        camera_model = PinholeCameraModel()
+			        camera_model.fromCameraInfo(camera_info)
+
+			        point = Point(((u - camera_model.cx()) - camera_model.Tx()) / camera_model.fx(),
+			             ((v - camera_model.cy()) - camera_model.Ty()) / camera_model.fy(), 1)
+
+			        localization = self.localize(data.header, point, self.region_scope)
+			        print("sledi ----")
+			        if not localization:
+			            return
+			        print("returnaj")
+			        marker = Marker()
+			        marker.header.stamp = data.header.stamp
+			        marker.header.frame_id = data.header.frame_id
+			        marker.pose = localization.pose
+			        marker.type = Marker.CUBE
+			        marker.action = Marker.ADD
+			        marker.frame_locked = False
+			        marker.lifetime = rospy.Duration.from_sec(1)
+			        marker.id = nbr_predicted
+			        marker.scale = Vector3(0.1, 0.1, 0.1)
+			        marker.color = ColorRGBA(1, 0, 0, 1)
+			        
+			        self.markers.markers.append(marker)
+			        self.marker_id_counter += 1
+
 			except CvBridgeError, e:
 				print e
 
 
+	def flush(self):
+		if not self.markers.markers or len(self.markers.markers) == 0:
+			self.markers = MarkerArray()
+			return
+		self.markers_pub.publish(self.markers)
+		self.markers = MarkerArray()
+
+
 	def read_images(self,urls):
-		image_paths = [os.path.join(urls, f) for f in os.listdir(urls)]
+		try:
+			image_paths = [os.path.join("/home/team_zeta/catkin_ws/src/slike/", f) for f in os.listdir("/home/team_zeta/catkin_ws/src/slike/")]
+		except Exception as inst:
+			image_paths = [os.path.join("/home/boka/catkin_ws/src/slike/", f) for f in os.listdir("/home/boka/catkin_ws/src/slike/")]
 		images = []
 		labels = []
 		print(image_paths[0])
@@ -58,7 +113,13 @@ class Faces():
 
 
 	def learn(self):
-		[images, labels] = self.read_images("/home/team_zeta/slike/")
+		try:
+			[images, labels] = self.read_images("/home/team_zeta/catkin_ws/src/slike/")
+			[images, labels] = self.read_images("/home/boka/catkin_ws/src/slike/")
+		except Exception as inst:
+			[images, labels] = self.read_images("/home/boka/catkin_ws/src/slike/")
+			[images, labels] = self.read_images("/home/team_zeta/catkin_ws/src/slike/")
+			
 		print("ucim se, pocakaj..")
 		print images
 		print labels
@@ -69,8 +130,16 @@ class Faces():
 		nbr_predicted, conf = self.recognizer.predict(image)
 		print("predicted" + str(nbr_predicted))
 		print("coef"+str(conf))
+		return [nbr_predicted, conf]
 
 	def __init__(self):
+
+		self.buffer_size = rospy.get_param('~camera_buffer_size', 50)
+		self.region_scope = rospy.get_param('~region', 3)
+		rospy.wait_for_service('localizer/localize')
+		self.camera_infos = collections.deque(maxlen = self.buffer_size)
+
+
 		self.recognizer = cv2.createLBPHFaceRecognizer()
 		#self.recognizer = cv2.createFisherFaceRecognizer()
 		print("ucim")
@@ -82,8 +151,10 @@ class Faces():
 
 		self.bridge = CvBridge()
 		self.faces_sub = rospy.Subscriber(faces_topic, Detection, self.face_callback)
-		self.cas = time.time()
+		self.cas = tm.time()
 
+		self.markers_pub = rospy.Publisher('/foundFace', MarkerArray, queue_size=10)
+		self.markers = MarkerArray()
 
 
 # Main function.    
@@ -93,8 +164,9 @@ if __name__ == '__main__':
 
 	try:
 		fd = Faces()
-		r = rospy.Rate(0.2)
+		r = rospy.Rate(30)
 		while not rospy.is_shutdown():
+			fd.flush()
 			r.sleep()
 	except rospy.ROSInterruptException: pass
 

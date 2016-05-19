@@ -24,33 +24,48 @@ from sensor_msgs.msg import Image
 
 class Faces():
 	def face_callback(self, data):
-		print("v call back")
-		if(time.time() - self.cas > 5 ):
-			print("berem image")
+		#print("v call back")
+		if(time.time() - self.cas > 1 ):
+			#print("berem image")
 
 			n = 1
-			image = numpy.zeros((self.face_size * n, self.face_size), dtype=numpy.uint8)
+			#image = numpy.zeros((self.face_size * n, self.face_size), dtype=numpy.uint8)
 			try:
 
 				for i in xrange(0, n):
-					image = self.bridge.imgmsg_to_cv2(data.image, "mono8")
-					equ = cv2.equalizeHist(image)
+					image = self.bridge.imgmsg_to_cv2(data.image, "bgr8")
+					image = cv2.resize(image, (50, 50)) 
+					equb,equg,equr = cv2.split(image)
+					equb = cv2.equalizeHist(equb)
+					equg = cv2.equalizeHist(equg)
+					equr = cv2.equalizeHist(equr)
+					image = cv2.merge((equb,equg,equr))
+					
 					#cv2.imwrite("/home/team_zeta/slikeZ/"+str(100)+".png", equ)
-					self.recognize(np.array(equ).flatten())
+					self.recognize(np.array(image).flatten().tolist())
 					self.cas = time.time()
 			except CvBridgeError, e:
 				print e
 
 
 	def read_images(self,urls):
-		image_paths = [os.path.join(urls, f) for f in os.listdir(urls)]
+		try:
+			image_paths = [os.path.join("/home/team_zeta/catkin_ws/src/slikeZ/", f) for f in os.listdir("/home/team_zeta/catkin_ws/src/slikeZ/")]
+		except Exception as inst:
+			image_paths = [os.path.join("/home/boka/catkin_ws/src/slikeZ/", f) for f in os.listdir("/home/boka/catkin_ws/src/slikeZ/")]
 		images = []
 		labels = []
 		print(image_paths[0])
 		for url in image_paths:
 			#images += [cv2.imread(url)]
-			equ = cv2.equalizeHist(cv2.cvtColor(cv2.imread(url), cv2.COLOR_BGR2GRAY))
-			images += [np.array(equ).flatten()]
+			equ = cv2.imread(url)
+			equ = cv2.resize(equ, (50, 50)) 
+			equb,equg,equr = cv2.split(equ)
+			equb = cv2.equalizeHist(equb)
+			equg = cv2.equalizeHist(equg)
+			equr = cv2.equalizeHist(equr)
+			image = cv2.merge((equb,equg,equr))
+			images += [np.array(image).flatten().tolist()]
 			print(os.path.split(url)[1].split(".")[1])
 			nbr = int(os.path.split(url)[1].split(".")[1].split("-")[1])
 			labels += [nbr]
@@ -58,17 +73,23 @@ class Faces():
 
 
 	def learn(self):
-		[images, labels] = self.read_images("/home/team_zeta/slikeZ/")
+		try:
+			[images, labels] = self.read_images("/home/team_zeta/catkin_ws/src/slikeZ/")
+		except Exception as inst:
+			[images, labels] = self.read_images("/home/boka/catkin_ws/src/slikeZ/")
 		print("ucim se, pocakaj..")
-		print images
+		print(np.array(images))
+		print(len(np.array(images)[0]))
+		print(len(np.array(images)))
 		print labels
-		self.recognizer.train(np.array(images).astype(int), np.array(labels))
+		self.recognizer.train(np.array(images).astype(np.float32), np.array(labels).astype(np.float32))
 		#self.recognizer.save("/home/boka/model/model.yaml")
 
 	def recognize(self,image):
-		ret, nbr_predicted, neighbours, dist = self.recognizer.find_nearest(image, k=5)
+		print(np.array([image]).astype(np.float32))
+		ret, nbr_predicted, neighbours, dist = self.recognizer.find_nearest(np.array([image]).astype(np.float32), k=5)
 		print("predicted" + str(nbr_predicted))
-		print("coef"+str(conf))
+		print("coef"+str(dist))
 
 	def __init__(self):
 		self.recognizer = cv2.KNearest()

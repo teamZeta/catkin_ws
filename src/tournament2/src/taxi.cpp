@@ -122,15 +122,19 @@ void callback (const visualization_msgs::MarkerArrayConstPtr& markerArray) {
 			goal.target_pose.header.frame_id = "/map";
 			goal.target_pose.header.stamp = ros::Time::now();
 
-				tf::TransformListener listener;
-				tf::StampedTransform transform;
+				ros::NodeHandle nh4;
+				tf::TransformListener listener(nh4,ros::Duration(5),true);
+				//listener.TransformListener(ros::Duration(5),true);
+				tf::StampedTransform transform;//(listener,markerArray->markers[i].header.stamp,"/map",markerArray->markers[i].header.frame_id);
+				//transform.StampedTransform(listener,markerArray->markers[i].header.stamp,"/map",markerArray->markers[i].header.frame_id);
+	 	
 				//listener.waitForTransform("/map", "/base_link", ros::Time::now(), ros::Duration(10.0) );
 				
 				//listener.lookupTransform("/map", "/base_link", ros::Time::now(), transform);
-				listener.waitForTransform("/map", "/base_link", ros::Time(0), ros::Duration(1));
-				listener.lookupTransform("/map", "/base_link", ros::Time(0), transform);
-				//listener.waitForTransform("/map", "/base_link", markerArray->markers[0].header.stamp, ros::Duration(10.0) );
-				//listener.lookupTransform("/map", "/base_link", markerArray->markers[0].header.stamp, transform);
+				//listener.waitForTransform("/map", "/base_link", ros::Time(0), ros::Duration(1));
+				//listener.lookupTransform("/map", "/base_link", ros::Time(0), transform);
+				listener.waitForTransform("/map", markerArray->markers[i].header.frame_id, markerArray->markers[i].header.stamp, ros::Duration(5.0),ros::Duration(0.01));
+				listener.lookupTransform("/map", markerArray->markers[i].header.frame_id, markerArray->markers[i].header.stamp, transform);
 				
 				float xRobot = transform.getOrigin().x();
 				float yRobot = transform.getOrigin().y();
@@ -144,14 +148,14 @@ void callback (const visualization_msgs::MarkerArrayConstPtr& markerArray) {
 				float zFace = markerArray->markers[i].pose.position.z;
 
 				tf::Stamped<tf::Pose> poseMarkerMap;
-				try{
+				//try{
 					tf::Stamped<tf::Pose> poseMarker(
 				    tf::Pose(tf::Quaternion(0, 0, 0, 1), tf::Vector3(xFace, 0, markerArray->markers[i].pose.position.z)),
 				    markerArray->markers[i].header.stamp, markerArray->markers[i].header.frame_id);
 
 					listener.transformPose("/map", poseMarker, poseMarkerMap);
-					printf("Time works\n");
-				}catch(tf2::ExtrapolationException e){
+				//	printf("Time works\n");
+				/*}catch(tf2::ExtrapolationException e){
 					//printf("Error\n");
 
 					tf::Stamped<tf::Pose> poseMarker(
@@ -159,7 +163,7 @@ void callback (const visualization_msgs::MarkerArrayConstPtr& markerArray) {
 				    ros::Time(0), markerArray->markers[i].header.frame_id);
 
 					listener.transformPose("/map", poseMarker, poseMarkerMap);
-				}
+				}*/
 
 				xFace = poseMarkerMap.getOrigin().x();
 				yFace = poseMarkerMap.getOrigin().y();
