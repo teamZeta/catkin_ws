@@ -44,43 +44,43 @@ class Faces():
 					self.cas = tm.time()
 
 					camera_info = None
-			        best_time = 100
-			        for ci in self.camera_infos:
-			        	print(data.header.stamp.to_sec())
-			            time = abs(ci.header.stamp.to_sec() - data.header.stamp.to_sec())
-			            if time < best_time:
-			                camera_info = ci
-			                best_time = time
-			                				
-			        print("sledi camera ----")
-			        if not camera_info or best_time > 101:
-			            return
+					best_time = 100
+					for ci in self.camera_infos:
+						print(data.header.stamp.to_sec())
+						time = abs(ci.header.stamp.to_sec() - data.header.stamp.to_sec())
+						if time < best_time:
+						camera_info = ci
+						best_time = time
 
-			        camera_model = PinholeCameraModel()
-			        camera_model.fromCameraInfo(camera_info)
+					print("sledi camera ----")
+					if not camera_info or best_time > 101:
+						return
 
-			        point = Point(((u - camera_model.cx()) - camera_model.Tx()) / camera_model.fx(),
-			             ((v - camera_model.cy()) - camera_model.Ty()) / camera_model.fy(), 1)
+					camera_model = PinholeCameraModel()
+					camera_model.fromCameraInfo(camera_info)
 
-			        localization = self.localize(data.header, point, self.region_scope)
-			        print("sledi ----")
-			        if not localization:
-			            return
-			        print("returnaj")
-			        marker = Marker()
-			        marker.header.stamp = data.header.stamp
-			        marker.header.frame_id = data.header.frame_id
-			        marker.pose = localization.pose
-			        marker.type = Marker.CUBE
-			        marker.action = Marker.ADD
-			        marker.frame_locked = False
-			        marker.lifetime = rospy.Duration.from_sec(1)
-			        marker.id = nbr_predicted
-			        marker.scale = Vector3(0.1, 0.1, 0.1)
-			        marker.color = ColorRGBA(1, 0, 0, 1)
-			        
-			        self.markers.markers.append(marker)
-			        self.marker_id_counter += 1
+					point = Point(((u - camera_model.cx()) - camera_model.Tx()) / camera_model.fx(),
+					     ((v - camera_model.cy()) - camera_model.Ty()) / camera_model.fy(), 1)
+
+					localization = self.localize(data.header, point, self.region_scope)
+					print("sledi ----")
+					if not localization:
+						return
+					print("returnaj")
+					marker = Marker()
+					marker.header.stamp = data.header.stamp
+					marker.header.frame_id = data.header.frame_id
+					marker.pose = localization.pose
+					marker.type = Marker.CUBE
+					marker.action = Marker.ADD
+					marker.frame_locked = False
+					marker.lifetime = rospy.Duration.from_sec(1)
+					marker.id = nbr_predicted
+					marker.scale = Vector3(0.1, 0.1, 0.1)
+					marker.color = ColorRGBA(1, 0, 0, 1)
+
+					self.markers.markers.append(marker)
+					self.marker_id_counter += 1
 
 			except CvBridgeError, e:
 				print e
