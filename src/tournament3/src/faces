@@ -51,7 +51,7 @@ class Faces():
 			            if time < best_time:
 			                camera_info = ci
 			                best_time = time
-											
+			                				
 			        print("sledi camera ----")
 			        if not camera_info or best_time > 101:
 			            return
