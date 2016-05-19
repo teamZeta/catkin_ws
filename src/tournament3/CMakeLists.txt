@@ -201,5 +201,14 @@ install(PROGRAMS src/faces DESTINATION ${CATKIN_PACKAGE_BIN_DESTINATION})
 install(PROGRAMS src/storeface DESTINATION ${CATKIN_PACKAGE_BIN_DESTINATION})
 install(PROGRAMS src/storeznak DESTINATION ${CATKIN_PACKAGE_BIN_DESTINATION})
 install(PROGRAMS src/znaki DESTINATION ${CATKIN_PACKAGE_BIN_DESTINATION})
+install(PROGRAMS src/horn DESTINATION ${CATKIN_PACKAGE_BIN_DESTINATION})
 
+add_executable(talk src/talk.cpp)
+target_link_libraries(talk ${catkin_LIBRARIES})
+
+add_executable(pathSetter src/pathSetter.cpp)
+target_link_libraries(pathSetter ${catkin_LIBRARIES})
+
+add_executable(traffic src/traffic.cpp)
+target_link_libraries(traffic ${catkin_LIBRARIES})
 
