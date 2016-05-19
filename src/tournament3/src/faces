@@ -5,6 +5,7 @@ from PIL import Image
 import roslib
 
 roslib.load_manifest('facedetector')
+roslib.load_manifest('localizer')
 import rospy
 import sys, select, termios, tty
 import cv
