@@ -124,7 +124,7 @@ void callback (const visualization_msgs::MarkerArrayConstPtr& markerArray) {
 
 				tf::TransformListener listener(ros::Duration(5),true);
 				//listener.TransformListener(ros::Duration(5),true);
-				tf::StampedTransform transform(listener,markerArray->markers[i].header.stamp,"/map",markerArray->markers[i].header.frame_id);
+				tf::StampedTransform transform;//(listener,markerArray->markers[i].header.stamp,"/map",markerArray->markers[i].header.frame_id);
 				//transform.StampedTransform(listener,markerArray->markers[i].header.stamp,"/map",markerArray->markers[i].header.frame_id);
 	 	
 				//listener.waitForTransform("/map", "/base_link", ros::Time::now(), ros::Duration(10.0) );
