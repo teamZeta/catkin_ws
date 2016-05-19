@@ -15,21 +15,25 @@
 using namespace std;
 
 void callback (const visualization_msgs::MarkerArrayConstPtr& markerArray) {
-    if (markerArray->markers[0].id == 4) {      // horn
+    if (markerArray->markers[0].id == 1) {      // horn
+        ros::NodeHandle nh2;
+        //ros::Publisher pub = nh2.advertise<sound_play::SoundRequest>("/robotsound", 1);
+
+       // pub.publish(4);
+
         sound_play::SoundClient sc;
-        sc.play(sound_play::SoundRequest::NEEDS_UNPLUGGING);
+        sc.init(nh2,"/robotsound");
+        sc.play(sound_play::SoundRequest::NEEDS_UNPLUGGING_BADLY);
     }
 }
 
 int main(int argc, char** argv){
     ros::init(argc, argv, "traffic");
-    //ros::NodeHandle nh;
-		
-		sound_play::SoundClient sc;
-    sc.play(sound_play::SoundRequest::NEEDS_UNPLUGGING);
-    //ros::Subscriber sub = nh.subscribe<visualization_msgs::MarkerArray> ("/sign", 1, callback);
+    ros::NodeHandle nh;
 
-    //ros::spin();
+    ros::Subscriber sub = nh.subscribe<visualization_msgs::MarkerArray> ("/sign", 1, callback);
 
-  	return 0;
+    ros::spin();
+
+    //return 0;
 }

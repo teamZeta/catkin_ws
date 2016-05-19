@@ -24,6 +24,7 @@
 	<run_depend>faces</run_depend>
 	<run_depend>storeznak</run_depend>
 	<run_depend>znaki</run_depend>
+  <run_depend>horn</run_depend>
 	
 
 </package>
