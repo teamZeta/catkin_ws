@@ -28,6 +28,9 @@ from image_geometry import PinholeCameraModel
 from geometry_msgs.msg import Point, Vector3
 
 class Faces():
+	def camera_callback(self, camera_info):
+		self.camera_infos.append(camera_info)
+
 	def face_callback(self, data):
 		print("v call back")
 		if(tm.time() - self.cas > 5 ):
@@ -138,7 +141,8 @@ class Faces():
 		self.region_scope = rospy.get_param('~region', 3)
 		rospy.wait_for_service('localizer/localize')
 		self.camera_infos = collections.deque(maxlen = self.buffer_size)
-
+		self.camera_sub = message_filters.Subscriber('camera_info', CameraInfo)
+		self.camera_sub.registerCallback(self.camera_callback)
 
 		self.recognizer = cv2.createLBPHFaceRecognizer()
 		#self.recognizer = cv2.createFisherFaceRecognizer()
@@ -152,7 +156,7 @@ class Faces():
 		self.bridge = CvBridge()
 		self.faces_sub = rospy.Subscriber(faces_topic, Detection, self.face_callback)
 		self.cas = tm.time()
-		
+
 		self.localize = rospy.ServiceProxy('localizer/localize', Localize)
 		self.markers_pub = rospy.Publisher('/foundFace', MarkerArray, queue_size=10)
 		self.markers = MarkerArray()
