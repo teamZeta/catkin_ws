@@ -21,8 +21,8 @@ void callback (const visualization_msgs::MarkerArrayConstPtr& markerArray) {
 
        // pub.publish(4);
 
-        sound_play::SoundClient sc;
-        sc.init(nh2,"/robotsound");
+        std::string topic = "/robotsound";
+        sound_play::SoundClient sc(nh2,topic);
         sc.play(sound_play::SoundRequest::NEEDS_UNPLUGGING_BADLY);
     }
 }
