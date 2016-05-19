@@ -6,7 +6,7 @@
 	<node pkg="localizer" type="mapper" name="facemapper" output="screen">
 	    <remap from="detections" to="/facedetector/faces" />
 	    <remap from="camera_info" to="/camera/rgb/camera_info" />
-	    <!-- <remap from="mapper" to="/facedetector/markers" /> -->
+	    <remap from="mapper" to="/facedetector/markers" />
   	</node>
 	<node name="facereco" pkg="tournament3" type="faces" output="screen">
   	<param name="topic" type="string" value="/facedetector/faces" />
