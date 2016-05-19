@@ -152,7 +152,8 @@ class Faces():
 		self.bridge = CvBridge()
 		self.faces_sub = rospy.Subscriber(faces_topic, Detection, self.face_callback)
 		self.cas = tm.time()
-
+		
+		self.localize = rospy.ServiceProxy('localizer/localize', Localize)
 		self.markers_pub = rospy.Publisher('/foundFace', MarkerArray, queue_size=10)
 		self.markers = MarkerArray()
 
