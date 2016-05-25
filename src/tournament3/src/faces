@@ -86,7 +86,7 @@ class Faces():
 					marker.color = ColorRGBA(1, 0, 0, 1)
 
 					self.markers.markers.append(marker)
-					self.marker_id_counter += 1
+					#self.marker_id_counter += 1
 
 			except CvBridgeError, e:
 				print e
