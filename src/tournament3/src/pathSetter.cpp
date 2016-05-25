@@ -132,6 +132,7 @@ void callback (const std_msgs::String::ConstPtr& msg) {
             }
             //printf("Goal: %f %f\n",xTarget,yTarget);
             //ROS_INFO("Sending path goal %d",nGoal);
+            printf("Goal  %.2f - %.2f \n", searchingGoal[searchStart].target_pose.pose.position.x, searchingGoal[searchStart].target_pose.pose.position.y );
             ac.sendGoal(searchingGoal[searchStart]);
             ac.waitForResult();
             if(ac.getState() == actionlib::SimpleClientGoalState::SUCCEEDED){
