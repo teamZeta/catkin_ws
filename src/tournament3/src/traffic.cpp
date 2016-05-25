@@ -17,23 +17,24 @@ using namespace std;
 void callback (const visualization_msgs::MarkerArrayConstPtr& markerArray) {
     if (markerArray->markers[0].id == 1) {      // horn
         ros::NodeHandle nh2;
-        //ros::Publisher pub = nh2.advertise<sound_play::SoundRequest>("/robotsound", 1);
-
-       // pub.publish(4);
-
-        std::string topic = "/robotsound";
-        sound_play::SoundClient sc(nh2,topic);
-        sc.play(sound_play::SoundRequest::NEEDS_UNPLUGGING_BADLY);
+        sound_play::SoundClient sc;
+        if(nh2.ok()){
+            sleep(1);
+            sound_play::Sound s3 = sc.builtinSound(sound_play::SoundRequest::NEEDS_UNPLUGGING_BADLY);
+            s3.play();
+            sleep(15);
+            s3.stop();
+        }
     }
 }
 
 int main(int argc, char** argv){
-    ros::init(argc, argv, "traffic");
+    ros::init(argc, argv, "horn");
     ros::NodeHandle nh;
 
     ros::Subscriber sub = nh.subscribe<visualization_msgs::MarkerArray> ("/sign", 1, callback);
 
     ros::spin();
-
+    
     //return 0;
 }
