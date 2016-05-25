@@ -82,6 +82,7 @@ void callback (const std_msgs::String::ConstPtr& msg) {
     // doloci kam mora it
     int searchStart = 0;
     int searchEnd = 0;
+    printf("%s %s %s \n", array[0].c_str(), array[1].c_str(), array[2].c_str());
     if (!array[2].compare("red") || !array[2].compare("Red")) {
         currentGoal = 0;
         searchStart = 0;
