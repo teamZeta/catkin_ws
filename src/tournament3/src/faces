@@ -36,7 +36,7 @@ class Faces():
 
 	def face_callback(self, data):
 		print("v call back")
-		if(tm.time() - self.cas > 5 ):
+		if(tm.time() - self.cas > 2 ):
 			print("berem image")
 
 			n = 1
@@ -83,7 +83,7 @@ class Faces():
 					marker.lifetime = rospy.Duration.from_sec(1)
 					marker.id = nbr_predicted
 					marker.scale = Vector3(0.1, 0.1, 0.1)
-					marker.color = ColorRGBA(1, 0, 0, 1)
+					marker.color = ColorRGBA(1, 1, 0, 1)
 
 					self.markers.markers.append(marker)
 					#self.marker_id_counter += 1
