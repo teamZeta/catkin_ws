@@ -2,7 +2,7 @@
 	
 	<include file="$(find turtlebot_bringup)/launch/minimal.launch" />
 
-	<include file="$(find tournament3)/launch/facerec.launch" />
+	<include file="$(find opencv_detector)/launch/facedetector_mapper.launch" />
 
 	<include file="$(find working_navigation)/amcl_demo.launch" />
 
