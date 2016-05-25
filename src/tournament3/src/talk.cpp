@@ -54,7 +54,7 @@ void callback (const std_msgs::String::ConstPtr& msg) {
 		// :::::::::::::::: POBERI OSEBO ::::::::::::::::
 		// ::::::::::::::::::::::::::::::::::::::::::::::
 
-		if (!array[0].compare("Find")) {
+		if (!array[0].compare("find")) {
 			if ((!array[1].compare("Peter") || !array[1].compare("Tina") || !array[1].compare("Kim") || 
 				!array[1].compare("Harry") || !array[1].compare("Matthew") || !array[1].compare("Scarlet") || 
 				!array[1].compare("Ellen") || !array[1].compare("Filip") || !array[1].compare("Forrest")) && 
@@ -122,10 +122,10 @@ void callback (const std_msgs::String::ConstPtr& msg) {
 		// :::::::::::::::: ODPELJI OSEBO ::::::::::::::::
 		// :::::::::::::::::::::::::::::::::::::::::::::::
 			
-		} else if (!array[0].compare("Take")) {
+		} else if (!array[0].compare("take")) {
 			if (!person1.compare(array[1])) {
-				if (!array[4].compare("Red") || !array[4].compare("Green") || !array[4].compare("Blue") || 
-					!array[4].compare("Yellow")) {
+				if (!array[4].compare("red") || !array[4].compare("green") || !array[4].compare("bue") || 
+					!array[4].compare("yellow")) {
 
 					nPerson = 1;
 					building1 = array[4];
@@ -133,8 +133,8 @@ void callback (const std_msgs::String::ConstPtr& msg) {
 					printf("ROBOT: 'Should I take %s to the %s Building?'\n", array[1].c_str(), array[4].c_str());
 				}
 			} else if (!person2.compare(array[1])) {
-				if (!array[4].compare("Red") || !array[4].compare("Green") || !array[4].compare("Blue") || 
-					!array[4].compare("Yellow")) {
+				if (!array[4].compare("red") || !array[4].compare("green") || !array[4].compare("blue") || 
+					!array[4].compare("yellow")) {
 
 					nPerson = 2;
 					building2 = array[4];
@@ -164,7 +164,7 @@ void callback (const std_msgs::String::ConstPtr& msg) {
 		}
 
 		if (order == 1) {															// poberi osebo na neki ulici
-			if (!array[0].compare("Yes")) {			// izvedi ukaz
+			if (!array[0].compare("yes")) {			// izvedi ukaz
 				order = 0;
 				if (nPerson == 1) {
 					nPerson = 0;
@@ -200,7 +200,7 @@ void callback (const std_msgs::String::ConstPtr& msg) {
 					printf("Program shouldn't come here. (Izvedi ukaz, nPerson != 1,2)\n");
 				}
 
-			} else if (!array[0].compare("No")) {	// izbrisi zapomnjeno
+			} else if (!array[0].compare("no")) {	// izbrisi zapomnjeno
 				order = 0;
 				if (nPerson == 1) {
 					nPerson = 0;
@@ -221,7 +221,7 @@ void callback (const std_msgs::String::ConstPtr& msg) {
 				printf("ROBOT: 'Please repeat the confirmation.\n'");
 			}
 		} else if (order == 2) {														// odpelji osebo do zgradbe
-			if (!array[0].compare("Yes")) {			// izvedi ukaz
+			if (!array[0].compare("yes")) {			// izvedi ukaz
 				order = 0;
 				if (nPerson == 1) {
 					nPerson = 0;
@@ -258,7 +258,7 @@ void callback (const std_msgs::String::ConstPtr& msg) {
 					printf("Program shouldn't come here. (Izvedi ukaz, nPerson != 1,2)\n");
 				}
 
-			} else if (!array[0].compare("No")) {	// izbrisi zapomnjeno
+			} else if (!array[0].compare("no")) {	// izbrisi zapomnjeno
 				order = 0;
 				if (nPerson == 1) {
 					nPerson = 0;
