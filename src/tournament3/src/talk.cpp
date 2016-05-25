@@ -170,8 +170,8 @@ void callback (const std_msgs::String::ConstPtr& msg) {
 				newOrder = true;
 				if (nPerson == 1) {
 					nPerson = 0;
-					ros::Rate loop_rate(10);
-					while (ros::ok()) {
+					//ros::Rate loop_rate(10);
+					//while (ros::ok()) {
 						//printf("posiljam stop\n");
 				  		std_msgs::String msg;
 				    	std::stringstream ss;
@@ -179,10 +179,10 @@ void callback (const std_msgs::String::ConstPtr& msg) {
 				    	msg.data = ss.str();
 				    	setGoal.publish(msg);
 				    	
-				    	ros::spinOnce();
+				    	//ros::spinOnce();
 
-				    	loop_rate.sleep();
-				  	}
+				    	//loop_rate.sleep();
+				  //}
 				} else if (nPerson == 2) {
 					nPerson = 0;
 					ros::Rate loop_rate(10);

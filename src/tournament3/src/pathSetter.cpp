@@ -19,7 +19,7 @@ static move_base_msgs::MoveBaseGoal goal;
 static int currentGoal = -1;
 static bool foundFace = false;
 static ros::Publisher updateTaxi;
-static string osebe[] = {"Harry", "Filip", "Tina", "Peter", "Forrest", "Ellen", "Kim", "Scarlet", "Matthew"};
+static string osebe[] = {"Harry", "Philip", "Tina", "Peter", "Forrest", "Ellen", "Kim", "Scarlet", "Matthew"};
 static int iskanaOsebaID = 0;
 static string trenutnaOseba = "";
 /*
