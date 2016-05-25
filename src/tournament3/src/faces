@@ -30,6 +30,7 @@ from geometry_msgs.msg import Point, Vector3
 
 class Faces():
 	def camera_callback(self, camera_info):
+		print("berem camera")
 		self.camera_infos.append(camera_info)
 
 	def face_callback(self, data):
