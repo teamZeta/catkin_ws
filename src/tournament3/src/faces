@@ -143,7 +143,10 @@ class Faces():
 		self.region_scope = rospy.get_param('~region', 3)
 		rospy.wait_for_service('localizer/localize')
 		self.camera_infos = collections.deque(maxlen = self.buffer_size)
-		self.camera_sub = message_filters.Subscriber('camera_info', CameraInfo)
+
+
+		camera_topic = rospy.get_param('~topic', rospy.resolve_name('/camera/rgb/camera_info'))
+		self.camera_sub = message_filters.Subscriber(camera_topic, CameraInfo)
 		self.camera_sub.registerCallback(self.camera_callback)
 
 		self.recognizer = cv2.createLBPHFaceRecognizer()
