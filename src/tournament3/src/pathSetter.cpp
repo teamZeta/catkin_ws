@@ -297,10 +297,10 @@ void callbackFoundFace (const visualization_msgs::MarkerArrayConstPtr& markerArr
 
 void goalInit() {
     int i=0;
-    goals[i++]=createGoal(-4.9,2.3,1,0);    // red street
-    goals[i++]=createGoal(-3.6,1.3,1,0);    // green street
+    goals[i++]=createGoal(-4.9,1.5,0,1);    // red street
+    goals[i++]=createGoal(-3.6,0.2,0,1);    // green street
     goals[i++]=createGoal(-0.48,0.7,-1,1);    // blue street
-    goals[i++]=createGoal(-4.8,0.7,-1,-1);   // yellow street
+    goals[i++]=createGoal(-4.8,-0.7,-1,-1);   // yellow street
 }
 
 void searchingGoalInit() {
@@ -310,10 +310,10 @@ void searchingGoalInit() {
     searchingGoal[i++]=createGoal(-4.9,2.3,-1,0);
     searchingGoal[i++]=createGoal(-4.9,2.3,0,-1);
 
-    searchingGoal[i++]=createGoal(-1.9,1,1,0);
-    searchingGoal[i++]=createGoal(-1.9,1.2,0,1);    // green street
-    searchingGoal[i++]=createGoal(-0.9,1.2,1,1);
-    searchingGoal[i++]=createGoal(-0.2,1,1,0);
+    searchingGoal[i++]=createGoal(-1.9,0.2,1,0);
+    searchingGoal[i++]=createGoal(-1.9,0.2,0,1);    // green street
+    searchingGoal[i++]=createGoal(-0.9,0.2,1,1);
+    searchingGoal[i++]=createGoal(-0.2,0,1,0);
 
 
     searchingGoal[i++]=createGoal(-0.48,0.7,-1,1);   // blue street goals
@@ -321,10 +321,10 @@ void searchingGoalInit() {
     searchingGoal[i++]=createGoal(-2.65,0.7,-1,0);
     searchingGoal[i++]=createGoal(-4,0.7,-1,0);
 
-    searchingGoal[i++]=createGoal(-4.8,0.7,-1,-1);   // yellow street goals
-    searchingGoal[i++]=createGoal(-4.8,1,0,-1);
-    searchingGoal[i++]=createGoal(-4.8,1,0,1);
-    searchingGoal[i++]=createGoal(-4.7,1.5,0,-1);
+    searchingGoal[i++]=createGoal(-4.8,-0.7,-1,-1);   // yellow street goals
+    searchingGoal[i++]=createGoal(-4.8,0,0,-1);
+    searchingGoal[i++]=createGoal(-4.8,0,0,1);
+    searchingGoal[i++]=createGoal(-4.7,0.5,0,-1);
 }
 
 int main(int argc, char** argv){
