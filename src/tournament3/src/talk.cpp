@@ -54,7 +54,7 @@ void callback (const std_msgs::String::ConstPtr& msg) {
 		// :::::::::::::::: POBERI OSEBO ::::::::::::::::
 		// ::::::::::::::::::::::::::::::::::::::::::::::
 
-		if (!array[0].compare("Pick")) {
+		if (!array[0].compare("Find")) {
 			if ((!array[1].compare("Peter") || !array[1].compare("Tina") || !array[1].compare("Kim") || 
 				!array[1].compare("Harry") || !array[1].compare("Matthew") || !array[1].compare("Scarlet") || 
 				!array[1].compare("Ellen") || !array[1].compare("Filip") || !array[1].compare("Forrest")) && 
@@ -326,6 +326,6 @@ int main(int argc, char** argv){
 	ros::spin();
 }
 
-// "Pick Peter on Blue Street"
+// "Find Peter on Blue Street"
 // "Take Peter to the Blue Building"
 // "Yes" / "No"

@@ -2,9 +2,14 @@
 	
 	<include file="$(find turtlebot_bringup)/launch/minimal.launch" />
 
-	<include file="$(find opencv_detector)/launch/facedetector_mapper.launch" />
+	<include file="$(find tournament3)/launch/facerec.launch" />
 
 	<include file="$(find working_navigation)/amcl_demo.launch" />
+
+	<include file="$(find speech_proxy)/launch/speech_proxy.launch" />
+
+	<include file="$(find sound_play)/launch/soundplay_node.launch" />
+
 
 	<node name="map_server" pkg="map_server" type="map_server" args="/home/team_zeta/catkin_ws/Azeroth.yaml" />
 
