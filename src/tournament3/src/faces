@@ -145,8 +145,8 @@ class Faces():
 		self.camera_infos = collections.deque(maxlen = self.buffer_size)
 
 
-		camera_topic = rospy.get_param('~topic', rospy.resolve_name('/camera/rgb/camera_info'))
-		self.camera_sub = message_filters.Subscriber(camera_topic, CameraInfo)
+		#camera_topic = rospy.get_param('~topic', rospy.resolve_name('/camera/rgb/camera_info'))
+		self.camera_sub = message_filters.Subscriber('/camera/rgb/camera_info', CameraInfo)
 		self.camera_sub.registerCallback(self.camera_callback)
 
 		self.recognizer = cv2.createLBPHFaceRecognizer()
