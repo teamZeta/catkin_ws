@@ -167,6 +167,7 @@ void callback (const std_msgs::String::ConstPtr& msg) {
 		if (order == 1) {															// poberi osebo na neki ulici
 			if (!array[0].compare("yes")) {			// izvedi ukaz
 				order = 0;
+				newOrder = true;
 				if (nPerson == 1) {
 					nPerson = 0;
 					ros::Rate loop_rate(10);
@@ -203,6 +204,7 @@ void callback (const std_msgs::String::ConstPtr& msg) {
 
 			} else if (!array[0].compare("no")) {	// izbrisi zapomnjeno
 				order = 0;
+				newOrder = true;
 				if (nPerson == 1) {
 					nPerson = 0;
 					person1 = "";
@@ -224,6 +226,7 @@ void callback (const std_msgs::String::ConstPtr& msg) {
 		} else if (order == 2) {														// odpelji osebo do zgradbe
 			if (!array[0].compare("yes")) {			// izvedi ukaz
 				order = 0;
+				newOrder = true;
 				if (nPerson == 1) {
 					nPerson = 0;
 					ros::Rate loop_rate(10);
@@ -261,6 +264,7 @@ void callback (const std_msgs::String::ConstPtr& msg) {
 
 			} else if (!array[0].compare("no")) {	// izbrisi zapomnjeno
 				order = 0;
+				newOrder = true;
 				if (nPerson == 1) {
 					nPerson = 0;
 					building1 = "";

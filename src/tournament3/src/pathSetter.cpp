@@ -123,8 +123,8 @@ void callback (const std_msgs::String::ConstPtr& msg) {
 
     // ::::::::::::::::::::::
     // zacni izvajat iskanje prave osebe
-    if (!array[0].compare("pick") && searchStart<=searchEnd) {
-        while (!foundFace) {
+    if (!array[0].compare("pick")) {
+        while (!foundFace && searchStart<=searchEnd) {
             // dokler ne najde face se premikaj po goalih
             MoveBaseClient ac("move_base", true);
             while(!ac.waitForServer(ros::Duration(5.0))){
