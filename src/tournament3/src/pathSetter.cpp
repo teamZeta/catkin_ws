@@ -299,7 +299,7 @@ void goalInit() {
     int i=0;
     goals[i++]=createGoal(-4.9,1.5,0,1);    // red street
     goals[i++]=createGoal(-3.6,0.2,0,1);    // green street
-    goals[i++]=createGoal(-0.48,0.7,-1,1);    // blue street
+    goals[i++]=createGoal(-3.36,-0.44,-1,1);    // blue street
     goals[i++]=createGoal(-4.8,-0.7,-1,-1);   // yellow street
 }
 
@@ -316,10 +316,10 @@ void searchingGoalInit() {
     searchingGoal[i++]=createGoal(-0.2,0,1,0);
 
 
-    searchingGoal[i++]=createGoal(-0.48,0.7,-1,1);   // blue street goals
-    searchingGoal[i++]=createGoal(-1.2,0.7,-1,0);
-    searchingGoal[i++]=createGoal(-2.65,0.7,-1,0);
-    searchingGoal[i++]=createGoal(-4,0.7,-1,0);
+    searchingGoal[i++]=createGoal(-2.09,-0.46,-1,1);   // blue street goals
+    searchingGoal[i++]=createGoal(-1.13,-0.52,-1,0);
+    searchingGoal[i++]=createGoal(-0.22,-0.49,-1,0);
+    searchingGoal[i++]=createGoal(-0.25,-0.03,-1,0);
 
     searchingGoal[i++]=createGoal(-4.8,-0.7,-1,-1);   // yellow street goals
     searchingGoal[i++]=createGoal(-4.8,0,0,-1);
