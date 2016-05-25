@@ -56,10 +56,10 @@ void callback (const std_msgs::String::ConstPtr& msg) {
 
 		if (!array[0].compare("find")) {
 			if ((!array[1].compare("Peter") || !array[1].compare("Tina") || !array[1].compare("Kim") || 
-				!array[1].compare("Harry") || !array[1].compare("Matthew") || !array[1].compare("Scarlet") || 
-				!array[1].compare("Ellen") || !array[1].compare("Filip") || !array[1].compare("Forrest")) && 
-				(!array[3].compare("Red") || !array[3].compare("Green") || !array[3].compare("Blue") || 
-				!array[3].compare("Yellow"))) {
+				!array[1].compare("Harry") || !array[1].compare("Matthew") || !array[1].compare("Scarlet") || !array[1].compare("Scarlett") || 
+				!array[1].compare("Ellen") || !array[1].compare("Philip") || !array[1].compare("Tom")) && 
+				(!array[3].compare("Red") || !array[3].compare("Green") || !array[3].compare("Blue") || !array[3].compare("red") || !array[3].compare("green") || !array[3].compare("blue") || 
+				!array[3].compare("Yellow") || array[3].compare("yellow"))) {
 
 				if (!person1.compare("") && !person2.compare("")) {							// Oba sedeza sta prazna
 					person1 = array[1];
@@ -123,8 +123,9 @@ void callback (const std_msgs::String::ConstPtr& msg) {
 			
 		} else if (!array[0].compare("take")) {
 			if (!person1.compare(array[1])) {
-				if (!array[4].compare("red") || !array[4].compare("green") || !array[4].compare("bue") || 
-					!array[4].compare("yellow")) {
+				if (!array[4].compare("red") || !array[4].compare("green") || !array[4].compare("blue") || 
+					!array[4].compare("yellow") || !array[4].compare("Red") || !array[4].compare("Green") || !array[4].compare("Blue") || 
+					!array[4].compare("Yellow")) {
 
 					nPerson = 1;
 					building1 = array[4];
@@ -133,7 +134,8 @@ void callback (const std_msgs::String::ConstPtr& msg) {
 				}
 			} else if (!person2.compare(array[1])) {
 				if (!array[4].compare("red") || !array[4].compare("green") || !array[4].compare("blue") || 
-					!array[4].compare("yellow")) {
+					!array[4].compare("yellow") || !array[4].compare("Red") || !array[4].compare("Green") || !array[4].compare("Blue") || 
+					!array[4].compare("Yellow")) {
 
 					nPerson = 2;
 					building2 = array[4];
