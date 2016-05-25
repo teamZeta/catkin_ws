@@ -116,7 +116,6 @@ void callback (const std_msgs::String::ConstPtr& msg) {
 					printf("ROBOT: 'There is no space left in the taxi.'\n");
 				}
 			}
-			printf("ROBOT: 'I didn't understand the order. Pls repeat it.'\n");
 
 		// :::::::::::::::::::::::::::::::::::::::::::::::
 		// :::::::::::::::: ODPELJI OSEBO ::::::::::::::::

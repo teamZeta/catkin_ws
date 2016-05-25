@@ -82,19 +82,19 @@ void callback (const std_msgs::String::ConstPtr& msg) {
     // doloci kam mora it
     int searchStart = 0;
     int searchEnd = 0;
-    if (!array[2].compare("red")) {
+    if (!array[2].compare("red") || !array[2].compare("Red")) {
         currentGoal = 0;
         searchStart = 0;
         searchEnd = 3;
-    } else if (!array[2].compare("green")) {
+    } else if (!array[2].compare("green") || !array[2].compare("Green") ) {
         currentGoal = 1;
         searchStart = 4;
         searchEnd = 7;
-    } else if (!array[2].compare("blue")) {
+    } else if (!array[2].compare("blue") || !array[2].compare("Blue")) {
         currentGoal = 2;
         searchStart = 8;
         searchEnd = 11;
-    } else if (!array[2].compare("yellow")) {
+    } else if (!array[2].compare("yellow") || !array[2].compare("Yellow")) {
         currentGoal = 3;
         searchStart = 12;
         searchEnd = 15;
