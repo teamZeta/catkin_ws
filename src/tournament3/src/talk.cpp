@@ -94,7 +94,7 @@ void callback (const std_msgs::String::ConstPtr& msg) {
 					}
 
 				} else if (!person2.compare("")) {											// Samo drugi sedez je prazen
-					if (!array[1].compare("Tina") || !array[1].compare("Scarlet") || !array[1].compare("Ellen")) {
+					if (!array[1].compare("Tina") || !array[1].compare("Scarlet") || !array[1].compare("Scarlett") || !array[1].compare("Ellen")) {
 						sex2 = 2;
 					} else {
 						sex2 = 1;
