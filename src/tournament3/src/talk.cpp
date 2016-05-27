@@ -31,8 +31,36 @@ static std::string building2 = "";
 static int sex2 = 0;
 static int nPerson = 0;
 static int order = 0;			// 0 - undefined, 1 - pick up, 2 - take to
+static string osebe[] = {"Harry", "Philip", "Tina", "Peter", "Tom", "Ellen", "Kim", "Scarlett", "Matthew"};
 
 static ros::Publisher setGoal;
+
+static bool color(std::string barva) {
+	if (!barva.compare("red") || !barva.compare("green") || !barva.compare("blue") || 
+		!barva.compare("yellow") || !barva.compare("Red") || !barva.compare("Green") || !barva.compare("Blue") || 
+		!barva.compare("Yellow")) {
+		return true;
+	} else {
+		return false;
+	}
+}
+
+static bool female(std::string trenutnaOseba) {
+	if (!trenutnaOseba.compare("Tina") || !trenutnaOseba.compare("Scarlett") || !trenutnaOseba.compare("Ellen")) {
+		return true;
+	} else {
+		return false;
+	}
+}
+
+static bool person(std::string trenutnaOseba) {
+	for (int i=0; i<9; i++) {
+		if (!trenutnaOseba.compare(osebe[i])) {
+		    return true;
+		}
+	}
+	return false;
+}
 
 // ::::::::::::::::::::::::::::::::::::::::::::::
 // :::::::::::::::::: CALLBACK ::::::::::::::::::
@@ -41,30 +69,31 @@ void callback (const std_msgs::String::ConstPtr& msg) {
 	ROS_INFO("I heard: [%s]", msg->data.c_str());
 	//std::cout<<msg->data.c_str()<<std::endl;
 
+	string array[6];
+	int i = 0;
+	stringstream strings(msg->data.c_str());
+	while (strings.good() && i<6) {
+		strings >> array[i];
+		i++;
+	}
+	if (!array[0].compare("details")) {
+		printf("Sedez 1: %s, pobrana na: %s, namenjena na: %s\n", person1.c_str(), street1.c_str(), building1.c_str());
+		printf("Sedez 2: %s, pobrana na: %s, namenjena na: %s\n", person2.c_str(), street2.c_str(), building2.c_str());
+	}
+
 	if (newOrder) {
 
-		string array[5];
-		int i = 0;
-		stringstream strings(msg->data.c_str());
-		while (strings.good() && i<5) {
-			strings >> array[i];
-			i++;
-		}
 		// ::::::::::::::::::::::::::::::::::::::::::::::
 		// :::::::::::::::: POBERI OSEBO ::::::::::::::::
 		// ::::::::::::::::::::::::::::::::::::::::::::::
 
 		if (!array[0].compare("find")) {
-			if ((!array[1].compare("Peter") || !array[1].compare("Tina") || !array[1].compare("Kim") || 
-				!array[1].compare("Harry") || !array[1].compare("Matthew") || !array[1].compare("Scarlet") || !array[1].compare("Scarlett") || 
-				!array[1].compare("Ellen") || !array[1].compare("Philip") || !array[1].compare("Tom")) && 
-				(!array[3].compare("Red") || !array[3].compare("Green") || !array[3].compare("Blue") || !array[3].compare("red") || !array[3].compare("green") || !array[3].compare("blue") || 
-				!array[3].compare("Yellow") || array[3].compare("yellow"))) {
+			if (person(array[1]) && color(array[4])) {
 
 				if (!person1.compare("") && !person2.compare("")) {							// Oba sedeza sta prazna
 					person1 = array[1];
 					street1 = array[3];
-					if (!array[1].compare("Tina") || !array[1].compare("Scarlet") || !array[1].compare("Ellen")) {
+					if (female(array[1])) {
 						sex1 = 2;
 					} else {
 						sex1 = 1;
@@ -75,7 +104,7 @@ void callback (const std_msgs::String::ConstPtr& msg) {
 					printf("ROBOT: 'Should I pick %s on %s Street?'\n", array[1].c_str(), array[3].c_str());
 
 				} else if (!person1.compare("")) {										// Samo prvi sedez je prazen
-					if (!array[1].compare("Tina") || !array[1].compare("Scarlet") || !array[1].compare("Ellen")) {
+					if (female(array[1])) {
 						sex1 = 2;
 					} else {
 						sex1 = 1;
@@ -94,7 +123,7 @@ void callback (const std_msgs::String::ConstPtr& msg) {
 					}
 
 				} else if (!person2.compare("")) {											// Samo drugi sedez je prazen
-					if (!array[1].compare("Tina") || !array[1].compare("Scarlet") || !array[1].compare("Scarlett") || !array[1].compare("Ellen")) {
+					if (female(array[1])) {
 						sex2 = 2;
 					} else {
 						sex2 = 1;
@@ -115,6 +144,8 @@ void callback (const std_msgs::String::ConstPtr& msg) {
 				} else {																	// Oba sedeza sta zasedena
 					printf("ROBOT: 'There is no space left in the taxi.'\n");
 				}
+			} else {
+				printf("ROBOT: 'I didn't understand the order. Pls repeat it.'\n");
 			}
 
 		// :::::::::::::::::::::::::::::::::::::::::::::::
@@ -122,30 +153,23 @@ void callback (const std_msgs::String::ConstPtr& msg) {
 		// :::::::::::::::::::::::::::::::::::::::::::::::
 			
 		} else if (!array[0].compare("take")) {
-			if (!person1.compare(array[1])) {
-				if (!array[4].compare("red") || !array[4].compare("green") || !array[4].compare("blue") || 
-					!array[4].compare("yellow") || !array[4].compare("Red") || !array[4].compare("Green") || !array[4].compare("Blue") || 
-					!array[4].compare("Yellow")) {
-
+			if (color(array[4])) {
+				if (!person1.compare(array[1])) {
 					nPerson = 1;
 					building1 = array[4];
 					newOrder = false;
 					printf("ROBOT: 'Should I take %s to the %s Building?'\n", array[1].c_str(), array[4].c_str());
-				}
-			} else if (!person2.compare(array[1])) {
-				if (!array[4].compare("red") || !array[4].compare("green") || !array[4].compare("blue") || 
-					!array[4].compare("yellow") || !array[4].compare("Red") || !array[4].compare("Green") || !array[4].compare("Blue") || 
-					!array[4].compare("Yellow")) {
-
+				} else if (!person2.compare(array[1])) {
 					nPerson = 2;
 					building2 = array[4];
 					newOrder = false;
 					printf("ROBOT: 'Should I take %s to the %s Building?'\n", array[1].c_str(), array[4].c_str());
+				} else {
+					printf("No person with such name in taxi.\n");
 				}
 			} else {
-				printf("No person with such name in taxi.\n");
+				printf("ROBOT: 'I didn't understand the order. Pls repeat it.'\n");
 			}
-			printf("ROBOT: 'I didn't understand the order. Pls repeat it.'\n");
 		} else {
 			printf("ROBOT: 'I didn't understand the order. Pls repeat it.'\n");
 		}
@@ -155,14 +179,6 @@ void callback (const std_msgs::String::ConstPtr& msg) {
 		// :::::::::::::::::::::::::::::::::::::::::::::
 
 	} else {
-
-		string array[1];
-		int i = 0;
-		stringstream strings(msg->data.c_str());
-		while (strings.good() && i<1) {
-			strings >> array[i];
-			i++;
-		}
 
 		if (order == 1) {															// poberi osebo na neki ulici
 			if (!array[0].compare("yes")) {			// izvedi ukaz
@@ -331,6 +347,7 @@ int main(int argc, char** argv){
 	ros::spin();
 }
 
-// "Find Peter on Blue Street"
+// "Find Peter on the Blue Street"
 // "Take Peter to the Blue Building"
+// "Details"
 // "Yes" / "No"
