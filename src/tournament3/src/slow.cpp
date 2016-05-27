@@ -22,9 +22,9 @@ void callback (const visualization_msgs::MarkerArrayConstPtr& markerArray) {
         vel_pub_ = nh.advertise<geometry_msgs::Twist>("cmd_vel", 1);
 
     if (markerArray->markers[0].id == 2) {      // slow
-        cmd_vel.linear.x = 0.5;
-        cmd_vel.linear.y = 0.5;
-        cmd_vel.angular.z = 0.5;
+        cmd_vel.linear.x = 0.1;
+        cmd_vel.linear.y = 0.1;
+        cmd_vel.angular.z = 0.1;
     }else if (markerArray->markers[0].id == 4) {      // stop
         cmd_vel.linear.x = 0.0;
         cmd_vel.linear.y = 0.0;
@@ -41,12 +41,22 @@ int main(int argc, char** argv){
     ros::Subscriber sub = nh.subscribe<visualization_msgs::MarkerArray> ("/sign", 1, callback);
 
     ros::Publisher vel_pub_;
-    vel_pub_ = nh.advertise<geometry_msgs::Twist>("cmd_vel", 1);
+    vel_pub_ = nh.advertise<geometry_msgs::Twist>("/mobile_base/commands/velocity", 1);
     geometry_msgs::Twist cmd_vel;
-    cmd_vel.linear.x = 0.5;
-    cmd_vel.linear.y = 0.5;
-    cmd_vel.angular.z = 0.5;
+    cmd_vel.linear.x = 0.0;
+    cmd_vel.linear.y = 0.0;
+    cmd_vel.angular.z = 0.0;
+    int st =0;
+    while(ros::ok()&&st++<2000000)
+        vel_pub_.publish(cmd_vel);
 
+    cmd_vel.linear.x = 0.1;
+    cmd_vel.linear.y = 0.1;
+    cmd_vel.angular.z = 0.1;
+    st =0;
+        while(ros::ok()&&st++<2000000)
+        vel_pub_.publish(cmd_vel);
+    ros::shutdown();
 
     ros::spin();
 
