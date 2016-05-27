@@ -45,6 +45,8 @@ class Faces():
 			try:
 
 				for i in xrange(0, n):
+					u = data.x + data.width / 2
+					v = data.y + data.height / 2
 					image = self.bridge.imgmsg_to_cv2(data.image, "bgr8")
 					image = cv2.resize(image, (50, 50)) 
 					equb,equg,equr = cv2.split(image)
@@ -66,7 +68,7 @@ class Faces():
 							camera_info = ci
 							best_time = time
 
-					print("sledi camera ----"+ str(data.header.stamp.to_sec()) + "sss" + str(self.camera_infos))
+					#print("sledi camera ----"+ str(data.header.stamp.to_sec()) + "sss" + str(self.camera_infos))
 					if not camera_info or best_time > 101:
 						return
 
@@ -115,7 +117,7 @@ class Faces():
 			image_paths = [os.path.join("/home/boka/catkin_ws/src/slikeZ/", f) for f in os.listdir("/home/boka/catkin_ws/src/slikeZ/")]
 		images = []
 		labels = []
-		print(image_paths[0])
+		#print(image_paths[0])
 		for url in image_paths:
 			#images += [cv2.imread(url)]
 			equ = cv2.imread(url)
