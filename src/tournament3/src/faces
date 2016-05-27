@@ -57,7 +57,7 @@ class Faces():
 					self.id_prep[nbr_predicted] += 1
 					self.id_cas[nbr_predicted] = tm.time()
 				else:
-					self.id_prep[nbr_predicted] += 0
+					self.id_prep[nbr_predicted] = 0
 				
 				if self.id_prep[nbr_predicted] > 10:
 					camera_info = None
