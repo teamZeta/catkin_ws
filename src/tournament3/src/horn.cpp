@@ -15,7 +15,7 @@
 using namespace std;
 
 void callback (const visualization_msgs::MarkerArrayConstPtr& markerArray) {
-    if (markerArray->markers[0].id == 1) {      // horn
+    if (markerArray->markers[0].id == 5) {      // horn
         ros::NodeHandle nh2;
         sound_play::SoundClient sc;
         if(nh2.ok()){
