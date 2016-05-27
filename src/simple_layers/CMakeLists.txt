@@ -194,8 +194,8 @@ include_directories(${catkin_INCLUDE_DIRS} include)
 #target_link_libraries(simple_layer ${catkin_LIBRARIES})
 
 
-add_executable(main src/main.cpp)
-target_link_libraries(main ${catkin_LIBRARIES})
+#add_executable(main src/main.cpp)
+#target_link_libraries(main ${catkin_LIBRARIES})
 
 
-add_library(simple_layer src/simple_layer.cpp)
+#add_library(simple_layer src/simple_layer.cpp)
