@@ -47,7 +47,7 @@ int main(int argc, char** argv){
     cmd_vel.linear.y = 0.0;
     cmd_vel.angular.z = 0.0;
     int st =0;
-    while(ros::ok()&&st++<300000)
+    while(ros::ok()&&st++<3000000)
         vel_pub_.publish(cmd_vel);
     ros::shutdown();
 
