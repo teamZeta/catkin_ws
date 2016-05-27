@@ -38,20 +38,20 @@ static string trenutnaOseba = "";
 typedef actionlib::SimpleActionClient<move_base_msgs::MoveBaseAction> MoveBaseClient;
 
 static move_base_msgs::MoveBaseGoal createGoal(float xRobot, float yRobot, float xDirection, float yDirection){
-    move_base_msgs::MoveBaseGoal goal;
-    goal.target_pose.header.frame_id = "/map";
+    move_base_msgs::MoveBaseGoal goalC;
+    goalC.target_pose.header.frame_id = "/map";
     tf::Vector3 v1 = tf::Vector3(1, 0 ,0);
     tf::Vector3 v2 = tf::Vector3(xDirection+0.0000001, yDirection+0.0000001,0);
     tf::Vector3 a = v1.cross(v2);
     tf::Quaternion q(a.x(), a.y(), a.z(), sqrt(v1.length2() * v2.length2()) + v1.dot(v2));
     q.normalize();
-    goal.target_pose.pose.orientation.x = q.x();
-    goal.target_pose.pose.orientation.y = q.y();
-    goal.target_pose.pose.orientation.z = q.z();
-    goal.target_pose.pose.orientation.w = q.w();
-    goal.target_pose.pose.position.x = xRobot;
-    goal.target_pose.pose.position.y = yRobot;
-return goal;
+    goalC.target_pose.pose.orientation.x = q.x();
+    goalC.target_pose.pose.orientation.y = q.y();
+    goalC.target_pose.pose.orientation.z = q.z();
+    goalC.target_pose.pose.orientation.w = q.w();
+    goalC.target_pose.pose.position.x = xRobot;
+    goalC.target_pose.pose.position.y = yRobot;
+    return goalC;
 }
 
 // ::::::::::::::::::::::::::::::::::::::::::::::
@@ -156,9 +156,9 @@ void callback (const std_msgs::String::ConstPtr& msg) {
 
         // ko najde zgradbo, vrzi osebo iz avta
         printf("ROBOT: 'Sayonara %s.'\n", array[1].c_str());
-        ros::Rate loop_rate(10);
-        while (ros::ok()) {
-            printf("posiljam search\n");
+        //ros::Rate loop_rate(10);
+        //while (ros::ok()) {
+            //printf("posiljam search\n");
             std_msgs::String msg;
             std::stringstream ss;
             ss << array[1];
@@ -167,8 +167,8 @@ void callback (const std_msgs::String::ConstPtr& msg) {
             
             ros::spinOnce();
 
-            loop_rate.sleep();
-        }
+            //loop_rate.sleep();
+        //}
 
     } else {
         printf("pathSetter shouldnt come here (Take osebo).\n");
