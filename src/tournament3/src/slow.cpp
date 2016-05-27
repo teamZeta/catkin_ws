@@ -11,12 +11,14 @@
 #include <sys/timeb.h>
 #include <sound_play/sound_play.h>
 #include <unistd.h>
+#include <move_base/move_base.h>
 
 using namespace std;
 
 void callback (const visualization_msgs::MarkerArrayConstPtr& markerArray) {
-        ros::NodeHandle nh2;
+        ros::NodeHandle nh;
         geometry_msgs::Twist cmd_vel;
+        ros::Publisher vel_pub_;
         vel_pub_ = nh.advertise<geometry_msgs::Twist>("cmd_vel", 1);
 
     if (markerArray->markers[0].id == 2) {      // slow
@@ -38,7 +40,7 @@ int main(int argc, char** argv){
 
     ros::Subscriber sub = nh.subscribe<visualization_msgs::MarkerArray> ("/sign", 1, callback);
 
-
+    ros::Publisher vel_pub_;
     vel_pub_ = nh.advertise<geometry_msgs::Twist>("cmd_vel", 1);
     geometry_msgs::Twist cmd_vel;
     cmd_vel.linear.x = 0.5;
