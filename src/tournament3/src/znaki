@@ -36,9 +36,9 @@ class Faces():
 
 
 	def face_callback(self, data):
-		print("v call back")
+		#print("v call back")
 		if(tm.time() - self.cas > 2 ):
-			print("berem image")
+			#print("berem image")
 
 			n = 1
 			#image = numpy.zeros((self.face_size * n, self.face_size), dtype=numpy.uint8)

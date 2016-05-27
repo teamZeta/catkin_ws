@@ -1,6 +1,6 @@
 <launch>
 
-	 <include file="$(find turtlebot_bringup)/launch/3dsensor.launch" /> 
+	<!-- <include file="$(find turtlebot_bringup)/launch/3dsensor.launch" /> -->
 
 
   	<include file="$(find dlib_detector)/launch/dlib_detector.launch">
@@ -9,13 +9,13 @@
     <arg name="detector" value="$(find dlib_detector)/data/traffic_signs.dat"/>
   </include>
 
-	<include file="$(find localizer)/launch/localizer_node.launch" /> 
+	<!-- <include file="$(find localizer)/launch/localizer_node.launch" /> 
 
 	<node pkg="localizer" type="mapper" name="facemapper" output="screen">
 	    <remap from="detections" to="/facedetector/faces" />
 	    <remap from="camera_info" to="/camera/rgb/camera_info" />
 	    <remap from="mapper" to="/facedetector/markers" />
-  	</node> 
+  	</node>  -->
 
 
 	<node name="znakreco" pkg="tournament3" type="znaki" output="screen">
