@@ -214,3 +214,6 @@ target_link_libraries(talk ${catkin_LIBRARIES})
 add_executable(pathSetter src/pathSetter.cpp)
 target_link_libraries(pathSetter ${catkin_LIBRARIES})
 
+add_executable(slow src/slow.cpp)
+target_link_libraries(slow ${catkin_LIBRARIES})
+
