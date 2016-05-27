@@ -48,7 +48,7 @@ class Faces():
 				[nbr_predicted, conf] = self.recognize(equ)
 				if conf > 70:
 					return
-					
+				print(self.count)
 				if self.count == 0:
 					self.id_prep = nbr_predicted
 				if self.id_prep == nbr_predicted:
@@ -93,6 +93,7 @@ class Faces():
 					marker.id = nbr_predicted
 					marker.scale = Vector3(0.1, 0.1, 0.1)
 					marker.color = ColorRGBA(1, 1, 0, 1)
+					print("predicted" + str(nbr_predicted) + " conf " + str(conf))
 
 					self.markers.markers.append(marker)
 					#self.marker_id_counter += 1
@@ -143,7 +144,7 @@ class Faces():
 
 	def recognize(self,image):
 		nbr_predicted, conf = self.recognizer.predict(image)
-		print("predicted" + str(nbr_predicted) + " conf " + str(conf))
+		
 		#print("coef"+str(conf))
 		return [nbr_predicted, conf]
 
