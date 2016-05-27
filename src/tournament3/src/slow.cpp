@@ -47,7 +47,14 @@ int main(int argc, char** argv){
     cmd_vel.linear.y = 0.0;
     cmd_vel.angular.z = 0.0;
     int st =0;
-    while(ros::ok()&&st++<3000000)
+    while(ros::ok()&&st++<2000000)
+        vel_pub_.publish(cmd_vel);
+
+    cmd_vel.linear.x = 0.1;
+    cmd_vel.linear.y = 0.1;
+    cmd_vel.angular.z = 0.1;
+    int st =0;
+        while(ros::ok()&&st++<2000000)
         vel_pub_.publish(cmd_vel);
     ros::shutdown();
 
