@@ -4,6 +4,8 @@
 
 	<include file="$(find tournament3)/launch/facerec.launch" />
 
+	<include file="$(find tournament3)/launch/znakrec.launch" />
+
 	<include file="$(find working_navigation)/amcl_demo.launch" />
 
 	<include file="$(find speech_proxy)/launch/speech_proxy.launch" />
