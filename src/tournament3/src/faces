@@ -48,17 +48,18 @@ class Faces():
 				[nbr_predicted, conf] = self.recognize(equ)
 				if conf > 70:
 					return
-				print(self.count)
-				if self.count == 0 || tm.time() - self.cas > 2:
-					self.id_prep = nbr_predicted
-				if self.id_prep == nbr_predicted:
-					self.count += 1
-					self.cas = tm.time()
-				elif tm.time() - self.cas > 0.5:
-					self.count = 0
-					self.id_prep = -1
+				print(self.id_prep[nbr_predicted])
+
+				if self.id_prep[nbr_predicted] == 0:
+					self.id_cas[nbr_predicted] = tm.time()
+
+				if tm.time() - self.id_cas[nbr_predicted] < 1:
+					self.id_prep[nbr_predicted] += 1
+					self.id_cas[nbr_predicted] = tm.time()
+				else:
+					self.id_prep[nbr_predicted] = 0
 				
-				if self.count > 10:
+				if self.id_prep[nbr_predicted] > 10:
 					camera_info = None
 					best_time = 100
 					for ci in self.camera_infos:
@@ -177,7 +178,8 @@ class Faces():
 		self.markers_pub = rospy.Publisher('/foundFace', MarkerArray, queue_size=10)
 		self.markers = MarkerArray()
 		self.count = 0
-		self.id_prep = -1
+		self.id_prep = np.zeros(9)
+		self.id_cas = np.ones(9)*10
 
 
 # Main function.    
