@@ -43,12 +43,13 @@ int main(int argc, char** argv){
     ros::Publisher vel_pub_;
     vel_pub_ = nh.advertise<geometry_msgs::Twist>("/mobile_base/commands/velocity", 1);
     geometry_msgs::Twist cmd_vel;
-    cmd_vel.linear.x = 0.1;
-    cmd_vel.linear.y = 0.1;
-    cmd_vel.angular.z = 0.1;
-    while(ros::ok())
+    cmd_vel.linear.x = 0.0;
+    cmd_vel.linear.y = 0.0;
+    cmd_vel.angular.z = 0.0;
+    Ros::Time clock = ros::Time::now();
+    while(ros::ok()&&(ros::Time::now()-clock)<2)
         vel_pub_.publish(cmd_vel);
-
+    ros::shutdown();
 
     ros::spin();
 
