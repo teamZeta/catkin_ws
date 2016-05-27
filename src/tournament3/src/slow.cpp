@@ -15,23 +15,36 @@
 using namespace std;
 
 void callback (const visualization_msgs::MarkerArrayConstPtr& markerArray) {
-    if (markerArray->markers[0].id == 1) {      // horn
         ros::NodeHandle nh2;
-        //ros::Publisher pub = nh2.advertise<sound_play::SoundRequest>("/robotsound", 1);
+        geometry_msgs::Twist cmd_vel;
+        vel_pub_ = nh.advertise<geometry_msgs::Twist>("cmd_vel", 1);
 
-       // pub.publish(4);
-
-        std::string topic = "/robotsound";
-        sound_play::SoundClient sc(nh2,topic);
-        sc.play(sound_play::SoundRequest::NEEDS_UNPLUGGING_BADLY);
+    if (markerArray->markers[0].id == 2) {      // slow
+        cmd_vel.linear.x = 0.5;
+        cmd_vel.linear.y = 0.5;
+        cmd_vel.angular.z = 0.5;
+    }else if (markerArray->markers[0].id == 4) {      // stop
+        cmd_vel.linear.x = 0.0;
+        cmd_vel.linear.y = 0.0;
+        cmd_vel.angular.z = 0.0;
     }
+
+    vel_pub_.publish(cmd_vel);
 }
 
 int main(int argc, char** argv){
-    ros::init(argc, argv, "traffic");
+    ros::init(argc, argv, "slow");
     ros::NodeHandle nh;
 
     ros::Subscriber sub = nh.subscribe<visualization_msgs::MarkerArray> ("/sign", 1, callback);
+
+
+    vel_pub_ = nh.advertise<geometry_msgs::Twist>("cmd_vel", 1);
+    geometry_msgs::Twist cmd_vel;
+    cmd_vel.linear.x = 0.5;
+    cmd_vel.linear.y = 0.5;
+    cmd_vel.angular.z = 0.5;
+
 
     ros::spin();
 
