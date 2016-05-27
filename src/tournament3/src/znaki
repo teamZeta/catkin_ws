@@ -66,7 +66,7 @@ class Faces():
 							camera_info = ci
 							best_time = time
 
-					print("sledi camera ----"+ str(data.header.stamp.to_sec()) + "sss" + str(self.camera_infos))
+					#print("sledi camera ----"+ str(data.header.stamp.to_sec()) + "sss" + str(self.camera_infos))
 					if not camera_info or best_time > 101:
 						return
 
@@ -77,10 +77,10 @@ class Faces():
 					     ((v - camera_model.cy()) - camera_model.Ty()) / camera_model.fy(), 1)
 
 					localization = self.localize(data.header, point, self.region_scope)
-					print("sledi ----")
+					#print("sledi ----")
 					if not localization:
 						return
-					print("returnaj")
+					#print("returnaj")
 					marker = Marker()
 					marker.header.stamp = data.header.stamp
 					marker.header.frame_id = data.header.frame_id
@@ -126,7 +126,7 @@ class Faces():
 			equr = cv2.equalizeHist(equr)
 			image = cv2.merge((equb,equg,equr))
 			images += [np.array(image).flatten().tolist()]
-			print(os.path.split(url)[1].split(".")[1])
+			#print(os.path.split(url)[1].split(".")[1])
 			nbr = int(os.path.split(url)[1].split(".")[1].split("-")[1])
 			labels += [nbr]
 		return [images, labels]
@@ -137,19 +137,19 @@ class Faces():
 			[images, labels] = self.read_images("/home/team_zeta/catkin_ws/src/slikeZ/")
 		except Exception as inst:
 			[images, labels] = self.read_images("/home/boka/catkin_ws/src/slikeZ/")
-		print("ucim se, pocakaj..")
-		print(np.array(images))
-		print(len(np.array(images)[0]))
-		print(len(np.array(images)))
-		print labels
+		#print("ucim se, pocakaj..")
+		#print(np.array(images))
+		#print(len(np.array(images)[0]))
+		#print(len(np.array(images)))
+		#print labels
 		self.recognizer.train(np.array(images).astype(np.float32), np.array(labels).astype(np.float32))
 		#self.recognizer.save("/home/boka/model/model.yaml")
 
 	def recognize(self,image):
-		print(np.array([image]).astype(np.float32))
+		#print(np.array([image]).astype(np.float32))
 		ret, nbr_predicted, neighbours, dist = self.recognizer.find_nearest(np.array([image]).astype(np.float32), k=5)
-		print("predicted" + str(nbr_predicted))
-		print("coef"+str(dist))
+		#print("predicted" + str(nbr_predicted))
+		print("coef"+str(dist) + " predicta "+ str(nbr_predicted))
 		return [nbr_predicted, np.mean(dist)]
 
 	def __init__(self):

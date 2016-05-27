@@ -3,22 +3,23 @@ import time
 import cv2, cv, numpy
 import Image
 from cv_bridge import CvBridge, CvBridgeError
+import rospy
+import roslib
+from sensor_msgs.msg import Image
 class Detector():
 
 	def image_callback(self, data):
-		if not self.enabled:
-			return
 		try:
-			if time.time() - cas > 3: 
-				cas = time.time()
+			if time.time() - self.cas > 3: 
+				self.cas = time.time()
 				now = rospy.Time.now()
 				if self.throttle and (now.to_sec() - self.throttle_time.to_sec()) < self.throttle:
-				return
+					return
 
 				self.throttle_time = now
 
 				cv_image = self.bridge.imgmsg_to_cv2(data, "bgr8")
-				equb,equg,equr = cv2.split(image)
+				equb,equg,equr = cv2.split(cv_image)
 				equb = cv2.equalizeHist(equb)
 				equg = cv2.equalizeHist(equg)
 				equr = cv2.equalizeHist(equr)
@@ -30,6 +31,7 @@ class Detector():
 					cv2.imwrite("/home/boka/catkin_ws/src/stolpi/"+str(time.time())+"-"+str(self.var)+".png", equ)
 					cv2.imwrite("/home/team_zeta/catkin_ws/src/stolpi/"+str(time.time())+"-"+str(self.var)+".png", equ)
 				print("napisal image")
+				self.var += 1
 
 
 
@@ -37,9 +39,14 @@ class Detector():
 			print e
 
 	def __init__(self):
+		self.var = 0
+		self.throttle = rospy.get_param('~throttle', 10)
+		self.throttle = None if self.throttle <= 0 else (1 / float(self.throttle))
+		self.throttle_time = rospy.Time.now()
 		self.cas = time.time()
 		self.bridge = CvBridge()
 		self.image_sub = rospy.Subscriber('camera', Image, self.image_callback, queue_size=1)
+
 
 # Main function.    
 if __name__ == '__main__':

@@ -35,9 +35,9 @@ class Faces():
 		self.camera_infos.append(camera_info)
 
 	def face_callback(self, data):
-		print("v call back")
+		#print("v call back")
 		if(tm.time() - self.cas > 2 ):
-			print("berem image")
+
 
 			n = 1
 			try:
@@ -58,7 +58,7 @@ class Faces():
 							camera_info = ci
 							best_time = time
 
-					print("sledi camera ----"+ str(data.header.stamp.to_sec()) + "sss" + str(self.camera_infos))
+					#print("sledi camera ----"+ str(data.header.stamp.to_sec()) + "sss" + str(self.camera_infos))
 					if not camera_info or best_time > 101:
 						return
 
@@ -69,10 +69,10 @@ class Faces():
 					     ((v - camera_model.cy()) - camera_model.Ty()) / camera_model.fy(), 1)
 
 					localization = self.localize(data.header, point, self.region_scope)
-					print("sledi ----")
+					#print("sledi ----")
 					if not localization:
 						return
-					print("returnaj")
+					#print("returnaj")
 					marker = Marker()
 					marker.header.stamp = data.header.stamp
 					marker.header.frame_id = data.header.frame_id
@@ -107,12 +107,12 @@ class Faces():
 			image_paths = [os.path.join("/home/boka/catkin_ws/src/slike/", f) for f in os.listdir("/home/boka/catkin_ws/src/slike/")]
 		images = []
 		labels = []
-		print(image_paths[0])
+		#print(image_paths[0])
 		for url in image_paths:
 			#images += [cv2.imread(url)]
 			equ = cv2.equalizeHist(cv2.cvtColor(cv2.imread(url), cv2.COLOR_BGR2GRAY))
 			images += [equ]
-			print(os.path.split(url)[1].split(".")[1])
+			#print(os.path.split(url)[1].split(".")[1])
 			nbr = int(os.path.split(url)[1].split(".")[1].split("-")[1])
 			labels += [nbr]
 		return [images, labels]
@@ -127,15 +127,15 @@ class Faces():
 			[images, labels] = self.read_images("/home/team_zeta/catkin_ws/src/slike/")
 			
 		print("ucim se, pocakaj..")
-		print images
-		print labels
+		#print images
+		#print labels
 		self.recognizer.train(images, np.array(labels))
 		#self.recognizer.save("/home/boka/model/model.yaml")
 
 	def recognize(self,image):
 		nbr_predicted, conf = self.recognizer.predict(image)
-		print("predicted" + str(nbr_predicted))
-		print("coef"+str(conf))
+		print("predicted" + str(nbr_predicted) + " conf " + str(conf))
+		#print("coef"+str(conf))
 		return [nbr_predicted, conf]
 
 	def __init__(self):
@@ -152,7 +152,7 @@ class Faces():
 
 		self.recognizer = cv2.createLBPHFaceRecognizer()
 		#self.recognizer = cv2.createFisherFaceRecognizer()
-		print("ucim")
+		#print("ucim")
 		self.learn()
 		print("naucil")
 		faces_topic = rospy.get_param('~topic', rospy.resolve_name('/facedetector/faces'))
