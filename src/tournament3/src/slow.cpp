@@ -46,6 +46,7 @@ int main(int argc, char** argv){
     cmd_vel.linear.x = 0.5;
     cmd_vel.linear.y = 0.5;
     cmd_vel.angular.z = 0.5;
+    vel_pub_.publish(cmd_vel);
 
 
     ros::spin();
