@@ -178,8 +178,8 @@ class Faces():
 		self.markers_pub = rospy.Publisher('/foundFace', MarkerArray, queue_size=10)
 		self.markers = MarkerArray()
 		self.count = 0
-		self.id_prep = np.zeros(9)
-		self.id_cas = np.ones(9)*10
+		self.id_prep = np.zeros(10)
+		self.id_cas = np.ones(10)*10
 
 
 # Main function.    

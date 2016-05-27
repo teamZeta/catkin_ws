@@ -37,29 +37,39 @@ class Faces():
 
 	def face_callback(self, data):
 		#print("v call back")
-		if(tm.time() - self.cas > 2 ):
-			#print("berem image")
+	
+		#print("berem image")
 
-			n = 1
-			#image = numpy.zeros((self.face_size * n, self.face_size), dtype=numpy.uint8)
-			try:
+		n = 1
+		#image = numpy.zeros((self.face_size * n, self.face_size), dtype=numpy.uint8)
+		try:
+			for i in xrange(0, n):
+				u = data.x + data.width / 2
+				v = data.y + data.height / 2
+				image = self.bridge.imgmsg_to_cv2(data.image, "bgr8")
+				image = cv2.resize(image, (50, 50)) 
+				equb,equg,equr = cv2.split(image)
+				equb = cv2.equalizeHist(equb)
+				equg = cv2.equalizeHist(equg)
+				equr = cv2.equalizeHist(equr)
+				image = cv2.merge((equb,equg,equr))
+				
+				#cv2.imwrite("/home/team_zeta/slikeZ/"+str(100)+".png", equ)
+				[nbr_predicted, conf] = self.recognize(np.array(image).flatten().tolist())
+				if conf > 700000000:
+					return
+				print(self.id_prep[nbr_predicted])
 
-				for i in xrange(0, n):
-					u = data.x + data.width / 2
-					v = data.y + data.height / 2
-					image = self.bridge.imgmsg_to_cv2(data.image, "bgr8")
-					image = cv2.resize(image, (50, 50)) 
-					equb,equg,equr = cv2.split(image)
-					equb = cv2.equalizeHist(equb)
-					equg = cv2.equalizeHist(equg)
-					equr = cv2.equalizeHist(equr)
-					image = cv2.merge((equb,equg,equr))
-					
-					#cv2.imwrite("/home/team_zeta/slikeZ/"+str(100)+".png", equ)
-					[nbr_predicted, conf] = self.recognize(np.array(image).flatten().tolist())
-					self.cas = tm.time()
+				if self.id_prep[nbr_predicted] == 0:
+					self.id_cas[nbr_predicted] = tm.time()
 
-
+				if tm.time() - self.id_cas[nbr_predicted] < 1:
+					self.id_prep[nbr_predicted] += 1
+					self.id_cas[nbr_predicted] = tm.time()
+				else:
+					self.id_prep[nbr_predicted] = 0
+				
+				if self.id_prep[nbr_predicted] > 10:
 					camera_info = None
 					best_time = 100
 					for ci in self.camera_infos:
@@ -97,8 +107,8 @@ class Faces():
 
 					self.markers.markers.append(marker)
 					#self.marker_id_counter += 1
-			except CvBridgeError, e:
-				print e
+		except CvBridgeError, e:
+			print e
 
 
 
@@ -181,7 +191,9 @@ class Faces():
 		self.localize = rospy.ServiceProxy('localizer/localize', Localize)
 		self.markers_pub = rospy.Publisher('/sign', MarkerArray, queue_size=10)
 		self.markers = MarkerArray()
-
+		self.count = 0
+		self.id_prep = np.zeros(10)
+		self.id_cas = np.ones(10)*10
 
 
 # Main function.    
