@@ -177,7 +177,7 @@ class Faces():
 		self.cas = time.time()
 
 		self.localize = rospy.ServiceProxy('localizer/localize', Localize)
-		self.markers_pub = rospy.Publisher('/foundFace', MarkerArray, queue_size=10)
+		self.markers_pub = rospy.Publisher('/sign', MarkerArray, queue_size=10)
 		self.markers = MarkerArray()
 
 
