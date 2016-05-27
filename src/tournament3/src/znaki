@@ -151,7 +151,7 @@ class Faces():
 		#print(np.array([image]).astype(np.float32))
 		ret, nbr_predicted, neighbours, dist = self.recognizer.find_nearest(np.array([image]).astype(np.float32), k=5)
 		#print("predicted" + str(nbr_predicted))
-		print("coef"+str(dist) + " predicta "+ str(nbr_predicted))
+		print("coef"+str(np.mean(dist)) + " predicta "+ str(nbr_predicted))
 		return [nbr_predicted, np.mean(dist)]
 
 	def __init__(self):
