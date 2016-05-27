@@ -31,7 +31,7 @@ from geometry_msgs.msg import Point, Vector3
 
 class Faces():
 	def camera_callback(self, camera_info):
-		#print("berem camera")
+		print("berem camera")
 		self.camera_infos.append(camera_info)
 
 
@@ -66,7 +66,7 @@ class Faces():
 							camera_info = ci
 							best_time = time
 
-					#print("sledi camera ----"+ str(data.header.stamp.to_sec()) + "sss" + str(self.camera_infos))
+					print("sledi camera ----"+ str(data.header.stamp.to_sec()) + "sss" + str(self.camera_infos))
 					if not camera_info or best_time > 101:
 						return
 
