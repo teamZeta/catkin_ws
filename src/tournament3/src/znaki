@@ -37,7 +37,7 @@ class Faces():
 
 	def face_callback(self, data):
 		#print("v call back")
-		if(time.time() - self.cas > 2 ):
+		if(tm.time() - self.cas > 2 ):
 			#print("berem image")
 
 			n = 1
@@ -55,7 +55,7 @@ class Faces():
 					
 					#cv2.imwrite("/home/team_zeta/slikeZ/"+str(100)+".png", equ)
 					[nbr_predicted, conf] = self.recognize(np.array(image).flatten().tolist())
-					self.cas = time.time()
+					self.cas = tm.time()
 
 
 					camera_info = None
@@ -174,7 +174,7 @@ class Faces():
 
 		self.bridge = CvBridge()
 		self.faces_sub = rospy.Subscriber(faces_topic, Detection, self.face_callback)
-		self.cas = time.time()
+		self.cas = tm.time()
 
 		self.localize = rospy.ServiceProxy('localizer/localize', Localize)
 		self.markers_pub = rospy.Publisher('/sign', MarkerArray, queue_size=10)
