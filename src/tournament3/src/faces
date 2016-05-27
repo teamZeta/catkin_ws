@@ -36,20 +36,29 @@ class Faces():
 
 	def face_callback(self, data):
 		#print("v call back")
-		if(tm.time() - self.cas > 2 ):
-
-
-			n = 1
-			try:
-				for i in xrange(0, n):
-					u = data.x + data.width / 2
-					v = data.y + data.height / 2
-					image = self.bridge.imgmsg_to_cv2(data.image, "mono8")
-					equ = cv2.equalizeHist(image)
-					#cv2.imwrite("/home/team_zeta/slike/"+str(100)+".png", equ)
-					[nbr_predicted, conf] = self.recognize(equ)
+	
+		n = 1
+		try:
+			for i in xrange(0, n):
+				u = data.x + data.width / 2
+				v = data.y + data.height / 2
+				image = self.bridge.imgmsg_to_cv2(data.image, "mono8")
+				equ = cv2.equalizeHist(image)
+				#cv2.imwrite("/home/team_zeta/slike/"+str(100)+".png", equ)
+				[nbr_predicted, conf] = self.recognize(equ)
+				if conf > 70:
+					return
+					
+				if self.count == 0:
+					self.id_prep = nbr_predicted
+				if self.id_prep == nbr_predicted:
+					self.count += 1
 					self.cas = tm.time()
-
+				elif tm.time() - self.cas > 0.5:
+					self.count = 0
+					self.id_prep = -1
+				
+				if self.count > 10:
 					camera_info = None
 					best_time = 100
 					for ci in self.camera_infos:
@@ -88,8 +97,8 @@ class Faces():
 					self.markers.markers.append(marker)
 					#self.marker_id_counter += 1
 
-			except CvBridgeError, e:
-				print e
+		except CvBridgeError, e:
+			print e
 
 
 	def flush(self):
@@ -166,6 +175,8 @@ class Faces():
 		self.localize = rospy.ServiceProxy('localizer/localize', Localize)
 		self.markers_pub = rospy.Publisher('/foundFace', MarkerArray, queue_size=10)
 		self.markers = MarkerArray()
+		self.count = 0
+		self.id_prep = -1
 
 
 # Main function.    
