@@ -46,8 +46,8 @@ int main(int argc, char** argv){
     cmd_vel.linear.x = 0.0;
     cmd_vel.linear.y = 0.0;
     cmd_vel.angular.z = 0.0;
-    Ros::Time clock = ros::Time::now();
-    while(ros::ok()&&(ros::Time::now()-clock)<2)
+    ros::Time clock = ros::Time::now().toSec();
+    while(ros::ok()&&(ros::Time::now().toSec()-clock)<3)
         vel_pub_.publish(cmd_vel);
     ros::shutdown();
 
