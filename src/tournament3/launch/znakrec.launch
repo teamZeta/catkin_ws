@@ -2,13 +2,9 @@
 
 	 <include file="$(find turtlebot_bringup)/launch/3dsensor.launch" /> 
 
-<node pkg="usb_cam" type="usb_cam_node" name="camera" output="screen">
-    <param name="pixel_format" value="yuyv" />
-    <param name="video_device" type="string" value="/dev/video0" />
-  </node>
 
   	<include file="$(find dlib_detector)/launch/dlib_detector.launch">
-	<arg name="image_topic" value="/camera/image_raw" />
+	<arg name="image_topic" value="/camera/rgb/image_color" />
 	<arg name="detections_topic" value="/detector/traffic_signs" />
     <arg name="detector" value="$(find dlib_detector)/data/traffic_signs.dat"/>
   </include>
