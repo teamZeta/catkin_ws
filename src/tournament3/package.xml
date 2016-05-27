@@ -25,6 +25,7 @@
 	<run_depend>storeznak</run_depend>
 	<run_depend>znaki</run_depend>
   <run_depend>horn</run_depend>
+	<run_depend>storestolp</run_depend>
 	
 
 </package>

@@ -201,6 +201,7 @@ install(PROGRAMS src/faces DESTINATION ${CATKIN_PACKAGE_BIN_DESTINATION})
 install(PROGRAMS src/storeface DESTINATION ${CATKIN_PACKAGE_BIN_DESTINATION})
 install(PROGRAMS src/storeznak DESTINATION ${CATKIN_PACKAGE_BIN_DESTINATION})
 install(PROGRAMS src/znaki DESTINATION ${CATKIN_PACKAGE_BIN_DESTINATION})
+install(PROGRAMS src/storestolp DESTINATION ${CATKIN_PACKAGE_BIN_DESTINATION})
 
 add_executable(traffic src/traffic.cpp)
 target_link_libraries(traffic ${catkin_LIBRARIES})
