@@ -85,13 +85,13 @@ class Faces():
 					#print("sledi ----")
 					if not localization:
 						return
-					try:
-						now = rospy.Time(0)
-						(trans, rot) = listener.lookupTransform("/map", data.header.frame_id, now)
-					except: (tf.LookupException, tf.ConnectivityException):
-						print("e")
-					print(trans)
-					print(rot)
+					#try:
+					#	now = rospy.Time(0)
+					#	(trans, rot) = listener.lookupTransform("/map", data.header.frame_id, now)
+					#except: (tf.LookupException, tf.ConnectivityException):
+					#	print("e")
+					#print(trans)
+					#print(rot)
 					marker = Marker()
 					marker.header.stamp = data.header.stamp
 					marker.header.frame_id = data.header.frame_id
