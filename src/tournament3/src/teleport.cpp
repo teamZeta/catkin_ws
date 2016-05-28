@@ -22,6 +22,7 @@ static float diff=5.5;
 static float dynamicDiff;
 static bool reset=false;
 void changeMap(float x, float y){
+	printf("Racunam novo mapo\n");
 	int mapInd=0;
 	if(y>3)
 		mapInd=1;
@@ -34,12 +35,16 @@ void changeMap(float x, float y){
 		destInd=0;
 
 	dynamicDiff=(destInd-mapInd)*diff;
+	printf("Koordinate %f , %f ",x,y);
+	printf("Sem v: %d hocem v: %d teleport: %f",mapInd,destInd,dynamicDiff);
 	if(dynamicDiff==0)
 		once=false;
 }
 
 void callback (const visualization_msgs::MarkerArrayConstPtr& markerArray) {
-    if (markerArray->markers[0].id == 3) {      // one way
+	printf("vidim znak\n");
+    if (markerArray->markers[0].id == 3 || markerArray->markers[0].id == 1) {      // one way
+    	printf("uh oh one way\n");
         once=true;
         ros::NodeHandle nh;
 
