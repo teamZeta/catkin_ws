@@ -53,7 +53,7 @@ class Faces():
 				if self.id_prep[nbr_predicted] == 0:
 					self.id_cas[nbr_predicted] = tm.time()
 
-				if tm.time() - self.id_cas[nbr_predicted] < 0.2:
+				if tm.time() - self.id_cas[nbr_predicted] < 1:
 					self.id_prep[nbr_predicted] += 1
 					self.id_cas[nbr_predicted] = tm.time()
 				else:
@@ -69,7 +69,7 @@ class Faces():
 							best_time = time
 
 					#print("sledi camera ----"+ str(data.header.stamp.to_sec()) + "sss" + str(self.camera_infos))
-					if not camera_info or best_time > 1:
+					if not camera_info or best_time > 0.2:
 						return
 
 					camera_model = PinholeCameraModel()
