@@ -41,10 +41,11 @@ void callback (const pcl::PCLPointCloud2ConstPtr& cloud_blob) {
 
   pcl::SACSegmentation<pcl::PointXYZRGB> seg;
   seg.setOptimizeCoefficients (true);
-  seg.setModelType (pcl::SACMODEL_PLANE);
+  seg.setModelType (pcl::SACMODEL_CYLINDER);
   seg.setMethodType (pcl::SAC_RANSAC);
   seg.setMaxIterations (1000);
   seg.setDistanceThreshold (0.01);
+   seg.setRadiusLimits (0, 0.3);
   seg.setInputCloud (cloud_filtered);
     
   seg.segment(*inliers, *coefficients);
@@ -56,7 +57,7 @@ void callback (const pcl::PCLPointCloud2ConstPtr& cloud_blob) {
   pcl::ExtractIndices<pcl::PointXYZRGB> extract;
   extract.setInputCloud(cloud_filtered);
   extract.setIndices(inliers);
-  extract.setNegative(true);
+  extract.setNegative(false);
   extract.filter(*cloud_f);
 
 //nasa koda
