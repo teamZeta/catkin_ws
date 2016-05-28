@@ -195,9 +195,10 @@ void callbackFoundFace (const visualization_msgs::MarkerArrayConstPtr& markerArr
     goal.target_pose.header.stamp = ros::Time::now();
     tf::TransformListener listener;
     tf::StampedTransform transform;
-    listener.waitForTransform("/map", markerArray->markers[0].header.frame_id, markerArray->markers[0].header.stamp, ros::Duration(5.0),ros::Duration(0.01));
-    listener.lookupTransform("/map", markerArray->markers[0].header.frame_id, markerArray->markers[0].header.stamp, transform);
+    listener.waitForTransform("/map", "/base_link", ros::Time(0), ros::Duration(5));
+    listener.lookupTransform("/map", "/base_link", ros::Time(0), transform);
                 
+
     float xRobot = transform.getOrigin().x();
     float yRobot = transform.getOrigin().y();
     float xFace = markerArray->markers[0].pose.position.x;
