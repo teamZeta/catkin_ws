@@ -68,7 +68,7 @@ void callback (const pcl::PCLPointCloud2ConstPtr& cloud_blob) {
 pcl::IndicesPtr indices (new std::vector <int>);
   pcl::PassThrough<pcl::PointXYZRGB> pass;
   pass.setInputCloud (cloud_f);
-  pass.setFilterFieldName ("z");
+  pass.setFilterFieldName ("y");
   pass.setFilterLimits (0.0, 1.0);
   pass.filter (*indices);
 
@@ -76,10 +76,10 @@ pcl::IndicesPtr indices (new std::vector <int>);
   reg.setInputCloud (cloud_f);
   reg.setIndices (indices);
   reg.setSearchMethod (tree);
-  reg.setDistanceThreshold (3);
+  reg.setDistanceThreshold (30);
   reg.setPointColorThreshold (26);
   reg.setRegionColorThreshold (25);
-  reg.setMinClusterSize (60);
+  reg.setMinClusterSize (20);
 
   std::vector <pcl::PointIndices> clusters;
   reg.extract (clusters);
