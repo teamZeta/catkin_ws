@@ -25,6 +25,7 @@ void callback (const visualization_msgs::MarkerArrayConstPtr& markerArray) {
 }
 
 void callback2(const geometry_msgs::PoseWithCovarianceStamped msg){
+    printf("callback2\n");
     //msg.pose.pose.position.y+=110;
     geometry_msgs::PoseWithCovarianceStamped pos;
     pos.pose.pose.position.x = msg.pose.pose.position.x;
@@ -38,6 +39,7 @@ void callback2(const geometry_msgs::PoseWithCovarianceStamped msg){
     ros::NodeHandle nh;
     ros::Publisher pub = nh.advertise<geometry_msgs::PoseWithCovarianceStamped>("/initialpose", 1);
     pub.publish(pos);
+    printf("sfdghv\n");
 }
 
 int main(int argc, char** argv){
