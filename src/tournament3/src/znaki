@@ -65,7 +65,7 @@ class Faces():
 				if self.id_prep[nbr_predicted[0]] == 0:
 					self.id_cas[nbr_predicted[0]] = tm.time()
 
-				if tm.time() - self.id_cas[nbr_predicted[0]] < 1:
+				if tm.time() - self.id_cas[nbr_predicted[0]] < 0.2:
 					self.id_prep[nbr_predicted[0]] += 1
 					self.id_cas[nbr_predicted[0]] = tm.time()
 				else:
