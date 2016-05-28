@@ -103,7 +103,7 @@ class Faces():
 					marker.id = nbr_predicted
 					marker.scale = Vector3(0.1, 0.1, 0.1)
 					marker.color = ColorRGBA(1, 1, 0, 1)
-					#print("predicted" + str(nbr_predicted) + " conf " + str(conf))
+					print("predicted" + str(nbr_predicted) + " conf " + str(conf))
 
 					self.markers.markers.append(marker)
 					#self.marker_id_counter += 1
