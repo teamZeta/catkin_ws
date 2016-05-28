@@ -69,7 +69,7 @@ class Faces():
 							best_time = time
 
 					#print("sledi camera ----"+ str(data.header.stamp.to_sec()) + "sss" + str(self.camera_infos))
-					if not camera_info or best_time > 101:
+					if not camera_info or best_time > 1:
 						return
 
 					camera_model = PinholeCameraModel()
