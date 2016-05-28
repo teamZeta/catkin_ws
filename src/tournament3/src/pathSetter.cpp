@@ -66,6 +66,8 @@ void callback (const std_msgs::String::ConstPtr& msg) {
         i++;
     }
 
+    printf("Callback: %s, %s, %s\n", array[0].c_str(), array[1].c_str(), array[2].c_str());
+
     // ::::::::::::::::::::::
     // doloci katero osebo iscemo
     trenutnaOseba = array[1];
@@ -82,7 +84,6 @@ void callback (const std_msgs::String::ConstPtr& msg) {
     // doloci kam mora it
     int searchStart = 0;
     int searchEnd = 0;
-    printf("%s %s %s \n", array[0].c_str(), array[1].c_str(), array[2].c_str());
     if (!array[2].compare("red") || !array[2].compare("Red")) {
         currentGoal = 0;
         searchStart = 0;
@@ -118,7 +119,6 @@ void callback (const std_msgs::String::ConstPtr& msg) {
        // sleep(1.1);
     } else {
         printf("No go %s\n",ac.getState().toString().c_str());
-        // mogoce rabi while, ki bo setal goal dokler mu ne uspe prit do tam
     }
 
     // ::::::::::::::::::::::
@@ -152,7 +152,7 @@ void callback (const std_msgs::String::ConstPtr& msg) {
     // zacni izvajat iskanje prave zgradbe
     else if (!array[0].compare("take")) {
 
-
+        // TODO: iskanje zgradbe
 
         // ko najde zgradbo, vrzi osebo iz avta
         printf("ROBOT: 'Sayonara %s.'\n", array[1].c_str());
@@ -186,6 +186,7 @@ void callbackFoundFace (const visualization_msgs::MarkerArrayConstPtr& markerArr
     }
 
     foundFace = true;
+    printf("ROBOT: 'I found the person.'\n");
 
    /* ros::NodeHandle node;
     ros::Publisher vis_pub = node.advertise<visualization_msgs::Marker>( "visualization_marker", 1 );
@@ -194,9 +195,9 @@ void callbackFoundFace (const visualization_msgs::MarkerArrayConstPtr& markerArr
     goal.target_pose.header.stamp = ros::Time::now();
     tf::TransformListener listener;
     tf::StampedTransform transform;
-    listener.waitForTransform("/map", "/base_link", ros::Time(0), ros::Duration(10) );
-    listener.lookupTransform("/map", "/base_link", ros::Time(0), transform);
-    
+    listener.waitForTransform("/map", markerArray->markers[i].header.frame_id, markerArray->markers[i].header.stamp, ros::Duration(5.0),ros::Duration(0.01));
+    listener.lookupTransform("/map", markerArray->markers[i].header.frame_id, markerArray->markers[i].header.stamp, transform);
+                
     float xRobot = transform.getOrigin().x();
     float yRobot = transform.getOrigin().y();
     float xFace = markerArray->markers[0].pose.position.x;
@@ -204,16 +205,14 @@ void callbackFoundFace (const visualization_msgs::MarkerArrayConstPtr& markerArr
     float zFace = markerArray->markers[0].pose.position.z;
 
     tf::Stamped<tf::Pose> poseMarkerMap;
-    try{
+    try {
         tf::Stamped<tf::Pose> poseMarker(
         tf::Pose(tf::Quaternion(0, 0, 0, 1), tf::Vector3(xFace, 0, markerArray->markers[0].pose.position.z)),
         markerArray->markers[0].header.stamp, markerArray->markers[0].header.frame_id);
 
         listener.transformPose("/map", poseMarker, poseMarkerMap);
         printf("Time works\n");
-    }catch(tf2::ExtrapolationException e){
-        //printf("Error\n");
-
+    } catch(tf2::ExtrapolationException e) {
         tf::Stamped<tf::Pose> poseMarker(
         tf::Pose(tf::Quaternion(0, 0, 0, 1), tf::Vector3(xFace, 0, markerArray->markers[0].pose.position.z)),
         ros::Time(0), markerArray->markers[0].header.frame_id);
@@ -327,6 +326,9 @@ void searchingGoalInit() {
     searchingGoal[i++]=createGoal(-4.7,0.5,0,-1);
 }
 
+// ::::::::::::::::::::::::::::::::::::::::::::::
+// :::::::::::::::::::: MAIN ::::::::::::::::::::
+// ::::::::::::::::::::::::::::::::::::::::::::::
 int main(int argc, char** argv){
     ros::init(argc, argv, "pathSetter");
     ros::NodeHandle nh;
