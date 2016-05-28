@@ -16,6 +16,9 @@
 
 using namespace std;
 
+static ros::Publisher posit;
+static bool T = true;
+
 void callback (const visualization_msgs::MarkerArrayConstPtr& markerArray) {
     if (markerArray->markers[0].id == 3) {      // one way
         
@@ -25,26 +28,29 @@ void callback (const visualization_msgs::MarkerArrayConstPtr& markerArray) {
 }
 
 void callback2(const geometry_msgs::PoseWithCovarianceStamped msg){
-    printf("callback2\n");
-    //msg.pose.pose.position.y+=110;
-    geometry_msgs::PoseWithCovarianceStamped pos;
-    pos.pose.pose.position.x = msg.pose.pose.position.x;
-    pos.pose.pose.position.y = msg.pose.pose.position.y+110;
-    pos.pose.pose.position.z = msg.pose.pose.position.z;
-    pos.pose.pose.orientation.x = msg.pose.pose.orientation.x;
-    pos.pose.pose.orientation.y = msg.pose.pose.orientation.y;
-    pos.pose.pose.orientation.z = msg.pose.pose.orientation.z;
-    pos.pose.pose.orientation.w = msg.pose.pose.orientation.w;
+    if (T) {
 
-    ros::NodeHandle nh;
-    ros::Publisher pub = nh.advertise<geometry_msgs::PoseWithCovarianceStamped>("/initialpose", 1);
-    pub.publish(pos);
-    printf("sfdghv\n");
+        geometry_msgs::PoseWithCovarianceStamped pos;
+        pos.pose.pose.position.x = msg.pose.pose.position.x;
+        pos.pose.pose.position.y = msg.pose.pose.position.y+5.5;
+        pos.pose.pose.position.z = msg.pose.pose.position.z;
+        pos.pose.pose.orientation.x = msg.pose.pose.orientation.x;
+        pos.pose.pose.orientation.y = msg.pose.pose.orientation.y;
+        pos.pose.pose.orientation.z = msg.pose.pose.orientation.z;
+        pos.pose.pose.orientation.w = msg.pose.pose.orientation.w;
+
+        posit.publish(pos);
+        T = false;
+    }
 }
 
 int main(int argc, char** argv){
-    ros::init(argc, argv, "oneway");
+    ros::init(argc, argv, "teleport");
     ros::NodeHandle nh;
+    ros::NodeHandle nh4;
+    posit = nh4.advertise<geometry_msgs::PoseWithCovarianceStamped>("/initialpose", 1);
+
+    sleep(5);
 
     ros::Subscriber sub = nh.subscribe<visualization_msgs::MarkerArray> ("/sign", 1, callback);
     ////////////////////
