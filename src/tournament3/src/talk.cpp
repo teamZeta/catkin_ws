@@ -32,17 +32,16 @@ static int sex2 = 0;
 static int nPerson = 0;
 static int order = 0;			// 0 - undefined, 1 - pick up, 2 - take to
 static string osebe[] = {"Harry", "Philip", "Tina", "Peter", "Tom", "Ellen", "Kim", "Scarlett", "Matthew"};
-
+static string barve[] = {"Red", "Green", "Blue", "Yellow", "red", "green", "blue", "yellow"};
 static ros::Publisher setGoal;
 
 static bool color(std::string barva) {
-	if (!barva.compare("red") || !barva.compare("green") || !barva.compare("blue") || 
-		!barva.compare("yellow") || !barva.compare("Red") || !barva.compare("Green") || !barva.compare("Blue") || 
-		!barva.compare("Yellow")) {
-		return true;
-	} else {
-		return false;
+	for (int i=0; i<8; i++) {
+		if (!barva.compare(barve[i])) {
+		    return true;
+		}
 	}
+	return false;
 }
 
 static bool female(std::string trenutnaOseba) {
@@ -92,7 +91,7 @@ void callback (const std_msgs::String::ConstPtr& msg) {
 
 				if (!person1.compare("") && !person2.compare("")) {							// Oba sedeza sta prazna
 					person1 = array[1];
-					street1 = array[3];
+					street1 = array[4];
 					if (female(array[1])) {
 						sex1 = 2;
 					} else {
@@ -101,7 +100,7 @@ void callback (const std_msgs::String::ConstPtr& msg) {
 					nPerson = 1;
 					newOrder = false;
 					order = 1;
-					printf("ROBOT: 'Should I pick %s on %s Street?'\n", array[1].c_str(), array[3].c_str());
+					printf("ROBOT: 'Should I pick %s on the %s Street?'\n", person1.c_str(), street1.c_str());
 
 				} else if (!person1.compare("")) {										// Samo prvi sedez je prazen
 					if (female(array[1])) {
@@ -116,10 +115,10 @@ void callback (const std_msgs::String::ConstPtr& msg) {
 					} else {
 						nPerson = 1;
 						person1 = array[1];
-						street1 = array[3];
+						street1 = array[4];
 						newOrder = false;
 						order = 1;
-						printf("ROBOT: 'Should I pick %s on %s Street?'\n", array[1].c_str(), array[3].c_str());
+						printf("ROBOT: 'Should I pick %s on the %s Street?'\n",person1.c_str(), street1.c_str());
 					}
 
 				} else if (!person2.compare("")) {											// Samo drugi sedez je prazen
@@ -135,43 +134,39 @@ void callback (const std_msgs::String::ConstPtr& msg) {
 					} else {
 						nPerson = 2;
 						person2 = array[1];
-						street2 = array[3];
+						street2 = array[4];
 						newOrder = false;
 						order = 1;
-						printf("ROBOT: 'Should I pick %s on %s Street?'\n", array[1].c_str(), array[3].c_str());	
+						printf("ROBOT: 'Should I pick %s on the %s Street?'\n", person2.c_str(), street2.c_str());	
 					}
 
 				} else {																	// Oba sedeza sta zasedena
 					printf("ROBOT: 'There is no space left in the taxi.'\n");
 				}
 			} else {
-				printf("ROBOT: 'I didn't understand the order. Pls repeat it.'\n");
+				printf("ROBOT: 'I didn't understand the order. Please repeat it.'\n");
 			}
 
 		// :::::::::::::::::::::::::::::::::::::::::::::::
 		// :::::::::::::::: ODPELJI OSEBO ::::::::::::::::
 		// :::::::::::::::::::::::::::::::::::::::::::::::
 			
-		} else if (!array[0].compare("take")) {
-			if (color(array[4])) {
-				if (!person1.compare(array[1])) {
-					nPerson = 1;
-					building1 = array[4];
-					newOrder = false;
-					printf("ROBOT: 'Should I take %s to the %s Building?'\n", array[1].c_str(), array[4].c_str());
-				} else if (!person2.compare(array[1])) {
-					nPerson = 2;
-					building2 = array[4];
-					newOrder = false;
-					printf("ROBOT: 'Should I take %s to the %s Building?'\n", array[1].c_str(), array[4].c_str());
-				} else {
-					printf("No person with such name in taxi.\n");
-				}
+		} else if (!array[0].compare("take") && color(array[4])) {
+			if (!person1.compare(array[1])) {
+				nPerson = 1;
+				building1 = array[4];
+				newOrder = false;
+				printf("ROBOT: 'Should I take %s to the %s Building?'\n", person1.c_str(), building1.c_str());
+			} else if (!person2.compare(array[1])) {
+				nPerson = 2;
+				building2 = array[4];
+				newOrder = false;
+				printf("ROBOT: 'Should I take %s to the %s Building?'\n", person2.c_str(), building2.c_str());
 			} else {
-				printf("ROBOT: 'I didn't understand the order. Pls repeat it.'\n");
+				printf("ROBOT: 'No person with such name in the taxi.'\n");
 			}
 		} else {
-			printf("ROBOT: 'I didn't understand the order. Pls repeat it.'\n");
+			printf("ROBOT: 'I didn't understand the order. Please repeat it.'\n");
 		}
 
 		// :::::::::::::::::::::::::::::::::::::::::::::
@@ -201,8 +196,8 @@ void callback (const std_msgs::String::ConstPtr& msg) {
 				  //}
 				} else if (nPerson == 2) {
 					nPerson = 0;
-					ros::Rate loop_rate(10);
-					while (ros::ok()) {
+					//ros::Rate loop_rate(10);
+					//while (ros::ok()) {
 						//printf("posiljam stop\n");
 				  		std_msgs::String msg;
 				    	std::stringstream ss;
@@ -210,10 +205,10 @@ void callback (const std_msgs::String::ConstPtr& msg) {
 				    	msg.data = ss.str();
 				    	setGoal.publish(msg);
 				    	
-				    	ros::spinOnce();
+				    //	ros::spinOnce();
 
-				    	loop_rate.sleep();
-				  	}
+				    //	loop_rate.sleep();
+				  	//}
 				} else {
 					printf("Program shouldn't come here. (Izvedi ukaz, nPerson != 1,2)\n");
 				}
@@ -245,8 +240,8 @@ void callback (const std_msgs::String::ConstPtr& msg) {
 				newOrder = true;
 				if (nPerson == 1) {
 					nPerson = 0;
-					ros::Rate loop_rate(10);
-					while (ros::ok()) {
+					//ros::Rate loop_rate(10);
+					//while (ros::ok()) {
 						//printf("posiljam stop\n");
 				  		std_msgs::String msg;
 				    	std::stringstream ss;
@@ -254,15 +249,15 @@ void callback (const std_msgs::String::ConstPtr& msg) {
 				    	msg.data = ss.str();
 				    	setGoal.publish(msg);
 				    	
-				    	ros::spinOnce();
+				    //	ros::spinOnce();
 
-				    	loop_rate.sleep();
-				  	}
+				    //	loop_rate.sleep();
+				  	//}
 
 				} else if (nPerson == 2) {
 					nPerson = 0;
-					ros::Rate loop_rate(10);
-					while (ros::ok()) {
+					//ros::Rate loop_rate(10);
+					//while (ros::ok()) {
 						//printf("posiljam stop\n");
 				  		std_msgs::String msg;
 				    	std::stringstream ss;
@@ -270,10 +265,10 @@ void callback (const std_msgs::String::ConstPtr& msg) {
 				    	msg.data = ss.str();
 				    	setGoal.publish(msg);
 				    	
-				    	ros::spinOnce();
+				    //	ros::spinOnce();
 
-				    	loop_rate.sleep();
-				  	}
+				    //	loop_rate.sleep();
+				  	//}
 				} else {
 					printf("Program shouldn't come here. (Izvedi ukaz, nPerson != 1,2)\n");
 				}
@@ -298,19 +293,13 @@ void callback (const std_msgs::String::ConstPtr& msg) {
 		} else {
 			printf("Program shouldn't come here. (order != 1,2) \n");
 		}
-
-
-	/*
-		if (!array[1].compare("Peter")) {
-			printf("%s\n", array[1].c_str());
-		}*/
 	}
-
 }
 
+// ::::::::::::::::::::::::::::::::::::::::::::::
+// ::::::::::: CALLBACK UPDATE PEOPLE :::::::::::
+// ::::::::::::::::::::::::::::::::::::::::::::::
 void callbackUpdatePeople (const std_msgs::String::ConstPtr& msg) {
-	//ROS_INFO("I heard: [%s]", msg->data.c_str());
-	//std::cout<<msg->data.c_str()<<std::endl;
 
 	string array[1];
 	int i = 0;
@@ -335,6 +324,9 @@ void callbackUpdatePeople (const std_msgs::String::ConstPtr& msg) {
 	}
 }
 
+// ::::::::::::::::::::::::::::::::::::::::::::::
+// :::::::::::::::::::: MAIN ::::::::::::::::::::
+// ::::::::::::::::::::::::::::::::::::::::::::::
 int main(int argc, char** argv){
   	ros::init(argc, argv, "talk");
 	ros::NodeHandle nh;
