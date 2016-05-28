@@ -17,22 +17,42 @@
 using namespace std;
 
 static ros::Publisher posit;
-static bool T = true;
+static bool once = false;
+static float diff=5.5;
+static float dynamicDiff;
+static bool reset=false;
+void changeMap(float x, float y){
+	int mapInd=0;
+	if(y>3)
+		mapInd=1;
+	else if(y<-0.9)
+		mapInd=-1;
+	int destInd=1;
+	if(x<-3)
+		destInd=-1;
+	if(reset)
+		destInd=0;
+
+	dynamicDiff=(destInd-mapInd)*diff;
+	if(dynamicDiff==0)
+		once=false;
+}
 
 void callback (const visualization_msgs::MarkerArrayConstPtr& markerArray) {
     if (markerArray->markers[0].id == 3) {      // one way
-        
+        once=true;
         ros::NodeHandle nh;
 
     }
 }
 
 void callback2(const geometry_msgs::PoseWithCovarianceStamped msg){
-    if (T) {
-
+	if(once)
+		changeMap((float)msg.pose.pose.position.x,(float)msg.pose.pose.position.y);
+    if (once) {
         geometry_msgs::PoseWithCovarianceStamped pos;
         pos.pose.pose.position.x = msg.pose.pose.position.x;
-        pos.pose.pose.position.y = msg.pose.pose.position.y+5.5;
+        pos.pose.pose.position.y = msg.pose.pose.position.y+dynamicDiff;
         pos.pose.pose.position.z = msg.pose.pose.position.z;
         pos.pose.pose.orientation.x = msg.pose.pose.orientation.x;
         pos.pose.pose.orientation.y = msg.pose.pose.orientation.y;
@@ -40,42 +60,20 @@ void callback2(const geometry_msgs::PoseWithCovarianceStamped msg){
         pos.pose.pose.orientation.w = msg.pose.pose.orientation.w;
 
         posit.publish(pos);
-        T = false;
+        once = false;
     }
 }
 
 int main(int argc, char** argv){
     ros::init(argc, argv, "teleport");
-    ros::NodeHandle nh;
-    ros::NodeHandle nh4;
-    posit = nh4.advertise<geometry_msgs::PoseWithCovarianceStamped>("/initialpose", 1);
+    ros::NodeHandle nh,nh2,nh3;
+    posit = nh.advertise<geometry_msgs::PoseWithCovarianceStamped>("/initialpose", 1);
 
     sleep(5);
 
-    ros::Subscriber sub = nh.subscribe<visualization_msgs::MarkerArray> ("/sign", 1, callback);
-    ////////////////////
-    ros::NodeHandle nh2;
-    ros::Subscriber sub2 = nh2.subscribe<geometry_msgs::PoseWithCovarianceStamped> ("/amcl_pose", 1, callback2);
-
-
-    /*geometry_msgs::PoseWithCovarianceStamped pos;
-    pos.pose.pose.position.x = transform.getOrigin().x();
-    pos.pose.pose.position.y = transform.getOrigin().y()+110;
-    pos.pose.pose.position.z = transform.getOrigin().z();
-    pos.pose.pose.orientation.x = transform.getRotation().x();
-    pos.pose.pose.orientation.y = transform.getRotation().y();
-    pos.pose.pose.orientation.z = transform.getRotation().z();
-    pos.pose.pose.orientation.w = transform.getRotation().w();
-    //position.pose.position.y+=110;
-
-    ros::Publisher pub = nh.advertise<geometry_msgs::PoseWithCovarianceStamped>("/initialpose", 1);
-    pub.publish(pos);*/
-
-
-
-    //////////////////////////////
-
+    ros::Subscriber sub = nh2.subscribe<visualization_msgs::MarkerArray> ("/sign", 1, callback);
+    ros::Subscriber sub2 = nh3.subscribe<geometry_msgs::PoseWithCovarianceStamped> ("/amcl_pose", 1, callback2);
+  
     ros::spin();
     
-    //return 0;
 }
