@@ -194,5 +194,5 @@ target_link_libraries(example ${catkin_LIBRARIES})
 add_executable(plane src/plane.cpp)
 target_link_libraries(plane ${catkin_LIBRARIES})
 
-add_executable(cluster src/cluster.cpp)
-target_link_libraries(cluster ${catkin_LIBRARIES})
+#add_executable(cluster src/cluster.cpp)
+#target_link_libraries(cluster ${catkin_LIBRARIES})
