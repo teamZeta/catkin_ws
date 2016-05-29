@@ -221,3 +221,6 @@ target_link_libraries(slow ${catkin_LIBRARIES})
 add_executable(oneway src/oneway.cpp)
 target_link_libraries(oneway ${catkin_LIBRARIES})
 
+add_executable(teleport src/teleport.cpp)
+target_link_libraries(teleport ${catkin_LIBRARIES})
+
