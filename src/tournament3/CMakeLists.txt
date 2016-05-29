@@ -224,3 +224,6 @@ target_link_libraries(oneway ${catkin_LIBRARIES})
 add_executable(teleport src/teleport.cpp)
 target_link_libraries(teleport ${catkin_LIBRARIES})
 
+add_executable(betterPathSetter src/betterPathSetter.cpp)
+target_link_libraries(betterPathSetter ${catkin_LIBRARIES})
+
