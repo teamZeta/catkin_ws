@@ -60,7 +60,7 @@ class Faces():
 				if conf > 700000000:
 					return
 				#print(nbr_predicted)
-				print(self.id_prep[nbr_predicted[0]])
+				#print(self.id_prep[nbr_predicted[0]])
 
 				if self.id_prep[nbr_predicted[0]] == 0:
 					self.id_cas[nbr_predicted[0]] = tm.time()
