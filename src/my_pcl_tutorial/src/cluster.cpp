@@ -20,6 +20,9 @@
 #include <pcl/filters/passthrough.h>
 #include <pcl/segmentation/region_growing_rgb.h>
 
+#include <pcl/features/normal_3d.h>
+
+
 
 
 
@@ -27,6 +30,8 @@ ros::Publisher pub;
 
 // This function is a callback for incoming pointcloud data
 void callback (const pcl::PCLPointCloud2ConstPtr& cloud_blob) {
+  pcl::search::KdTree<pcl::PointXYZRGB>::Ptr tree (new pcl::search::KdTree<pcl::PointXYZRGB> ());
+  pcl::NormalEstimation<pcl::PointXYZRGB, pcl::Normal> ne;
   pcl::PCLPointCloud2::Ptr cloud_filtered_blob (new pcl::PCLPointCloud2);
   pcl::PointCloud<pcl::PointXYZRGB>::Ptr cloud_filtered (new pcl::PointCloud<pcl::PointXYZRGB>), cloud_p (new pcl::PointCloud<pcl::PointXYZRGB>), cloud_f (new pcl::PointCloud<pcl::PointXYZRGB>);
   pcl::PointCloud<pcl::PointXYZRGB>::Ptr cloud_filtered2 (new pcl::PointCloud<pcl::PointXYZRGB>);
@@ -44,13 +49,19 @@ void callback (const pcl::PCLPointCloud2ConstPtr& cloud_blob) {
   pcl::ModelCoefficients::Ptr coefficients (new pcl::ModelCoefficients ());
   pcl::PointIndices::Ptr inliers (new pcl::PointIndices ());
 
+  // Estimate point normals
+  ne.setSearchMethod (tree);
+  ne.setInputCloud (cloud_filtered);
+  ne.setKSearch (50);
+  ne.compute (*cloud_normals);
+
   //pcl::SACSegmentation<pcl::PointXYZRGB> seg;
   pcl::SACSegmentationFromNormals<pcl::PointXYZRGB, pcl::Normal> seg; 
   seg.setOptimizeCoefficients (true);
   seg.setModelType (pcl::SACMODEL_NORMAL_PLANE);
   seg.setNormalDistanceWeight (0.1);
   seg.setMethodType (pcl::SAC_RANSAC);
-  seg.setMaxIterations (1000);
+  seg.setMaxIterations (100);
   seg.setDistanceThreshold (0.01);
   seg.setInputCloud (cloud_filtered);
   seg.setInputNormals (cloud_normals);
@@ -64,35 +75,38 @@ void callback (const pcl::PCLPointCloud2ConstPtr& cloud_blob) {
   // Extract points of found plane
   pcl::ExtractIndices<pcl::PointXYZRGB> extract;
   pcl::ExtractIndices<pcl::Normal> extract_normals;
+
   extract.setInputCloud(cloud_filtered);
   extract.setIndices(inliers);
   extract.setNegative(true);
-  
   extract.filter(*cloud_filtered2);
+  
   extract_normals.setNegative (true);
   extract_normals.setInputCloud (cloud_normals);
   extract_normals.setIndices (inliers);
-  //;
   extract_normals.filter (*cloud_normals2);
 
 
   pcl::ModelCoefficients::Ptr coefficients2 (new pcl::ModelCoefficients ());
   pcl::PointIndices::Ptr inliers2 (new pcl::PointIndices ()); 
-  pcl::fromPCLPointCloud2 (*cloud_filtered_blob, *cloud_filtered2);
+  //pcl::fromPCLPointCloud2 (*cloud_filtered_blob, *cloud_filtered2);
+  pcl::SACSegmentationFromNormals<pcl::PointXYZRGB, pcl::Normal> seg2;
+  seg2.setOptimizeCoefficients (true);
+  seg2.setModelType (pcl::SACMODEL_CYLINDER);
+  seg2.setMethodType (pcl::SAC_RANSAC);
+  seg2.setNormalDistanceWeight (0.1);
+  seg2.setMaxIterations (10000);
+  seg2.setDistanceThreshold (0.05);
+  //seg.setRadiusLimits (0.02, 0.25);
+  seg2.setInputCloud (cloud_filtered2);
+  seg2.setInputNormals (cloud_normals2);
 
-  seg.setOptimizeCoefficients (true);
-  seg.setModelType (pcl::SACMODEL_CYLINDER);
-  seg.setMethodType (pcl::SAC_RANSAC);
-  seg.setNormalDistanceWeight (0.1);
-  seg.setMaxIterations (10000);
-  seg.setDistanceThreshold (0.2);
-  seg.setRadiusLimits (0, 0.1);
-  seg.setInputCloud (cloud_filtered2);
-  seg.setInputNormals (cloud_normals2);
-
-  seg.segment (*inliers2, *coefficients2);
+  seg2.segment (*inliers2, *coefficients2);
   // Extract points of found plane
- 
+  printf("velikost %ld", inliers2->indices.size ());
+  if (inliers2->indices.size () == 0) return;
+
+
   extract.setInputCloud(cloud_filtered2);
   extract.setIndices(inliers2);
   extract.setNegative(false);
