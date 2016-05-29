@@ -7,6 +7,7 @@
 #include <pcl/point_types.h>
 #include <pcl/sample_consensus/method_types.h>
 #include <pcl/sample_consensus/model_types.h>
+#include <pcl/sample_consensus/sac_model_cylinder.h>
 #include <pcl/segmentation/sac_segmentation.h>
 #include <pcl/filters/voxel_grid.h>
 #include <pcl/filters/extract_indices.h>
@@ -29,8 +30,8 @@ void callback (const pcl::PCLPointCloud2ConstPtr& cloud_blob) {
   pcl::PCLPointCloud2::Ptr cloud_filtered_blob (new pcl::PCLPointCloud2);
   pcl::PointCloud<pcl::PointXYZRGB>::Ptr cloud_filtered (new pcl::PointCloud<pcl::PointXYZRGB>), cloud_p (new pcl::PointCloud<pcl::PointXYZRGB>), cloud_f (new pcl::PointCloud<pcl::PointXYZRGB>);
   pcl::PointCloud<pcl::PointXYZRGB>::Ptr cloud_filtered2 (new pcl::PointCloud<pcl::PointXYZRGB>);
-
-  
+ pcl::PointCloud<pcl::Normal>::Ptr cloud_normals (new pcl::PointCloud<pcl::Normal>);
+  pcl::PointCloud<pcl::Normal>::Ptr cloud_normals2 (new pcl::PointCloud<pcl::Normal>);
   // Create the filtering object: downsample the dataset using a leaf size of 1cm
   pcl::VoxelGrid<pcl::PCLPointCloud2> sor;
   sor.setInputCloud (cloud_blob);
@@ -43,13 +44,16 @@ void callback (const pcl::PCLPointCloud2ConstPtr& cloud_blob) {
   pcl::ModelCoefficients::Ptr coefficients (new pcl::ModelCoefficients ());
   pcl::PointIndices::Ptr inliers (new pcl::PointIndices ());
 
-  pcl::SACSegmentation<pcl::PointXYZRGB> seg;
+  //pcl::SACSegmentation<pcl::PointXYZRGB> seg;
+  pcl::SACSegmentationFromNormals<pcl::PointXYZRGB, pcl::Normal> seg; 
   seg.setOptimizeCoefficients (true);
-  seg.setModelType (pcl::SACMODEL_PLANE);
+  seg.setModelType (pcl::SACMODEL_NORMAL_PLANE);
+  seg.setNormalDistanceWeight (0.1);
   seg.setMethodType (pcl::SAC_RANSAC);
   seg.setMaxIterations (1000);
   seg.setDistanceThreshold (0.01);
   seg.setInputCloud (cloud_filtered);
+  seg.setInputNormals (cloud_normals);
     
   seg.segment(*inliers, *coefficients);
 
@@ -59,10 +63,17 @@ void callback (const pcl::PCLPointCloud2ConstPtr& cloud_blob) {
 
   // Extract points of found plane
   pcl::ExtractIndices<pcl::PointXYZRGB> extract;
+  pcl::ExtractIndices<pcl::Normal> extract_normals;
   extract.setInputCloud(cloud_filtered);
   extract.setIndices(inliers);
   extract.setNegative(true);
-  extract.filter(*cloud_f);
+  
+  extract.filter(*cloud_filtered2);
+  extract_normals.setNegative (true);
+  extract_normals.setInputCloud (cloud_normals);
+  extract_normals.setIndices (inliers);
+  //;
+  extract_normals.filter (*cloud_normals2);
 
 
   pcl::ModelCoefficients::Ptr coefficients2 (new pcl::ModelCoefficients ());
@@ -72,18 +83,20 @@ void callback (const pcl::PCLPointCloud2ConstPtr& cloud_blob) {
   seg.setOptimizeCoefficients (true);
   seg.setModelType (pcl::SACMODEL_CYLINDER);
   seg.setMethodType (pcl::SAC_RANSAC);
+  seg.setNormalDistanceWeight (0.1);
   seg.setMaxIterations (10000);
   seg.setDistanceThreshold (0.2);
   seg.setRadiusLimits (0, 0.1);
   seg.setInputCloud (cloud_filtered2);
+  seg.setInputNormals (cloud_normals2);
 
   seg.segment (*inliers2, *coefficients2);
   // Extract points of found plane
-  pcl::ExtractIndices<pcl::PointXYZRGB> extract2;
-  extract2.setInputCloud(cloud_filtered2);
-  extract2.setIndices(inliers2);
-  extract2.setNegative(false);
-  extract2.filter(*cloud_f);
+ 
+  extract.setInputCloud(cloud_filtered2);
+  extract.setIndices(inliers2);
+  extract.setNegative(false);
+  extract.filter(*cloud_f);
 
   // Convert to ROS data type
   pcl::PCLPointCloud2 outcloud;
