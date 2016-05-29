@@ -186,12 +186,12 @@ void changeGoals(move_base_msgs::MoveBaseGoal Goals[],int size){
 void changeMap(float x, float y){
     printf("Racunam novo mapo\n");
     int mapInd=0;
-    if(y>3)
+    if(y>1.1)
         mapInd=1;
-    else if(y<-0.9)
+    else if(y<-3.2)
         mapInd=-1;
     int destInd=1;
-    if(x<-3)
+    if(x<-2)
         destInd=-1;
 
     dynamicDiff=(destInd-mapInd)*diff;

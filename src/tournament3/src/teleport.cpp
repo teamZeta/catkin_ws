@@ -22,15 +22,15 @@ static float diff=6.05;
 static float dynamicDiff;
 static bool reset=false;
 void changeMap(float x, float y){
-	printf("Racunam novo mapo\n");
-	int mapInd=0;
-	if(y>3)
-		mapInd=1;
-	else if(y<-0.9)
-		mapInd=-1;
-	int destInd=1;
-	if(x<-3)
-		destInd=-1;
+    printf("Racunam novo mapo\n");
+    int mapInd=0;
+    if(y>1.1)
+        mapInd=1;
+    else if(y<-3.2)
+        mapInd=-1;
+    int destInd=1;
+    if(x<-2)
+        destInd=-1;
 	if(reset)
 		destInd=0;
 
