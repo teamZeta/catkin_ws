@@ -201,7 +201,7 @@ void callback (const std_msgs::String::ConstPtr& msg) {
 						//printf("posiljam stop\n");
 				  		std_msgs::String msg;
 				    	std::stringstream ss;
-				    	ss << "pick" << person2 << " " << street2;
+				    	ss << "pick " << person2 << " " << street2;
 				    	msg.data = ss.str();
 				    	setGoal.publish(msg);
 				    	
