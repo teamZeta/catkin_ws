@@ -18,4 +18,6 @@
 
 	<node name="slow" pkg="tournament3" type="slow" />
 
+	<node name="teleport" pkg="tournament3" type="teleport" />
+
 </launch>
