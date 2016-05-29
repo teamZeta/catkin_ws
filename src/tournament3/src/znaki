@@ -73,7 +73,7 @@ class Faces():
 				
 				if self.id_prep[nbr_predicted[0]] > 5:
 					#if self.id_prep[nbr_predicted[0]] == 6:
-					print(str(self.tabela_znakov[nbr_predicted]) + " conf " + str(conf))
+					print(str(self.tabela_znakov[nbr_predicted[0]]) + " conf " + str(conf))
 					camera_info = None
 					best_time = 100
 					for ci in self.camera_infos:
