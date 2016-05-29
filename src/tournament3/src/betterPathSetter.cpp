@@ -34,6 +34,7 @@ static int iskanaOsebaID = 0;
 static string trenutnaOseba = "";
 static float diff=6.05;
 static float dynamicDiff;
+static ros::Publisher resetMap;
 static int whereTo = 0;     // 0 - undefined, 1234 - rgby
 /*
     OSEBE ID:
@@ -70,7 +71,14 @@ static move_base_msgs::MoveBaseGoal createGoal(float xRobot, float yRobot, float
 // ::::::::::::::::::::::::::::::::::::::::::::::
 // :::::::::::::::::: CALLBACK ::::::::::::::::::
 // ::::::::::::::::::::::::::::::::::::::::::::::
-
+void reset(){
+    printf("resetiram mapo\n");
+    std_msgs::String msg;
+    std::stringstream ss;
+    ss << "reset";
+    msg.data = ss.str();
+    resetMap.publish(msg);
+}
 void startSearch(move_base_msgs::MoveBaseGoal Goals[],int size){
     int k = 0;
     while (!foundFace && k<size) {
@@ -83,8 +91,24 @@ void startSearch(move_base_msgs::MoveBaseGoal Goals[],int size){
         ac.waitForResult();
         if(ac.getState() == actionlib::SimpleClientGoalState::SUCCEEDED){
             ROS_INFO("Reached goal.");
+            reset();
         } else {
-            printf("No go %s\n",ac.getState().toString().c_str());
+            printf("No go, retrying %s\n",ac.getState().toString().c_str());
+            while(!ac.waitForServer(ros::Duration(5.0))){
+                    ROS_INFO("Waiting for the move_base action server to come up");
+                }
+                printf("Goal  %.2f - %.2f \n", Goals[k].target_pose.pose.position.x, Goals[k].target_pose.pose.position.y );
+                ac.sendGoal(Goals[k]);
+                ac.waitForResult();
+                if(ac.getState() == actionlib::SimpleClientGoalState::SUCCEEDED){
+                    ROS_INFO("Reached goal.");
+                    reset();
+                } else {
+                    printf("No go %s\n",ac.getState().toString().c_str());
+
+                }
+
+
         }
         k++;
     }
@@ -376,7 +400,7 @@ void yellowGoalsInit() {
 // ::::::::::::::::::::::::::::::::::::::::::::::
 int main(int argc, char** argv){
     ros::init(argc, argv, "pathSetter");
-    ros::NodeHandle nh,nh2,nh3,nh4;
+    ros::NodeHandle nh,nh2,nh3,nh4,nh5;
 
     redGoalsInit();
     blueGoalsInit();
@@ -387,6 +411,7 @@ int main(int argc, char** argv){
     ros::Subscriber sub2 = nh2.subscribe<visualization_msgs::MarkerArray> ("/foundFace", 1, callbackFoundFace);
     updateTaxi = nh3.advertise<std_msgs::String>("/person", 1);
     ros::Subscriber teleport = nh4.subscribe<geometry_msgs::PoseWithCovarianceStamped>("/initialpose", 1, callbackTeleport);
+    resetMap = nh5.advertise<std_msgs::String>("/reset", 1);
 
     ros::spin();
 

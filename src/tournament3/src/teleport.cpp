@@ -31,8 +31,10 @@ void changeMap(float x, float y){
     int destInd=1;
     if(x<-2)
         destInd=-1;
-	if(reset)
+	if(reset){
 		destInd=0;
+		reset=false;
+	}
 
 	dynamicDiff=(destInd-mapInd)*diff;
 	printf("Koordinate %f , %f ",x,y);
@@ -51,7 +53,7 @@ void callback (const visualization_msgs::MarkerArrayConstPtr& markerArray) {
     }
 }
 
-void callback2(const geometry_msgs::PoseWithCovarianceStamped msg){
+void callbackPose(const geometry_msgs::PoseWithCovarianceStamped msg){
 	if(once)
 		changeMap((float)msg.pose.pose.position.x,(float)msg.pose.pose.position.y);
     if (once) {
@@ -69,15 +71,20 @@ void callback2(const geometry_msgs::PoseWithCovarianceStamped msg){
     }
 }
 
+void callbackReset(const std_msgs::String::ConstPtr& msg){
+	reset=true;
+}
+
 int main(int argc, char** argv){
     ros::init(argc, argv, "teleport");
-    ros::NodeHandle nh,nh2,nh3;
+    ros::NodeHandle nh,nh2,nh3,nh4;
     posit = nh.advertise<geometry_msgs::PoseWithCovarianceStamped>("/initialpose", 1);
 
     sleep(5);
 
     ros::Subscriber sub = nh2.subscribe<visualization_msgs::MarkerArray> ("/sign", 1, callback);
-    ros::Subscriber sub2 = nh3.subscribe<geometry_msgs::PoseWithCovarianceStamped> ("/amcl_pose", 1, callback2);
+    ros::Subscriber sub2 = nh3.subscribe<geometry_msgs::PoseWithCovarianceStamped> ("/amcl_pose", 1, callbackPose);
+    ros::Subscriber sub3 = nh4.subscribe<std_msgs::String>("/reset", 1, callbackReset);
   
     ros::spin();
     
