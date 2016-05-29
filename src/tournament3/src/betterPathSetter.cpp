@@ -128,13 +128,13 @@ void callback (const std_msgs::String::ConstPtr& msg) {
     for(int i=0;i<4;i++){
         if(cmp(array[2],streetName[i])){
             if (!array[0].compare("pick")) {
-                if (whereTo = 1) {
+                if (i == 0) {
                     startSearch(redGoals,redSize);
-                } else if (whereTo = 2) {
+                } else if (i == 1) {
                     startSearch(greenGoals,greenSize);
-                } else if (whereTo = 3) {
+                } else if (i == 2) {
                     startSearch(blueGoals,blueSize);
-                } else if (whereTo = 4) {
+                } else if (i == 3) {
                     startSearch(yellowGoals,yellowSize);
                 }
                 // ko najde faco izracunaj vektor in se priblizaj
@@ -330,13 +330,6 @@ void callbackFoundFace (const visualization_msgs::MarkerArrayConstPtr& markerArr
 
 }
 
-void goalInit() {
-    int i=0;
-    goals[i++]=createGoal(-4.9,1.5,0,1);    // red street
-    goals[i++]=createGoal(-3.6,0.2,0,1);    // green street
-    goals[i++]=createGoal(-3.36,-0.44,-1,1);    // blue street
-    goals[i++]=createGoal(-4.8,-0.7,-1,-1);   // yellow street
-}
 
 void redGoalsInit() {
     int i=0;
@@ -377,7 +370,6 @@ int main(int argc, char** argv){
     ros::init(argc, argv, "pathSetter");
     ros::NodeHandle nh,nh2,nh3,nh4;
 
-    goalInit();
     redGoalsInit();
     blueGoalsInit();
     greenGoalsInit();
