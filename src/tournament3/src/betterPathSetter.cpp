@@ -35,6 +35,8 @@ static string trenutnaOseba = "";
 static float diff=6.05;
 static float dynamicDiff;
 static ros::Publisher resetMap;
+static bool reset1 = false;
+static int goalInd=0;
 static int whereTo = 0;     // 0 - undefined, 1234 - rgby
 /*
     OSEBE ID:
@@ -78,6 +80,7 @@ void reset(){
     ss << "reset";
     msg.data = ss.str();
     resetMap.publish(msg);
+    reset1 = true;
 }
 void startSearch(move_base_msgs::MoveBaseGoal Goals[],int size){
     int k = 0;
@@ -208,19 +211,19 @@ void changeGoals(move_base_msgs::MoveBaseGoal Goals[],int size){
     }
 }
 void changeMap(float x, float y){
-    printf("Racunam novo mapo goalov\n");
-    int mapInd=0;
+    printf("Racunam nove pozicije goalov\n");
+    //int goalInd=0; 
+    int destInd=0;
     if(y>1.1)
-        mapInd=1;
+        destInd=1;
     else if(y<-3.2)
-        mapInd=-1;
-    int destInd=1;
-    if(x<-2)
         destInd=-1;
 
-    dynamicDiff=(destInd-mapInd)*diff;
-    printf("Koordinate %f , %f ",x,y);
-    printf("Sem v: %d hocem v: %d teleport: %f",mapInd,destInd,dynamicDiff);
+    dynamicDiff=(destInd-goalInd)*diff;
+    printf("Koordinate robota %f , %f ",x,y);
+    printf("Goali so v: %d robot v: %d prestavljam za: %f",goalInd,destInd,dynamicDiff);
+    goalInd=destInd;
+
     if(dynamicDiff!=0){    
         changeGoals(redGoals,redSize);
         changeGoals(greenGoals,greenSize);
