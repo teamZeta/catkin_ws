@@ -59,7 +59,7 @@ class Faces():
 				nbr_predicted = nbr_predicted[0]
 				if conf > 700000000:
 					return
-				print(nbr_predicted)
+				#print(nbr_predicted)
 				print(self.id_prep[nbr_predicted[0]])
 
 				if self.id_prep[nbr_predicted[0]] == 0:
@@ -71,7 +71,9 @@ class Faces():
 				else:
 					self.id_prep[nbr_predicted[0]] = 0
 				
-				if self.id_prep[nbr_predicted[0]] > 10:
+				if self.id_prep[nbr_predicted[0]] > 5:
+					if self.id_prep[nbr_predicted[0]] == 6:
+						print(str(self.tabela_znakov[nbr_predicted[0]]) + " conf " + str(conf))
 					camera_info = None
 					best_time = 100
 					for ci in self.camera_infos:
@@ -196,6 +198,7 @@ class Faces():
 		self.count = 0
 		self.id_prep = np.zeros(10)
 		self.id_cas = np.ones(10)*10
+		self.tabela_znakov = ["blank", "levo", "petdeset", "enosmerna", "stop", "horn"]
 
 
 # Main function.    

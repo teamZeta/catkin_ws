@@ -63,6 +63,8 @@ class Faces():
 					self.id_prep[nbr_predicted] = 0
 				
 				if self.id_prep[nbr_predicted] > 10:
+					if self.id_prep[nbr_predicted] == 11:
+						print(str(self.tabela_imen[nbr_predicted]) + " conf " + str(conf))
 					camera_info = None
 					best_time = 100
 					for ci in self.camera_infos:
@@ -103,7 +105,7 @@ class Faces():
 					marker.id = nbr_predicted
 					marker.scale = Vector3(0.1, 0.1, 0.1)
 					marker.color = ColorRGBA(1, 1, 0, 1)
-					print("predicted" + str(nbr_predicted) + " conf " + str(conf))
+					#print("predicted" + str(nbr_predicted) + " conf " + str(conf))
 
 					self.markers.markers.append(marker)
 					#self.marker_id_counter += 1
@@ -190,7 +192,7 @@ class Faces():
 		self.id_prep = np.zeros(10)
 		self.id_cas = np.ones(10)*10
 		self.listener = tf.TransformListener()
-
+		self.tabela_imen = ["blank" , "Potter", "Filip", "Tina", "Peter", "Tom", "Ellen", "Kim", "Scarlet", "Matt"]
 
 # Main function.    
 if __name__ == '__main__':

@@ -69,6 +69,7 @@ class Faces():
 		self.bridge = CvBridge()
 		self.faces_sub = rospy.Subscriber(faces_topic, Detection, self.face_callback)
 		self.cas = time.time()
+		self.tabela_imen = ["blank" , "Potter", "Filip", "Tina", "Peter", "Tom", "Ellen", "Kim", "Scarlet", "Matt"]
 
 
 
