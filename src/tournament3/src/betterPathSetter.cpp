@@ -208,7 +208,7 @@ void changeGoals(move_base_msgs::MoveBaseGoal Goals[],int size){
     }
 }
 void changeMap(float x, float y){
-    printf("Racunam novo mapo\n");
+    printf("Racunam novo mapo goalov\n");
     int mapInd=0;
     if(y>1.1)
         mapInd=1;
@@ -231,7 +231,8 @@ void changeMap(float x, float y){
 
 
 
-void callbackTeleport(const geometry_msgs::PoseWithCovarianceStamped msg){
+void callbackTeleport(const geometry_msgs::PoseWithCovarianceStamped msg){ //Zamenja goale na trenutno mapo
+	printf("Callback za menjavo goalov\n");
     changeMap((float)msg.pose.pose.position.x,(float)msg.pose.pose.position.y);
 }
 // ::::::::::::::::::::::::::::::::::::::::::::
@@ -367,7 +368,7 @@ void greenGoalsInit() {
     int i=0;
     greenGoals[i++]=createGoal(-2,-0.2,0,1);
     greenGoals[i++]=createGoal(-2,-0.2,0,-1);
-    greenGoals[i++]=createGoal(-0.9,0.25,0,1);
+    greenGoals[i++]=createGoal(-0.9,-0.25,0,1);
     greenGoals[i++]=createGoal(-0.4,-0.7,1,0);
     greenGoals[i++]=createGoal(0.17,-0.3,0,1);
     greenGoals[i++]=createGoal(0.7,-0.3,0,-1);
