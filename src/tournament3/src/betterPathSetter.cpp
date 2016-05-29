@@ -16,14 +16,13 @@
 
 using namespace std;
 
-static move_base_msgs::MoveBaseGoal goals[4];
+static move_base_msgs::MoveBaseGoal redGoals[5];
+static move_base_msgs::MoveBaseGoal greenGoals[9];
+static move_base_msgs::MoveBaseGoal blueGoals[7];
 static move_base_msgs::MoveBaseGoal yellowGoals[4];
-static move_base_msgs::MoveBaseGoal redGoals[4];
-static move_base_msgs::MoveBaseGoal greenGoals[4];
-static move_base_msgs::MoveBaseGoal blueGoals[4];
-static int redSize = 4;
-static int greenSize = 4;
-static int blueSize = 4;
+static int redSize = 5;
+static int greenSize = 9;
+static int blueSize = 7;
 static int yellowSize = 4;
 static move_base_msgs::MoveBaseGoal goal;
 static int currentGoal = -1;
@@ -33,7 +32,7 @@ static string osebe[] = {"Harry", "Philip", "Tina", "Peter", "Forrest", "Ellen",
 static string streetName[] = {"red","green","blue","yellow"};
 static int iskanaOsebaID = 0;
 static string trenutnaOseba = "";
-static float diff=5.5;
+static float diff=6.05;
 static float dynamicDiff;
 static int whereTo = 0;     // 0 - undefined, 1234 - rgby
 /*
@@ -333,34 +332,43 @@ void callbackFoundFace (const visualization_msgs::MarkerArrayConstPtr& markerArr
 
 void redGoalsInit() {
     int i=0;
-    redGoals[i++]=createGoal(-4.9,2.3,1,0); 
-    redGoals[i++]=createGoal(-4.9,2.3,0,1);
-    redGoals[i++]=createGoal(-4.9,2.3,-1,0);
-    redGoals[i++]=createGoal(-4.9,2.3,0,-1);
+    redGoals[i++]=createGoal(-3.5,2.3,1,0); 
+    redGoals[i++]=createGoal(-3.5,2.3,0,1);
+    redGoals[i++]=createGoal(-3.5,2.3,-1,0);
+    redGoals[i++]=createGoal(-3.5,1.4,1,0);
+    redGoals[i++]=createGoal(-3.5,1.4,-1,0);
 }
 
 void greenGoalsInit() {
     int i=0;
-    greenGoals[i++]=createGoal(-4.9,2.3,1,0);
-    greenGoals[i++]=createGoal(-4.9,2.3,1,0); 
-    greenGoals[i++]=createGoal(-4.9,2.3,0,1);
-    greenGoals[i++]=createGoal(-4.9,2.3,0,-1);
+    greenGoals[i++]=createGoal(-2,-0.2,0,1);
+    greenGoals[i++]=createGoal(-2,-0.2,0,-1);
+    greenGoals[i++]=createGoal(-0.9,0.25,0,1);
+    greenGoals[i++]=createGoal(-0.4,-0.7,1,0);
+    greenGoals[i++]=createGoal(0.17,-0.3,0,1);
+    greenGoals[i++]=createGoal(0.7,-0.3,0,-1);
+    greenGoals[i++]=createGoal(1.6,-0.3,0,1);
+    greenGoals[i++]=createGoal(1.6,-0.3,1,0);
+    greenGoals[i++]=createGoal(1.6,-0.3,-1,0);
 }
 
 void blueGoalsInit() {
     int i=0;
-    blueGoals[i++]=createGoal(-4.9,2.3,1,0); 
-    blueGoals[i++]=createGoal(-4.9,2.3,0,1);
-    blueGoals[i++]=createGoal(-4.9,2.3,-1,0);
-    blueGoals[i++]=createGoal(-4.9,2.3,0,-1);
+    blueGoals[i++]=createGoal(1.5,-1.6,1,0);    
+    blueGoals[i++]=createGoal(1.5,-1.6,0,-1);  
+    blueGoals[i++]=createGoal(0.7,-1.7,0,-1); 
+    blueGoals[i++]=createGoal(0.7,-1.7,0,1);
+    blueGoals[i++]=createGoal(-0.5,-1.55,0,-1); 
+    blueGoals[i++]=createGoal(-1.9,-1.6,0,-1);
+    blueGoals[i++]=createGoal(-1.9,-1.6,0,1);
 }
 
 void yellowGoalsInit() {
     int i=0;
-    yellowGoals[i++]=createGoal(-4.9,2.3,1,0); 
-    yellowGoals[i++]=createGoal(-4.9,2.3,0,1);
-    yellowGoals[i++]=createGoal(-4.9,2.3,-1,0);
-    yellowGoals[i++]=createGoal(-4.9,2.3,0,-1);
+    yellowGoals[i++]=createGoal(-3.3,-1.55,-1,0); 
+    yellowGoals[i++]=createGoal(-3.3,-1.55,0,-1); 
+    yellowGoals[i++]=createGoal(-3.4,-0.87,-1,0); 
+    yellowGoals[i++]=createGoal(-3.4,-0.87,1,0);
 }
 
 // ::::::::::::::::::::::::::::::::::::::::::::::

@@ -18,7 +18,7 @@ using namespace std;
 
 static ros::Publisher posit;
 static bool once = false;
-static float diff=5.5;
+static float diff=6.05;
 static float dynamicDiff;
 static bool reset=false;
 void changeMap(float x, float y){
