@@ -38,13 +38,10 @@ void callback (const pcl::PCLPointCloud2ConstPtr& cloud_blob) {
  pcl::PointCloud<pcl::Normal>::Ptr cloud_normals (new pcl::PointCloud<pcl::Normal>);
   pcl::PointCloud<pcl::Normal>::Ptr cloud_normals2 (new pcl::PointCloud<pcl::Normal>);
   // Create the filtering object: downsample the dataset using a leaf size of 1cm
-  pcl::VoxelGrid<pcl::PCLPointCloud2> sor;
-  sor.setInputCloud (cloud_blob);
-  sor.setLeafSize (0.01f, 0.01f, 0.01f);
-  sor.filter (*cloud_filtered_blob);
+  
 
   // Convert to the templated PointCloud
-  pcl::fromPCLPointCloud2 (*cloud_filtered_blob, *cloud_filtered);
+  pcl::fromPCLPointCloud2 (*cloud_blob, *cloud_filtered);
 
   pcl::ModelCoefficients::Ptr coefficients (new pcl::ModelCoefficients ());
   pcl::PointIndices::Ptr inliers (new pcl::PointIndices ());
@@ -97,7 +94,7 @@ void callback (const pcl::PCLPointCloud2ConstPtr& cloud_blob) {
   seg2.setNormalDistanceWeight (0.1);
   seg2.setMaxIterations (10000);
   seg2.setDistanceThreshold (0.05);
-  //seg.setRadiusLimits (0.02, 0.25);
+  seg2.setRadiusLimits (0.02, 0.25);
   seg2.setInputCloud (cloud_filtered2);
   seg2.setInputNormals (cloud_normals2);
 
@@ -117,6 +114,12 @@ void callback (const pcl::PCLPointCloud2ConstPtr& cloud_blob) {
   pcl::toPCLPointCloud2 (*cloud_f, outcloud);
   outcloud.header.frame_id = "/camera_depth_frame";
   // Publish the data
+  /*pcl::PCLPointCloud2 out_filtered_cloud;
+  pcl::VoxelGrid<pcl::PCLPointCloud2> sor;
+  sor.setInputCloud (outcloud);
+  sor.setLeafSize (0.01f, 0.01f, 0.01f);
+  sor.filter (out_filtered_cloud);*/
+
   pub.publish (outcloud);
 
 /*
