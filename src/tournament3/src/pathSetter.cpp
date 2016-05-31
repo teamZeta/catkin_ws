@@ -264,7 +264,7 @@ void callback (const std_msgs::String::ConstPtr& msg) {
 // :::::::::::::::: FOUND FACE ::::::::::::::::
 // ::::::::::::::::::::::::::::::::::::::::::::
 void callbackFoundFace (const visualization_msgs::MarkerArrayConstPtr& markerArray) {
-
+    printf("%d\n", markerArray->markers[0].id);
     if (iskanaOsebaID != markerArray->markers[0].id) {
         return;
     }
