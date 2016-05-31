@@ -12,6 +12,7 @@
 #include <sys/timeb.h>
 #include <iostream>
 #include <string>
+#include <unistd.h>
 
 using namespace std;
 using namespace boost;
@@ -31,33 +32,97 @@ static std::string building2 = "";
 static int sex2 = 0;
 static int nPerson = 0;
 static int order = 0;			// 0 - undefined, 1 - pick up, 2 - take to
-static string osebe[] = {"Harry", "Philip", "Tina", "Peter", "Tom", "Ellen", "Kim", "Scarlett", "Matthew"};
-static string barve[] = {"Red", "Green", "Blue", "Yellow", "red", "green", "blue", "yellow"};
+static int osebeDimensions = 3;
+static string osebe[][3] = {{"harry", "hairy", "perry"},
+							{"philip", "philips", "asdfa"},
+							{"tina", "asad", "aasdasd"},
+							{"peter", "aasdsa", "aasdasd"},
+							{"tom", "aasda", "aasd"},
+							{"ellen", "alen", "elen"},
+							{"kim", "a", "a"},
+							{"scarlet", "scarlett", "scarlets"},
+							{"Matthew", "a", "a"}};
+
+static int barveDimensions = 4;
+static string barve[][4] = {{"red", "rat", "rad", "read"},
+							{"green", "green"},
+							{"blue", "blow", "blah"},
+							{"yellow", "yellow"}};
 static ros::Publisher setGoal;
 
+bool cmp(string s1, string s2) {
+    int i;
+    for (i=0; s1[i]; i++)
+    	s1[i] = tolower(s1[i]);
+    for (i=0; s1[i]; i++)
+    	s2[i] = tolower(s2[i]);
+    return !s1.compare(s2);
+}
+
 static bool color(std::string barva) {
-	for (int i=0; i<8; i++) {
-		if (!barva.compare(barve[i])) {
-		    return true;
+	for (int i=0; i<4; i++) {
+		for (int j=0; j<barveDimensions; j++) {
+			if (cmp(barva, barve[i][j])) {
+			    return true;
+			}
 		}
 	}
 	return false;
 }
 
-static bool female(std::string trenutnaOseba) {
-	if (!trenutnaOseba.compare("Tina") || !trenutnaOseba.compare("Scarlett") || !trenutnaOseba.compare("Ellen")) {
-		return true;
-	} else {
-		return false;
+static int colorIndex(std::string barva) {
+	for (int i=0; i<4; i++) {
+		for (int j=0; j<barveDimensions; j++) {
+			if (cmp(barva, barve[i][j])) {
+			    return i;
+			}
+		}
 	}
+	return -1;
 }
 
 static bool person(std::string trenutnaOseba) {
 	for (int i=0; i<9; i++) {
-		if (!trenutnaOseba.compare(osebe[i])) {
-		    return true;
+		for (int j=0; j<osebeDimensions; j++) {
+			if (cmp(trenutnaOseba, osebe[i][j])) {
+			    return true;
+			}
 		}
 	}
+	return false;
+}
+
+static int personIndex(std::string trenutnaOseba) {
+	for (int i=0; i<9; i++) {
+		for (int j=0; j<osebeDimensions; j++) {
+			if (cmp(trenutnaOseba, osebe[i][j])) {
+			    return i;
+			}
+		}
+	}
+	return -1;
+}
+
+static bool female(std::string trenutnaOseba) {
+	if (personIndex(trenutnaOseba) == 2 || personIndex(trenutnaOseba) == 5 || personIndex(trenutnaOseba) == 7)
+		return true;
+	return false;
+}
+
+static bool personTake(std::string oseb, std::string trenutnaOseba) {
+	int st = -1;
+	for (int i=0; i<9; i++) {
+		for (int j=0; j<osebeDimensions; j++) {
+			if (!trenutnaOseba.compare(osebe[i][j])) {
+			    st = i;
+			    break;
+			}
+		}
+		if (st != -1)
+			break;
+	}
+	if (cmp(oseb, osebe[st][0]))
+		return true;
 	return false;
 }
 
@@ -90,8 +155,8 @@ void callback (const std_msgs::String::ConstPtr& msg) {
 			if (person(array[1]) && color(array[4])) {
 
 				if (!person1.compare("") && !person2.compare("")) {							// Oba sedeza sta prazna
-					person1 = array[1];
-					street1 = array[4];
+					person1 = osebe[personIndex(array[1])][0];
+					street1 = barve[colorIndex(array[4])][0];
 					if (female(array[1])) {
 						sex1 = 2;
 					} else {
@@ -114,8 +179,8 @@ void callback (const std_msgs::String::ConstPtr& msg) {
 						printf("ROBOT: 'This is a no gays allowed taxi. Can't take two of the same sex.'\n");
 					} else {
 						nPerson = 1;
-						person1 = array[1];
-						street1 = array[4];
+						person1 = osebe[personIndex(array[1])][0];
+						street1 = barve[colorIndex(array[4])][0];
 						newOrder = false;
 						order = 1;
 						printf("ROBOT: 'Should I pick %s on the %s Street?'\n",person1.c_str(), street1.c_str());
@@ -133,8 +198,8 @@ void callback (const std_msgs::String::ConstPtr& msg) {
 						printf("ROBOT: 'This is a no gays allowed taxi. Can't take two of the same sex.'\n");						
 					} else {
 						nPerson = 2;
-						person2 = array[1];
-						street2 = array[4];
+						person2 = osebe[personIndex(array[1])][0];
+						street2 = barve[colorIndex(array[4])][0];
 						newOrder = false;
 						order = 1;
 						printf("ROBOT: 'Should I pick %s on the %s Street?'\n", person2.c_str(), street2.c_str());	
@@ -152,14 +217,14 @@ void callback (const std_msgs::String::ConstPtr& msg) {
 		// :::::::::::::::::::::::::::::::::::::::::::::::
 			
 		} else if (!array[0].compare("take") && color(array[4])) {
-			if (!person1.compare(array[1])) {
+			if (personTake(person1,array[1])) {
 				nPerson = 1;
-				building1 = array[4];
+				building1 = barve[colorIndex(array[4])][0];;
 				newOrder = false;
 				printf("ROBOT: 'Should I take %s to the %s Building?'\n", person1.c_str(), building1.c_str());
-			} else if (!person2.compare(array[1])) {
+			} else if (personTake(person2,array[1])) {
 				nPerson = 2;
-				building2 = array[4];
+				building2 = barve[colorIndex(array[4])][0];;
 				newOrder = false;
 				printf("ROBOT: 'Should I take %s to the %s Building?'\n", person2.c_str(), building2.c_str());
 			} else {
