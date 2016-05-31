@@ -32,7 +32,7 @@ int main(int argc, char** argv){
     ros::init(argc, argv, "horn");
     ros::NodeHandle nh;
 
-    ros::Subscriber sub = nh.subscribe<visualization_msgs::MarkerArray> ("/sign", 0, callback);
+    ros::Subscriber sub = nh.subscribe<visualization_msgs::MarkerArray> ("/sign", 1, callback);
 
     ros::spin();
     

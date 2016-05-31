@@ -91,7 +91,8 @@ void changeGoals(move_base_msgs::MoveBaseGoal Goals[],int size){
 }
 
 void callbackPose(const geometry_msgs::PoseWithCovarianceStamped msg){
-    if (once&&changeMap((float)msg.pose.pose.position.x,(float)msg.pose.pose.position.y)) {
+    if(once)
+    if (changeMap((float)msg.pose.pose.position.x,(float)msg.pose.pose.position.y)) {
         geometry_msgs::PoseWithCovarianceStamped pos;
         pos.pose.pose.position.x = msg.pose.pose.position.x;
         pos.pose.pose.position.y = msg.pose.pose.position.y+dynamicDiff;
