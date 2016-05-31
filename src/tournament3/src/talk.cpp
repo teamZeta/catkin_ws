@@ -35,9 +35,9 @@ static int order = 0;			// 0 - undefined, 1 - pick up, 2 - take to
 static int osebeDimensions = 3;
 static string osebe[][3] = {{"harry", "hairy", "perry"},
 							{"philip", "philips", "asdfa"},
-							{"tina", "asad", "aasdasd"},
-							{"peter", "aasdsa", "aasdasd"},
-							{"tom", "aasda", "aasd"},
+							{"tina", "pina", "aasdasd"},
+							{"peter", "peter", "peter"},
+							{"tom", "tom", "tom"},
 							{"ellen", "alen", "elen"},
 							{"kim", "a", "a"},
 							{"scarlet", "scarlett", "scarlets"},
@@ -45,9 +45,9 @@ static string osebe[][3] = {{"harry", "hairy", "perry"},
 
 static int barveDimensions = 4;
 static string barve[][4] = {{"red", "rat", "rad", "read"},
-							{"green", "green"},
-							{"blue", "blow", "blah"},
-							{"yellow", "yellow"}};
+							{"green", "green","green","green"},
+							{"blue", "blow", "blah","block"},
+							{"yellow", "yellow","yellow","yellow"}};
 static ros::Publisher setGoal;
 
 bool cmp(string s1, string s2) {
