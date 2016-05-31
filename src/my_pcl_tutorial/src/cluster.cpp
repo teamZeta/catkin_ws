@@ -21,12 +21,123 @@
 #include <pcl/segmentation/region_growing_rgb.h>
 
 #include <pcl/features/normal_3d.h>
+#include <visualization_msgs/Marker.h>
 
 
-
+using namespace std;
 
 
 ros::Publisher pub;
+static ros::Publisher marker_pose;
+
+
+static visualization_msgs::Marker mark_cluster(pcl::PointCloud<pcl::PointXYZRGB>::Ptr cloud_cluster, std::string ns ,int id, float r, float g, float b)
+{
+
+ float rc = 0;
+ float gc = 0;
+ float bc = 0;
+ int count = 0;
+ for( size_t i = 0; i<cloud_cluster->points.size(); i+=10){
+ 	rc += cloud_cluster->points[i].r;
+ 	gc += cloud_cluster->points[i].g;
+ 	bc += cloud_cluster->points[i].b;
+ 	count++;
+ }
+ rc /= count;
+ gc /= count;
+ bc /= count;
+
+  rc /= 255;
+  gc /= 255;
+  bc /= 255;
+  uint8_t ru = 0x00;
+  uint8_t gu = 0x00;
+  uint8_t bu = 0x00;
+  if(rc > 0.1){
+  	ru = 0xff;
+  }
+  if(gc > 0.1){
+  	gu = 0xff;
+  }
+  if(bc > 0.1){
+  	bu = 0xff;
+  }
+  
+  uint32_t barva = (ru<<16) | (gu<<8) | (bu);
+
+  const uint32_t green = 0x00ff00;
+  const uint32_t magenta = 0xff00ff;
+  const uint32_t cyan = 0x00ffff;
+  const uint32_t yellow = 0xffff00;
+
+  r = reinterpret_cast<float&>(ru)/255;
+  g = reinterpret_cast<float&>(gu)/255;
+  b = reinterpret_cast<float&>(bu)/255;
+
+  printf("%f", r);
+  Eigen::Vector4f centroid;
+  Eigen::Vector4f min;
+  Eigen::Vector4f max;
+ 
+  pcl::compute3DCentroid (*cloud_cluster, centroid);
+  pcl::getMinMax3D (*cloud_cluster, min, max);
+ 
+  uint32_t shape = visualization_msgs::Marker::CUBE;
+  visualization_msgs::Marker marker;
+  marker.header.frame_id = cloud_cluster->header.frame_id;
+  marker.header.stamp = ros::Time::now();
+ 
+  marker.ns = ns;
+
+  switch(barva){
+  	case green: id = 1; break;
+  	case magenta: id = 1; break;
+  	case yellow: id = 2; break;
+  	case cyan: id = 3; break;
+  	default: id=0; break;
+
+  }
+
+  marker.id = id;
+  marker.type = shape;
+  marker.action = visualization_msgs::Marker::ADD;
+ 
+  marker.pose.position.x = centroid[0];
+  marker.pose.position.y = centroid[1];
+  marker.pose.position.z = centroid[2];
+  marker.pose.orientation.x = 0.0;
+  marker.pose.orientation.y = 0.0;
+  marker.pose.orientation.z = 0.0;
+  marker.pose.orientation.w = 1.0;
+ 
+  marker.scale.x = (max[0]-min[0]);
+  marker.scale.y = (max[1]-min[1]);
+  marker.scale.z = (max[2]-min[2]);
+ 
+  if (marker.scale.x ==0)
+      marker.scale.x=0.1;
+
+  if (marker.scale.y ==0)
+    marker.scale.y=0.1;
+
+  if (marker.scale.z ==0)
+    marker.scale.z=0.1;
+   
+
+
+  marker.color.r = rc;
+  marker.color.g = gc;
+  marker.color.b = bc;
+  marker.color.a = 1;
+
+  marker.lifetime = ros::Duration();
+  //marker.lifetime = ros::Duration();
+  marker_pose.publish (marker);
+  return marker;
+} 
+
+
 
 // This function is a callback for incoming pointcloud data
 void callback (const pcl::PCLPointCloud2ConstPtr& cloud_blob) {
@@ -121,43 +232,11 @@ void callback (const pcl::PCLPointCloud2ConstPtr& cloud_blob) {
   sor.filter (out_filtered_cloud);*/
 
   pub.publish (outcloud);
+  mark_cluster(cloud_f, "boka", 1, 0.5,0.5,0.5);
 
-/*
-//nasa koda
-//std::vector< PointIndices > vector;
-// pcl::search<pcl::Search> iskanje (new pcl::search<pcl::Search>);
- // pcl::extractEuclideanClusters(*cloud_f, iskanje->nearestKSearch, 0.1, *vector, 100, 20000);
- pcl::search::Search <pcl::PointXYZRGB>::Ptr tree = boost::shared_ptr<pcl::search::Search<pcl::PointXYZRGB> > (new pcl::search::KdTree<pcl::PointXYZRGB>);
-
-pcl::IndicesPtr indices (new std::vector <int>);
-  pcl::PassThrough<pcl::PointXYZRGB> pass;
-  pass.setInputCloud (cloud_f);
-  pass.setFilterFieldName ("z");
-  pass.setFilterLimits (0.0, 1.0);
-  pass.filter (*indices);
-
-  pcl::RegionGrowingRGB<pcl::PointXYZRGB> reg;
-  reg.setInputCloud (cloud_f);
-  reg.setIndices (indices);
-  reg.setSearchMethod (tree);
-  reg.setDistanceThreshold (3);
-  reg.setPointColorThreshold (26);
-  reg.setRegionColorThreshold (25);
-  reg.setMinClusterSize (60);
-
-  std::vector <pcl::PointIndices> clusters;
-  reg.extract (clusters);
-
-  pcl::PointCloud <pcl::PointXYZRGB>::Ptr colored_cloud = reg.getColoredCloud ();
-  
-
-  // Publish the plane to a new topic.
-  pcl::PCLPointCloud2 outcloud;
-  pcl::toPCLPointCloud2 (*colored_cloud, outcloud);
-  outcloud.header.frame_id = "/camera_depth_frame";
-  //outcloud.header.stamp = ros::Time::now();
-  pub.publish (outcloud);*/
 }
+
+
 
 int
 main (int argc, char** argv)
@@ -165,13 +244,14 @@ main (int argc, char** argv)
   // Initialize ROS
   ros::init (argc, argv, "my_pcl_tutorial");
   ros::NodeHandle nh;
+  ros::NodeHandle nh2;
 
   // Create a ROS subscriber for the input point cloud
   ros::Subscriber sub = nh.subscribe<pcl::PCLPointCloud2> ("input", 1, callback);
 
   // Create a ROS publisher for the output point cloud
   pub = nh.advertise<sensor_msgs::PointCloud2> ("cluster", 1);
-
+  marker_pose = nh2.advertise<visualization_msgs:: Marker>("steber", 1);
   // Spin
   ros::spin ();
 }
