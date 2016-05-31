@@ -34,10 +34,13 @@ static int iskanaOsebaID = 0;
 static string trenutnaOseba = "";
 static float diff=6.05;
 static float dynamicDiff;
-static ros::Publisher resetMap;
-static bool reset1 = false;
+static ros::Publisher posit;
+static bool reset = false;
 static int goalInd=0;
 static int whereTo = 0;     // 0 - undefined, 1234 - rgby
+static bool once = false;
+
+
 /*
     OSEBE ID:
     "Peter"     1
@@ -52,6 +55,63 @@ static int whereTo = 0;     // 0 - undefined, 1234 - rgby
 */
 
 typedef actionlib::SimpleActionClient<move_base_msgs::MoveBaseAction> MoveBaseClient;
+
+bool changeMap(float x, float y){
+    printf("Racunam novo mapo\n");
+    int mapInd=0;
+    if(y>1.1)
+        mapInd=1;
+    else if(y<-3.2)
+        mapInd=-1;
+    int destInd=1;
+    if(x<-2)
+        destInd=-1;
+	if(reset){
+		destInd=0;
+		reset=false;
+	}
+
+	dynamicDiff=(destInd-mapInd)*diff;
+	printf("Koordinate %f , %f ",x,y);
+	printf("Sem v: %d hocem v: %d teleport: %f",mapInd,destInd,dynamicDiff);
+	return dynamicDiff!=0;
+}
+
+void callbackSign (const visualization_msgs::MarkerArrayConstPtr& markerArray) {
+	printf("vidim znak\n");
+    if (markerArray->markers[0].id == 3 || markerArray->markers[0].id == 1) {      // one way
+    	printf("uh oh one way\n");
+        once=true;
+    }
+}
+void changeGoals(move_base_msgs::MoveBaseGoal Goals[],int size){
+    for(int i=0;i<size;i++){
+        Goals[i].target_pose.pose.position.y+=dynamicDiff;
+    }
+}
+
+void callbackPose(const geometry_msgs::PoseWithCovarianceStamped msg){
+    if (once&&changeMap((float)msg.pose.pose.position.x,(float)msg.pose.pose.position.y)) {
+        geometry_msgs::PoseWithCovarianceStamped pos;
+        pos.pose.pose.position.x = msg.pose.pose.position.x;
+        pos.pose.pose.position.y = msg.pose.pose.position.y+dynamicDiff;
+        pos.pose.pose.position.z = msg.pose.pose.position.z;
+        pos.pose.pose.orientation.x = msg.pose.pose.orientation.x;
+        pos.pose.pose.orientation.y = msg.pose.pose.orientation.y;
+        pos.pose.pose.orientation.z = msg.pose.pose.orientation.z;
+        pos.pose.pose.orientation.w = msg.pose.pose.orientation.w;
+
+        changeGoals(redGoals,redSize);
+        changeGoals(greenGoals,greenSize);
+        changeGoals(blueGoals,blueSize);
+        changeGoals(yellowGoals,yellowSize);
+
+        posit.publish(pos);
+        once = false;
+    }
+}
+
+
 
 static move_base_msgs::MoveBaseGoal createGoal(float xRobot, float yRobot, float xDirection, float yDirection){
     move_base_msgs::MoveBaseGoal goalC;
@@ -69,19 +129,6 @@ static move_base_msgs::MoveBaseGoal createGoal(float xRobot, float yRobot, float
     goalC.target_pose.pose.position.y = yRobot;
     return goalC;
 }
-
-// ::::::::::::::::::::::::::::::::::::::::::::::
-// :::::::::::::::::: CALLBACK ::::::::::::::::::
-// ::::::::::::::::::::::::::::::::::::::::::::::
-void reset(){
-    printf("resetiram mapo\n");
-    std_msgs::String msg;
-    std::stringstream ss;
-    ss << "reset";
-    msg.data = ss.str();
-    resetMap.publish(msg);
-    reset1 = true;
-}
 void startSearch(move_base_msgs::MoveBaseGoal Goals[],int size){
     int k = 0;
     while (!foundFace && k<size) {
@@ -94,7 +141,7 @@ void startSearch(move_base_msgs::MoveBaseGoal Goals[],int size){
         ac.waitForResult();
         if(ac.getState() == actionlib::SimpleClientGoalState::SUCCEEDED){
             ROS_INFO("Reached goal.");
-            reset();
+            reset=true;
         } else {
             printf("No go, retrying %s\n",ac.getState().toString().c_str());
             while(!ac.waitForServer(ros::Duration(5.0))){
@@ -105,7 +152,7 @@ void startSearch(move_base_msgs::MoveBaseGoal Goals[],int size){
                 ac.waitForResult();
                 if(ac.getState() == actionlib::SimpleClientGoalState::SUCCEEDED){
                     ROS_INFO("Reached goal.");
-                    reset();
+                    reset=true;
                 } else {
                     printf("No go %s\n",ac.getState().toString().c_str());
 
@@ -122,7 +169,7 @@ bool cmp(string s1, string s2){
     int i;
     for (i=0; s1[i]; i++) s1[i] = tolower(s1[i]);
     for (i=0; s1[i]; i++) s2[i] = tolower(s2[i]);
-        return !s1.compare(s2);
+    return !s1.compare(s2);
 }
 
 
@@ -205,39 +252,14 @@ void callback (const std_msgs::String::ConstPtr& msg) {
 
 
 }
-void changeGoals(move_base_msgs::MoveBaseGoal Goals[],int size){
-    for(int i=0;i<size;i++){
-        Goals[i].target_pose.pose.position.y+=dynamicDiff;
-    }
-}
-void changeMap(float x, float y){
-    printf("Racunam nove pozicije goalov\n");
-    //int goalInd=0; 
-    int destInd=0;
-    if(y>1.1)
-        destInd=1;
-    else if(y<-3.2)
-        destInd=-1;
-
-    dynamicDiff=(destInd-goalInd)*diff;
-    printf("Koordinate robota %f , %f ",x,y);
-    printf("Goali so v: %d robot v: %d prestavljam za: %f",goalInd,destInd,dynamicDiff);
-    goalInd=destInd;
-
-    if(dynamicDiff!=0){    
-        changeGoals(redGoals,redSize);
-        changeGoals(greenGoals,greenSize);
-        changeGoals(blueGoals,blueSize);
-        changeGoals(yellowGoals,yellowSize);
-    }
-}
 
 
 
-void callbackTeleport(const geometry_msgs::PoseWithCovarianceStamped msg){ //Zamenja goale na trenutno mapo
+
+/*void callbackTeleport(const geometry_msgs::PoseWithCovarianceStamped msg){ //Zamenja goale na trenutno mapo
 	printf("Callback za menjavo goalov\n");
-    changeMap((float)msg.pose.pose.position.x,(float)msg.pose.pose.position.y);
-}
+    changeGoalMap((float)msg.pose.pose.position.x,(float)msg.pose.pose.position.y);
+}*/
 // ::::::::::::::::::::::::::::::::::::::::::::
 // :::::::::::::::: FOUND FACE ::::::::::::::::
 // ::::::::::::::::::::::::::::::::::::::::::::
@@ -399,12 +421,9 @@ void yellowGoalsInit() {
     yellowGoals[i++]=createGoal(-3.4,-0.87,1,0);
 }
 
-// ::::::::::::::::::::::::::::::::::::::::::::::
-// :::::::::::::::::::: MAIN ::::::::::::::::::::
-// ::::::::::::::::::::::::::::::::::::::::::::::
 int main(int argc, char** argv){
     ros::init(argc, argv, "pathSetter");
-    ros::NodeHandle nh,nh2,nh3,nh4,nh5;
+    ros::NodeHandle nh,nh2,nh3,nh4,nh5,nh6;
 
     redGoalsInit();
     blueGoalsInit();
@@ -414,8 +433,10 @@ int main(int argc, char** argv){
     ros::Subscriber sub = nh.subscribe<std_msgs::String>("/newGoal", 1, callback);
     ros::Subscriber sub2 = nh2.subscribe<visualization_msgs::MarkerArray> ("/foundFace", 1, callbackFoundFace);
     updateTaxi = nh3.advertise<std_msgs::String>("/person", 1);
-    ros::Subscriber teleport = nh4.subscribe<geometry_msgs::PoseWithCovarianceStamped>("/initialpose", 1, callbackTeleport);
-    resetMap = nh5.advertise<std_msgs::String>("/reset", 1);
+    posit = nh6.advertise<geometry_msgs::PoseWithCovarianceStamped>("/initialpose", 1);
+    sleep(5);
+    ros::Subscriber sub3 = nh4.subscribe<visualization_msgs::MarkerArray> ("/sign", 1, callbackSign);
+    ros::Subscriber sub4 = nh5.subscribe<geometry_msgs::PoseWithCovarianceStamped> ("/amcl_pose", 1, callbackPose);
 
     ros::spin();
 
