@@ -43,11 +43,11 @@ static string osebe[][3] = {{"harry", "hairy", "perry"},
 							{"scarlet", "scarlett", "scarlets"},
 							{"Matthew", "a", "a"}};
 
-static int barveDimensions = 4;
-static string barve[][4] = {{"red", "rat", "rad", "read"},
-							{"green", "green","green","green"},
-							{"blue", "blow", "blah","block"},
-							{"yellow", "yellow","yellow","yellow"}};
+static int barveDimensions = 5;
+static string barve[][5] = {{"red", "rat", "rad", "read", "right"},
+							{"green", "green","green","green","green"},
+							{"blue", "blow", "blah", "block", "blood"},
+							{"yellow", "narrow", "yellow", "yellow", "yellow"}};
 static ros::Publisher setGoal;
 
 bool cmp(string s1, string s2) {
