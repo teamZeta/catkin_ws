@@ -22,7 +22,10 @@
 
 #include <pcl/features/normal_3d.h>
 #include <visualization_msgs/Marker.h>
-
+#include <cstdlib>
+#include <std_msgs/String.h>
+#include <sstream>
+#include <unistd.h>
 
 using namespace std;
 
