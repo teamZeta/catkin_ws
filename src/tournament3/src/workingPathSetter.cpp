@@ -10,37 +10,26 @@
 #include <sstream>
 #include <cstdlib>
 #include <sys/timeb.h>
-#include <unistd.h>
-#include <std_msgs/Header.h>
-#include <geometry_msgs/PoseWithCovarianceStamped.h>
 
 using namespace std;
 
-static move_base_msgs::MoveBaseGoal redGoals[5];
-static move_base_msgs::MoveBaseGoal greenGoals[9];
-static move_base_msgs::MoveBaseGoal blueGoals[7];
-static move_base_msgs::MoveBaseGoal yellowGoals[4];
-static int redSize = 5;
-static int greenSize = 9;
-static int blueSize = 7;
+static move_base_msgs::MoveBaseGoal goals[4];
+static int redSize = 4;
+static int greenSize = 4;
+static int blueSize = 4;
 static int yellowSize = 4;
+static move_base_msgs::MoveBaseGoal redGoals[4];
+static move_base_msgs::MoveBaseGoal greenGoals[4];
+static move_base_msgs::MoveBaseGoal blueGoals[4];
+static move_base_msgs::MoveBaseGoal yellowGoals[4];
 static move_base_msgs::MoveBaseGoal goal;
 static int currentGoal = -1;
 static bool foundFace = false;
 static ros::Publisher updateTaxi;
 static string osebe[] = {"Harry", "Philip", "Tina", "Peter", "Forrest", "Ellen", "Kim", "Scarlet", "Matthew"};
-static string streetName[] = {"red","green","blue","yellow"};
 static int iskanaOsebaID = 0;
 static string trenutnaOseba = "";
-static float diff=6.05;
-static float dynamicDiff;
-static ros::Publisher posit;
-static bool reset = false;
-static int goalInd=0;
 static int whereTo = 0;     // 0 - undefined, 1234 - rgby
-static bool once = false;
-
-
 /*
     OSEBE ID:
     "Peter"     1
@@ -55,63 +44,6 @@ static bool once = false;
 */
 
 typedef actionlib::SimpleActionClient<move_base_msgs::MoveBaseAction> MoveBaseClient;
-
-bool changeMap(float x, float y){
-    printf("Racunam novo mapo\n");
-    int mapInd=0;
-    if(y>1.1)
-        mapInd=1;
-    else if(y<-3.2)
-        mapInd=-1;
-    int destInd=1;
-    if(x<-2)
-        destInd=-1;
-	if(reset){
-		destInd=0;
-		reset=false;
-	}
-
-	dynamicDiff=(destInd-mapInd)*diff;
-	printf("Koordinate %f , %f ",x,y);
-	printf("Sem v: %d hocem v: %d teleport: %f",mapInd,destInd,dynamicDiff);
-	return dynamicDiff!=0;
-}
-
-void callbackSign (const visualization_msgs::MarkerArrayConstPtr& markerArray) {
-	printf("vidim znak\n");
-    if (markerArray->markers[0].id == 3 || markerArray->markers[0].id == 1) {      // one way
-    	printf("uh oh one way\n");
-        once=true;
-    }
-}
-void changeGoals(move_base_msgs::MoveBaseGoal Goals[],int size){
-    for(int i=0;i<size;i++){
-        Goals[i].target_pose.pose.position.y+=dynamicDiff;
-    }
-}
-
-void callbackPose(const geometry_msgs::PoseWithCovarianceStamped msg){
-    if (once&&changeMap((float)msg.pose.pose.position.x,(float)msg.pose.pose.position.y)) {
-        geometry_msgs::PoseWithCovarianceStamped pos;
-        pos.pose.pose.position.x = msg.pose.pose.position.x;
-        pos.pose.pose.position.y = msg.pose.pose.position.y+dynamicDiff;
-        pos.pose.pose.position.z = msg.pose.pose.position.z;
-        pos.pose.pose.orientation.x = msg.pose.pose.orientation.x;
-        pos.pose.pose.orientation.y = msg.pose.pose.orientation.y;
-        pos.pose.pose.orientation.z = msg.pose.pose.orientation.z;
-        pos.pose.pose.orientation.w = msg.pose.pose.orientation.w;
-
-        changeGoals(redGoals,redSize);
-        changeGoals(greenGoals,greenSize);
-        changeGoals(blueGoals,blueSize);
-        changeGoals(yellowGoals,yellowSize);
-
-        posit.publish(pos);
-        once = false;
-    }
-}
-
-
 
 static move_base_msgs::MoveBaseGoal createGoal(float xRobot, float yRobot, float xDirection, float yDirection){
     move_base_msgs::MoveBaseGoal goalC;
@@ -129,50 +61,10 @@ static move_base_msgs::MoveBaseGoal createGoal(float xRobot, float yRobot, float
     goalC.target_pose.pose.position.y = yRobot;
     return goalC;
 }
-void startSearch(move_base_msgs::MoveBaseGoal Goals[],int size){
-    int k = 0;
-    while (!foundFace && k<size) {
-        MoveBaseClient ac("move_base", true);
-        while(!ac.waitForServer(ros::Duration(5.0))){
-            ROS_INFO("Waiting for the move_base action server to come up");
-        }
-        printf("Goal  %.2f - %.2f \n", Goals[k].target_pose.pose.position.x, Goals[k].target_pose.pose.position.y );
-        ac.sendGoal(Goals[k]);
-        ac.waitForResult();
-        if(ac.getState() == actionlib::SimpleClientGoalState::SUCCEEDED){
-            ROS_INFO("Reached goal.");
-            reset=true;
-        } else {
-            printf("No go, retrying %s\n",ac.getState().toString().c_str());
-            while(!ac.waitForServer(ros::Duration(5.0))){
-                    ROS_INFO("Waiting for the move_base action server to come up");
-                }
-                printf("Goal  %.2f - %.2f \n", Goals[k].target_pose.pose.position.x, Goals[k].target_pose.pose.position.y );
-                ac.sendGoal(Goals[k]);
-                ac.waitForResult();
-                if(ac.getState() == actionlib::SimpleClientGoalState::SUCCEEDED){
-                    ROS_INFO("Reached goal.");
-                    reset=true;
-                } else {
-                    printf("No go %s\n",ac.getState().toString().c_str());
 
-                }
-
-
-        }
-        k++;
-    }
-
-}
-
-bool cmp(string s1, string s2){
-    int i;
-    for (i=0; s1[i]; i++) s1[i] = tolower(s1[i]);
-    for (i=0; s1[i]; i++) s2[i] = tolower(s2[i]);
-    return !s1.compare(s2);
-}
-
-
+// ::::::::::::::::::::::::::::::::::::::::::::::
+// :::::::::::::::::: CALLBACK ::::::::::::::::::
+// ::::::::::::::::::::::::::::::::::::::::::::::
 void callback (const std_msgs::String::ConstPtr& msg) {
     string array[3];
     int i = 0;
@@ -198,35 +90,114 @@ void callback (const std_msgs::String::ConstPtr& msg) {
 
     // ::::::::::::::::::::::
     // doloci kam mora it
-    for(int i=0;i<4;i++){
-        if(cmp(array[2],streetName[i])){
-            if (!array[0].compare("pick")) {
-                if (i == 0) {
-                    startSearch(redGoals,redSize);
-                } else if (i == 1) {
-                    startSearch(greenGoals,greenSize);
-                } else if (i == 2) {
-                    startSearch(blueGoals,blueSize);
-                } else if (i == 3) {
-                    startSearch(yellowGoals,yellowSize);
-                }
-                // ko najde faco izracunaj vektor in se priblizaj
-                foundFace = false;
-            }
+    if (!array[2].compare("red") || !array[2].compare("Red")) {
+        currentGoal = 0;
+        whereTo = 1;
+    } else if (!array[2].compare("green") || !array[2].compare("Green") ) {
+        currentGoal = 1;
+        whereTo = 2;
+    } else if (!array[2].compare("blue") || !array[2].compare("Blue")) {
+        currentGoal = 2;
+        whereTo = 3;
+    } else if (!array[2].compare("yellow") || !array[2].compare("Yellow")) {
+        currentGoal = 3;
+        whereTo = 4;
+    } else {
+        printf("pathSetter shouldnt come here (Doloci barvo ulice).\n");
+    }
 
-        }
-
+    // ::::::::::::::::::::::
+    // nastavi goal
+    MoveBaseClient ac("move_base", true);
+    while(!ac.waitForServer(ros::Duration(5.0))){
+        ROS_INFO("Waiting for the move_base action server to come up");
     }
     //printf("Goal: %f %f\n",xTarget,yTarget);
     //ROS_INFO("Sending path goal %d",nGoal);
-
+    ac.sendGoal(goals[currentGoal]);
+    ac.waitForResult();
+    if(ac.getState() == actionlib::SimpleClientGoalState::SUCCEEDED){
+        ROS_INFO("Reached goal.");
+       // sleep(1.1);
+    } else {
+        printf("No go %s\n",ac.getState().toString().c_str());
+    }
 
     // ::::::::::::::::::::::
     // zacni izvajat iskanje prave osebe
-
+    if (!array[0].compare("pick")) {
+        int k = 0;
+        if (whereTo = 1) {
+            while (!foundFace && k<redSize) {
+                MoveBaseClient ac("move_base", true);
+                while(!ac.waitForServer(ros::Duration(5.0))){
+                    ROS_INFO("Waiting for the move_base action server to come up");
+                }
+                printf("Goal  %.2f - %.2f \n", redGoals[k].target_pose.pose.position.x, redGoals[k].target_pose.pose.position.y );
+                ac.sendGoal(redGoals[k]);
+                ac.waitForResult();
+                if(ac.getState() == actionlib::SimpleClientGoalState::SUCCEEDED){
+                    ROS_INFO("Reached goal.");
+                } else {
+                    printf("No go %s\n",ac.getState().toString().c_str());
+                }
+                k++;
+            }
+        } else if (whereTo = 2) {
+            while (!foundFace && k<redSize) {
+                MoveBaseClient ac("move_base", true);
+                while(!ac.waitForServer(ros::Duration(5.0))){
+                    ROS_INFO("Waiting for the move_base action server to come up");
+                }
+                printf("Goal  %.2f - %.2f \n", greenGoals[k].target_pose.pose.position.x, greenGoals[k].target_pose.pose.position.y );
+                ac.sendGoal(greenGoals[k]);
+                ac.waitForResult();
+                if(ac.getState() == actionlib::SimpleClientGoalState::SUCCEEDED){
+                    ROS_INFO("Reached goal.");
+                } else {
+                    printf("No go %s\n",ac.getState().toString().c_str());
+                }
+                k++;
+            }
+        } else if (whereTo = 3) {
+            while (!foundFace && k<redSize) {
+                MoveBaseClient ac("move_base", true);
+                while(!ac.waitForServer(ros::Duration(5.0))){
+                    ROS_INFO("Waiting for the move_base action server to come up");
+                }
+                printf("Goal  %.2f - %.2f \n", blueGoals[k].target_pose.pose.position.x, blueGoals[k].target_pose.pose.position.y );
+                ac.sendGoal(blueGoals[k]);
+                ac.waitForResult();
+                if(ac.getState() == actionlib::SimpleClientGoalState::SUCCEEDED){
+                    ROS_INFO("Reached goal.");
+                } else {
+                    printf("No go %s\n",ac.getState().toString().c_str());
+                }
+                k++;
+            }
+        } else if (whereTo = 4) {
+            while (!foundFace && k<yellowSize) {
+                MoveBaseClient ac("move_base", true);
+                while(!ac.waitForServer(ros::Duration(5.0))){
+                    ROS_INFO("Waiting for the move_base action server to come up");
+                }
+                printf("Goal  %.2f - %.2f \n", yellowGoals[k].target_pose.pose.position.x, yellowGoals[k].target_pose.pose.position.y );
+                ac.sendGoal(yellowGoals[k]);
+                ac.waitForResult();
+                if(ac.getState() == actionlib::SimpleClientGoalState::SUCCEEDED){
+                    ROS_INFO("Reached goal.");
+                } else {
+                    printf("No go %s\n",ac.getState().toString().c_str());
+                }
+                k++;
+            }
+        }
+        // ko najde faco izracunaj vektor in se priblizaj
+        foundFace = false;
+    }
     // ::::::::::::::::::::::
     // zacni izvajat iskanje prave zgradbe
-    if (!array[0].compare("take")) {
+    else if (!array[0].compare("take")) {
 
         // TODO: iskanje zgradbe
 
@@ -252,14 +223,6 @@ void callback (const std_msgs::String::ConstPtr& msg) {
 
 
 }
-
-
-
-
-/*void callbackTeleport(const geometry_msgs::PoseWithCovarianceStamped msg){ //Zamenja goale na trenutno mapo
-	printf("Callback za menjavo goalov\n");
-    changeGoalMap((float)msg.pose.pose.position.x,(float)msg.pose.pose.position.y);
-}*/
 // ::::::::::::::::::::::::::::::::::::::::::::
 // :::::::::::::::: FOUND FACE ::::::::::::::::
 // ::::::::::::::::::::::::::::::::::::::::::::
@@ -379,52 +342,56 @@ void callbackFoundFace (const visualization_msgs::MarkerArrayConstPtr& markerArr
 
 }
 
+void goalInit() {
+    int i=0;
+    goals[i++]=createGoal(-4.9,1.5,0,1);    // red street
+    goals[i++]=createGoal(-3.6,0.2,0,1);    // green street
+    goals[i++]=createGoal(-3.36,-0.44,-1,1);    // blue street
+    goals[i++]=createGoal(-4.8,-0.7,-1,-1);   // yellow street
+}
 
 void redGoalsInit() {
     int i=0;
-    redGoals[i++]=createGoal(-3.5,2.3,1,0); 
-    redGoals[i++]=createGoal(-3.5,2.3,0,1);
-    redGoals[i++]=createGoal(-3.5,2.3,-1,0);
-    redGoals[i++]=createGoal(-3.5,1.4,1,0);
-    redGoals[i++]=createGoal(-3.5,1.4,-1,0);
+    redGoals[i++]=createGoal(-4.9,2.3,1,0); 
+    redGoals[i++]=createGoal(-4.9,2.3,0,1);
+    redGoals[i++]=createGoal(-4.9,2.3,-1,0);
+    redGoals[i++]=createGoal(-4.9,2.3,0,-1);
 }
 
 void greenGoalsInit() {
     int i=0;
-    greenGoals[i++]=createGoal(-2,-0.2,0,1);
-    greenGoals[i++]=createGoal(-2,-0.2,0,-1);
-    greenGoals[i++]=createGoal(-0.9,-0.25,0,1);
-    greenGoals[i++]=createGoal(-0.4,-0.7,1,0);
-    greenGoals[i++]=createGoal(0.17,-0.3,0,1);
-    greenGoals[i++]=createGoal(0.7,-0.3,0,-1);
-    greenGoals[i++]=createGoal(1.6,-0.3,0,1);
-    greenGoals[i++]=createGoal(1.6,-0.3,1,0);
-    greenGoals[i++]=createGoal(1.6,-0.3,-1,0);
+    greenGoals[i++]=createGoal(-4.9,2.3,1,0);
+    greenGoals[i++]=createGoal(-4.9,2.3,1,0); 
+    greenGoals[i++]=createGoal(-4.9,2.3,0,1);
+    greenGoals[i++]=createGoal(-4.9,2.3,0,-1);
 }
 
 void blueGoalsInit() {
     int i=0;
-    blueGoals[i++]=createGoal(1.5,-1.6,1,0);    
-    blueGoals[i++]=createGoal(1.5,-1.6,0,-1);  
-    blueGoals[i++]=createGoal(0.7,-1.7,0,-1); 
-    blueGoals[i++]=createGoal(0.7,-1.7,0,1);
-    blueGoals[i++]=createGoal(-0.5,-1.55,0,-1); 
-    blueGoals[i++]=createGoal(-1.9,-1.6,0,-1);
-    blueGoals[i++]=createGoal(-1.9,-1.6,0,1);
+    blueGoals[i++]=createGoal(-4.9,2.3,1,0); 
+    blueGoals[i++]=createGoal(-4.9,2.3,0,1);
+    blueGoals[i++]=createGoal(-4.9,2.3,-1,0);
+    blueGoals[i++]=createGoal(-4.9,2.3,0,-1);
 }
 
 void yellowGoalsInit() {
     int i=0;
-    yellowGoals[i++]=createGoal(-3.3,-1.55,-1,0); 
-    yellowGoals[i++]=createGoal(-3.3,-1.55,0,-1); 
-    yellowGoals[i++]=createGoal(-3.4,-0.87,-1,0); 
-    yellowGoals[i++]=createGoal(-3.4,-0.87,1,0);
+    yellowGoals[i++]=createGoal(-4.9,2.3,1,0); 
+    yellowGoals[i++]=createGoal(-4.9,2.3,0,1);
+    yellowGoals[i++]=createGoal(-4.9,2.3,-1,0);
+    yellowGoals[i++]=createGoal(-4.9,2.3,0,-1);
 }
 
+// ::::::::::::::::::::::::::::::::::::::::::::::
+// :::::::::::::::::::: MAIN ::::::::::::::::::::
+// ::::::::::::::::::::::::::::::::::::::::::::::
 int main(int argc, char** argv){
     ros::init(argc, argv, "pathSetter");
-    ros::NodeHandle nh,nh2,nh3,nh4,nh5,nh6;
+    ros::NodeHandle nh;
+    ros::NodeHandle nh2;
+    ros::NodeHandle nh3;
 
+    goalInit();
     redGoalsInit();
     blueGoalsInit();
     greenGoalsInit();
@@ -433,10 +400,6 @@ int main(int argc, char** argv){
     ros::Subscriber sub = nh.subscribe<std_msgs::String>("/newGoal", 1, callback);
     ros::Subscriber sub2 = nh2.subscribe<visualization_msgs::MarkerArray> ("/foundFace", 1, callbackFoundFace);
     updateTaxi = nh3.advertise<std_msgs::String>("/person", 1);
-    posit = nh6.advertise<geometry_msgs::PoseWithCovarianceStamped>("/initialpose", 1);
-    sleep(5);
-    ros::Subscriber sub3 = nh4.subscribe<visualization_msgs::MarkerArray> ("/sign", 1, callbackSign);
-    ros::Subscriber sub4 = nh5.subscribe<geometry_msgs::PoseWithCovarianceStamped> ("/amcl_pose", 1, callbackPose);
 
     ros::spin();
 
