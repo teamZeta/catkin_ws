@@ -212,18 +212,12 @@ target_link_libraries(horn ${catkin_LIBRARIES})
 add_executable(talk src/talk.cpp)
 target_link_libraries(talk ${catkin_LIBRARIES})
 
-add_executable(pathSetter src/pathSetter.cpp)
-target_link_libraries(pathSetter ${catkin_LIBRARIES})
-
 add_executable(slow src/slow.cpp)
 target_link_libraries(slow ${catkin_LIBRARIES})
 
 add_executable(oneway src/oneway.cpp)
 target_link_libraries(oneway ${catkin_LIBRARIES})
 
-add_executable(teleport src/teleport.cpp)
-target_link_libraries(teleport ${catkin_LIBRARIES})
-
-add_executable(betterPathSetter src/betterPathSetter.cpp)
-target_link_libraries(betterPathSetter ${catkin_LIBRARIES})
+add_executable(pathSetter src/pathSetter.cpp)
+target_link_libraries(pathSetter ${catkin_LIBRARIES})
 
