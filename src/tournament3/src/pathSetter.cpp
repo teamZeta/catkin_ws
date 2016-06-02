@@ -142,7 +142,7 @@ void startSearch(move_base_msgs::MoveBaseGoal Goals[],int size){
         ac.waitForResult();
         if(ac.getState() == actionlib::SimpleClientGoalState::SUCCEEDED){
             ROS_INFO("Reached goal.");
-            sleep(0.3);
+            sleep(1);
             reset=true;
         } else {
             printf("No go, retrying %s\n",ac.getState().toString().c_str());
@@ -154,7 +154,7 @@ void startSearch(move_base_msgs::MoveBaseGoal Goals[],int size){
                 ac.waitForResult();
                 if(ac.getState() == actionlib::SimpleClientGoalState::SUCCEEDED){
                     ROS_INFO("Reached goal.");
-                    sleep(0.3);
+                    sleep(1);
                     reset=true;
                 } else {
                     printf("No go %s\n",ac.getState().toString().c_str());
@@ -228,7 +228,7 @@ void callback (const std_msgs::String::ConstPtr& msg) {
 
     // ::::::::::::::::::::::
     // zacni izvajat iskanje prave zgradbe
-    if (!array[0].compare("take")) {
+   else if (!array[0].compare("take")) {
 
         // TODO: iskanje zgradbe
 

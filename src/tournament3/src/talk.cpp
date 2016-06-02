@@ -34,20 +34,20 @@ static int nPerson = 0;
 static int order = 0;			// 0 - undefined, 1 - pick up, 2 - take to
 static int osebeDimensions = 3;
 static string osebe[][3] = {{"harry", "hairy", "perry"},
-							{"philip", "philips", "asdfa"},
+							{"philip", "philips", "phillip"},
 							{"tina", "pina", "aasdasd"},
 							{"peter", "peter", "peter"},
 							{"tom", "tom", "tom"},
 							{"ellen", "alen", "elen"},
 							{"kim", "a", "a"},
 							{"scarlet", "scarlett", "scarlets"},
-							{"Matthew", "a", "a"}};
+							{"Matthew", "Matthew", "a"}};
 
 static int barveDimensions = 6;
-static string barve[][6] = {{"red", "rat", "rad", "read", "right","red"},
-							{"green", "green","green","green","green" "green"},
-							{"blue", "blow", "blah", "block", "blood", "bloor"},
-							{"yellow", "narrow", "yellow", "yellow", "yellow", "narrow"}};
+static string barve[][6] = {{"red", "rat", "rad", "read", "right","red","red","red","red"},
+							{"green", "green","green","green","green" "green","green","green","green"},
+							{"blue", "blow", "blah", "block", "blood", "bloor","blue","bluff","blue"},
+							{"yellow", "narrow", "yellow", "yellow", "yellow", "narrow","yellow","yellow","yellow"}};
 static ros::Publisher setGoal;
 
 bool cmp(string s1, string s2) {
