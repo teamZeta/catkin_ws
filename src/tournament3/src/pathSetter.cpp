@@ -90,8 +90,7 @@ void changeGoals(move_base_msgs::MoveBaseGoal Goals[],int size){
     }
 }
 
-void callbackPose(const geometry_msgs::PoseWithCovarianceStamped msg){
-    printf("c\n");
+void callbackPose(const geometry_msgs::PoseWithCovarianceStamped msg) {
     if(once) {
         printf("...........................ONCE\n");
         if (changeMap((float)msg.pose.pose.position.x,(float)msg.pose.pose.position.y)) {
