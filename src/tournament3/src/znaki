@@ -57,7 +57,7 @@ class Faces():
 				#cv2.imwrite("/home/team_zeta/slikeZ/"+str(100)+".png", equ)
 				[nbr_predicted, conf] = self.recognize(np.array(image).flatten().tolist())
 				nbr_predicted = nbr_predicted[0].astype(int)
-				if conf > 30000000:
+				if conf > 930000000:
 					return
 				#print(nbr_predicted)
 				#print(self.id_prep[nbr_predicted[0]])
@@ -71,7 +71,7 @@ class Faces():
 				else:
 					self.id_prep[nbr_predicted[0]] = 0
 				
-				if self.id_prep[nbr_predicted[0]] > 5:
+				if self.id_prep[nbr_predicted[0]] > 1:
 					if self.id_prep[nbr_predicted[0]] == 6:
 						print(str(self.tabela_znakov[nbr_predicted[0]]) + " conf " + str(conf))
 					camera_info = None

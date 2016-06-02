@@ -34,37 +34,210 @@ ros::Publisher pub;
 static ros::Publisher marker_pose;
 
 
-static visualization_msgs::Marker mark_cluster(pcl::PointCloud<pcl::PointXYZRGB>::Ptr cloud_cluster, std::string ns ,int id, float r, float g, float b)
+
+
+typedef struct {
+    double r;       // percent
+    double g;       // percent
+    double b;       // percent
+} rgb;
+
+typedef struct {
+    double h;       // angle in degrees
+    double s;       // percent
+    double v;       // percent
+} hsv;
+
+static hsv   rgb2hsv(rgb in);
+static rgb   hsv2rgb(hsv in);
+
+hsv rgb2hsv(rgb in)
+{
+    hsv         out;
+    double      min, max, delta;
+
+    min = in.r < in.g ? in.r : in.g;
+    min = min  < in.b ? min  : in.b;
+
+    max = in.r > in.g ? in.r : in.g;
+    max = max  > in.b ? max  : in.b;
+
+    out.v = max;                                // v
+    delta = max - min;
+    if (delta < 0.00001)
+    {
+        out.s = 0;
+        out.h = 0; // undefined, maybe nan?
+        return out;
+    }
+    if( max > 0.0 ) { // NOTE: if Max is == 0, this divide would cause a crash
+        out.s = (delta / max);                  // s
+    } else {
+        // if max is 0, then r = g = b = 0              
+            // s = 0, v is undefined
+        out.s = 0.0;
+        out.h = NAN;                            // its now undefined
+        return out;
+    }
+    if( in.r >= max )                           // > is bogus, just keeps compilor happy
+        out.h = ( in.g - in.b ) / delta;        // between yellow & magenta
+    else
+    if( in.g >= max )
+        out.h = 2.0 + ( in.b - in.r ) / delta;  // between cyan & yellow
+    else
+        out.h = 4.0 + ( in.r - in.g ) / delta;  // between magenta & cyan
+
+    out.h *= 60.0;                              // degrees
+
+    if( out.h < 0.0 )
+        out.h += 360.0;
+
+    return out;
+}
+
+
+rgb hsv2rgb(hsv in)
+{
+    double      hh, p, q, t, ff;
+    long        i;
+    rgb         out;
+
+    if(in.s <= 0.0) {       // < is bogus, just shuts up warnings
+        out.r = in.v;
+        out.g = in.v;
+        out.b = in.v;
+        return out;
+    }
+    hh = in.h;
+    if(hh >= 360.0) hh = 0.0;
+    hh /= 60.0;
+    i = (long)hh;
+    ff = hh - i;
+    p = in.v * (1.0 - in.s);
+    q = in.v * (1.0 - (in.s * ff));
+    t = in.v * (1.0 - (in.s * (1.0 - ff)));
+
+    switch(i) {
+    case 0:
+        out.r = in.v;
+        out.g = t;
+        out.b = p;
+        break;
+    case 1:
+        out.r = q;
+        out.g = in.v;
+        out.b = p;
+        break;
+    case 2:
+        out.r = p;
+        out.g = in.v;
+        out.b = t;
+        break;
+
+    case 3:
+        out.r = p;
+        out.g = q;
+        out.b = in.v;
+        break;
+    case 4:
+        out.r = t;
+        out.g = p;
+        out.b = in.v;
+        break;
+    case 5:
+    default:
+        out.r = in.v;
+        out.g = p;
+        out.b = q;
+        break;
+    }
+    return out;     
+}
+
+
+
+
+
+
+static void mark_cluster(pcl::PointCloud<pcl::PointXYZRGB>::Ptr cloud_cluster, std::string ns ,int id, float r, float g, float b)
 {
 
  float rc = 0;
  float gc = 0;
  float bc = 0;
  int count = 0;
+ float max2 = 0;
  for( size_t i = 0; i<cloud_cluster->points.size(); i+=10){
- 	rc += cloud_cluster->points[i].r;
+ 	
+	rc += cloud_cluster->points[i].r;
  	gc += cloud_cluster->points[i].g;
  	bc += cloud_cluster->points[i].b;
  	count++;
+ 	
+ 	
+ 	
  }
  rc /= count;
  gc /= count;
  bc /= count;
+ if(max2 < rc){
+ 	max2 = rc;
+ }
+ if(max2 < gc){
+ 	max2 = gc;
+ }
+ if(max2 < bc){
+	max2 = bc;
+ }
+  rc /= max2;
+  gc /= max2;
+  bc /= max2;
 
-  rc /= 255;
-  gc /= 255;
-  bc /= 255;
+  rgb rgb_barva;
+  rgb_barva.r = rc;
+  rgb_barva.g = gc;
+  rgb_barva.b = bc;
+
+  hsv hsv_barva;
+  hsv_barva = rgb2hsv(rgb_barva);
+
+
   uint8_t ru = 0x00;
   uint8_t gu = 0x00;
   uint8_t bu = 0x00;
-  if(rc > 0.1){
+  r = 0;//reinterpret_cast<float&>(ru)/256;
+  g = 0;//reinterpret_cast<float&>(gu)/256;
+  b = 0;//reinterpret_cast<float&>(bu)/256;
+
+  if(hsv_barva.s < 0.1){
+  	return;
+  }
+  if(hsv_barva.v < 0.01){
+  	return;
+  }
+  if(hsv_barva.h > 30 && hsv_barva.h < 60){
+  	g = 1;
+  	r = 1;
+  	b = 0;
   	ru = 0xff;
-  }
-  if(gc > 0.1){
   	gu = 0xff;
-  }
-  if(bc > 0.1){
+  }else if(hsv_barva.h > 75 && hsv_barva.h < 105){
+  	g = 1;
+  	r = 0;
+  	b = 0;
+  	gu = 0xff;
+
+  }else if(hsv_barva.h > 170 && hsv_barva.h < 105){
+  	g = 1;
+  	r = 0;
+  	b = 1;
+  	gu = 0xff;
   	bu = 0xff;
+  }else if(hsv_barva.h > 340 || hsv_barva.h < 15){
+  	g = 0;
+  	r = 1;
+  	b = 0;
+  	ru = 0xff;
   }
   
   uint32_t barva = (ru<<16) | (gu<<8) | (bu);
@@ -74,9 +247,7 @@ static visualization_msgs::Marker mark_cluster(pcl::PointCloud<pcl::PointXYZRGB>
   const uint32_t cyan = 0x00ffff;
   const uint32_t yellow = 0xffff00;
 
-  r = reinterpret_cast<float&>(ru)/255;
-  g = reinterpret_cast<float&>(gu)/255;
-  b = reinterpret_cast<float&>(bu)/255;
+  
 
   printf("%f", r);
   Eigen::Vector4f centroid;
@@ -100,6 +271,9 @@ static visualization_msgs::Marker mark_cluster(pcl::PointCloud<pcl::PointXYZRGB>
   	case cyan: id = 3; break;
   	default: id=0; break;
 
+  }
+  if(id == 0){
+  	return;
   }
 
   marker.id = id;
@@ -129,15 +303,15 @@ static visualization_msgs::Marker mark_cluster(pcl::PointCloud<pcl::PointXYZRGB>
    
 
 
-  marker.color.r = rc;
-  marker.color.g = gc;
-  marker.color.b = bc;
+  marker.color.r = r;
+  marker.color.g = g;
+  marker.color.b = b;
   marker.color.a = 1;
 
   marker.lifetime = ros::Duration();
   //marker.lifetime = ros::Duration();
   marker_pose.publish (marker);
-  return marker;
+  
 } 
 
 
