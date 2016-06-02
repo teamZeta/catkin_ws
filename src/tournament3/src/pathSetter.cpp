@@ -78,7 +78,7 @@ bool changeMap(float x, float y){
 }
 
 void callbackSign (const visualization_msgs::MarkerArrayConstPtr& markerArray) {
-	printf("vidim znak\n");
+	printf("vidim znak: %d\n", markerArray->markers[0].id);
     if (markerArray->markers[0].id == 3 || markerArray->markers[0].id == 1) {      // one way
     	printf("uh oh one way\n");
         once=true;
@@ -91,28 +91,30 @@ void changeGoals(move_base_msgs::MoveBaseGoal Goals[],int size){
 }
 
 void callbackPose(const geometry_msgs::PoseWithCovarianceStamped msg){
-    if(once)
-    if (changeMap((float)msg.pose.pose.position.x,(float)msg.pose.pose.position.y)) {
-        geometry_msgs::PoseWithCovarianceStamped pos;
-        pos.pose.pose.position.x = msg.pose.pose.position.x;
-        pos.pose.pose.position.y = msg.pose.pose.position.y+dynamicDiff;
-        pos.pose.pose.position.z = msg.pose.pose.position.z;
-        pos.pose.pose.orientation.x = msg.pose.pose.orientation.x;
-        pos.pose.pose.orientation.y = msg.pose.pose.orientation.y;
-        pos.pose.pose.orientation.z = msg.pose.pose.orientation.z;
-        pos.pose.pose.orientation.w = msg.pose.pose.orientation.w;
+    printf("c\n");
+    if(once) {
+        printf("...........................ONCE\n");
+        if (changeMap((float)msg.pose.pose.position.x,(float)msg.pose.pose.position.y)) {
+            printf("changeMap\n");
+            geometry_msgs::PoseWithCovarianceStamped pos;
+            pos.pose.pose.position.x = msg.pose.pose.position.x;
+            pos.pose.pose.position.y = msg.pose.pose.position.y+dynamicDiff;
+            pos.pose.pose.position.z = msg.pose.pose.position.z;
+            pos.pose.pose.orientation.x = msg.pose.pose.orientation.x;
+            pos.pose.pose.orientation.y = msg.pose.pose.orientation.y;
+            pos.pose.pose.orientation.z = msg.pose.pose.orientation.z;
+            pos.pose.pose.orientation.w = msg.pose.pose.orientation.w;
 
-        changeGoals(redGoals,redSize);
-        changeGoals(greenGoals,greenSize);
-        changeGoals(blueGoals,blueSize);
-        changeGoals(yellowGoals,yellowSize);
+            changeGoals(redGoals,redSize);
+            changeGoals(greenGoals,greenSize);
+            changeGoals(blueGoals,blueSize);
+            changeGoals(yellowGoals,yellowSize);
 
-        posit.publish(pos);
-        once = false;
+            posit.publish(pos);
+            once = false;
+        }
     }
 }
-
-
 
 static move_base_msgs::MoveBaseGoal createGoal(float xRobot, float yRobot, float xDirection, float yDirection){
     move_base_msgs::MoveBaseGoal goalC;
@@ -130,6 +132,7 @@ static move_base_msgs::MoveBaseGoal createGoal(float xRobot, float yRobot, float
     goalC.target_pose.pose.position.y = yRobot;
     return goalC;
 }
+
 void startSearch(move_base_msgs::MoveBaseGoal Goals[],int size){
     int k = 0;
     while (!foundFace && k<size) {

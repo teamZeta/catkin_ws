@@ -38,14 +38,14 @@ static string osebe[][6] = {{"harry", "hairy", "perry","harry","harry","harry"},
 							{"tina", "pina", "dina","dana","tina","tina"},
 							{"peter", "peter", "peter","peter","peter","peter"},
 							{"tom", "tom", "tom","tom","tom","tom"},
-							{"ellen", "alen", "elen","ellen","ellen","ellen"},
+							{"ellen", "alen", "elen","erin","ellen","ellen"},
 							{"kim", "kim", "kim","kim","kim","kim"},
 							{"scarlet", "scarlett", "scarlets","scarlet","scarlet","scarlet"},
-							{"Matthew", "Matthew", "Matthew","Matthew","Matthew","MatthewMatthew"}};
+							{"matthew", "matthew", "matthew","matthew","matthew","matthew"}};
 
 static int barveDimensions = 9;
-static string barve[][9] = {{"red", "rat", "rad", "read", "right","red","red","red","red"},
-							{"green", "grill","green","green","green" "green","green","green","green"},
+static string barve[][9] = {{"red", "rat", "rad", "read", "right","bread","red","red","red"},
+							{"green", "grill","grant","green","green","green","green","green","green"},
 							{"blue", "blow", "blah", "block", "blood", "bloor","bloodstream","bluff","blue"},
 							{"yellow", "narrow", "yellow", "yellow", "yellow", "narrow","yellow","yellow","yellow"}};
 static ros::Publisher setGoal;
