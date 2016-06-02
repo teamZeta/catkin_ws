@@ -199,9 +199,9 @@ void callback (const std_msgs::String::ConstPtr& msg) {
 
     // ::::::::::::::::::::::
     // doloci kam mora it
-    for(int i=0;i<4;i++){
-        if(cmp(array[2],streetName[i])){
-            if (!array[0].compare("pick")) {
+    if (!array[0].compare("pick")) {
+        for(int i=0;i<4;i++){
+            if(cmp(array[2],streetName[i])){
                 if (i == 0) {
                     startSearch(redGoals,redSize);
                 } else if (i == 1) {
@@ -214,9 +214,7 @@ void callback (const std_msgs::String::ConstPtr& msg) {
                 // ko najde faco izracunaj vektor in se priblizaj
                 foundFace = false;
             }
-
         }
-
     }
     //printf("Goal: %f %f\n",xTarget,yTarget);
     //ROS_INFO("Sending path goal %d",nGoal);
@@ -265,7 +263,7 @@ void callback (const std_msgs::String::ConstPtr& msg) {
 // :::::::::::::::: FOUND FACE ::::::::::::::::
 // ::::::::::::::::::::::::::::::::::::::::::::
 void callbackFoundFace (const visualization_msgs::MarkerArrayConstPtr& markerArray) {
-    printf("%d\n", markerArray->markers[0].id);
+    printf("iskanaOsebaID: %d, zaznan id face: %d\n", iskanaOsebaID, markerArray->markers[0].id);
     if (iskanaOsebaID != markerArray->markers[0].id) {
         return;
     }
@@ -424,7 +422,12 @@ void yellowGoalsInit() {
 
 int main(int argc, char** argv){
     ros::init(argc, argv, "pathSetter");
-    ros::NodeHandle nh,nh2,nh3,nh4,nh5,nh6;
+    ros::NodeHandle nh;
+    ros::NodeHandle nh2;
+    ros::NodeHandle nh3;
+    ros::NodeHandle nh4;
+    ros::NodeHandle nh5;
+    ros::NodeHandle nh6;
 
     redGoalsInit();
     blueGoalsInit();
