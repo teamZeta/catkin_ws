@@ -32,21 +32,21 @@ static std::string building2 = "";
 static int sex2 = 0;
 static int nPerson = 0;
 static int order = 0;			// 0 - undefined, 1 - pick up, 2 - take to
-static int osebeDimensions = 3;
-static string osebe[][3] = {{"harry", "hairy", "perry"},
-							{"philip", "philips", "phillip"},
-							{"tina", "pina", "aasdasd"},
-							{"peter", "peter", "peter"},
-							{"tom", "tom", "tom"},
-							{"ellen", "alen", "elen"},
-							{"kim", "a", "a"},
-							{"scarlet", "scarlett", "scarlets"},
-							{"Matthew", "Matthew", "a"}};
+static int osebeDimensions = 6;
+static string osebe[][6] = {{"harry", "hairy", "perry","harry","harry","harry"},
+							{"philip", "philips", "phillip","philip","philip","philip"},
+							{"tina", "pina", "dina","dana","tina","tina"},
+							{"peter", "peter", "peter","peter","peter","peter"},
+							{"tom", "tom", "tom","tom","tom","tom"},
+							{"ellen", "alen", "elen","ellen","ellen","ellen"},
+							{"kim", "kim", "kim","kim","kim","kim"},
+							{"scarlet", "scarlett", "scarlets","scarlet","scarlet","scarlet"},
+							{"Matthew", "Matthew", "Matthew","Matthew","Matthew","MatthewMatthew"}};
 
 static int barveDimensions = 9;
 static string barve[][9] = {{"red", "rat", "rad", "read", "right","red","red","red","red"},
-							{"green", "green","green","green","green" "green","green","green","green"},
-							{"blue", "blow", "blah", "block", "blood", "bloor","blue","bluff","blue"},
+							{"green", "grill","green","green","green" "green","green","green","green"},
+							{"blue", "blow", "blah", "block", "blood", "bloor","bloodstream","bluff","blue"},
 							{"yellow", "narrow", "yellow", "yellow", "yellow", "narrow","yellow","yellow","yellow"}};
 static ros::Publisher setGoal;
 

@@ -82,7 +82,6 @@ void callbackSign (const visualization_msgs::MarkerArrayConstPtr& markerArray) {
     if (markerArray->markers[0].id == 3 || markerArray->markers[0].id == 1) {      // one way
     	printf("uh oh one way\n");
         once=true;
-        ros::spinOnce();
     }
 }
 void changeGoals(move_base_msgs::MoveBaseGoal Goals[],int size){
@@ -144,7 +143,7 @@ void startSearch(move_base_msgs::MoveBaseGoal Goals[],int size){
         if(ac.getState() == actionlib::SimpleClientGoalState::SUCCEEDED){
             ROS_INFO("Reached goal.");
             sleep(1);
-            reset=true;
+          //  reset=true;
         } else {
             printf("No go, retrying %s\n",ac.getState().toString().c_str());
             while(!ac.waitForServer(ros::Duration(5.0))){
@@ -156,7 +155,7 @@ void startSearch(move_base_msgs::MoveBaseGoal Goals[],int size){
                 if(ac.getState() == actionlib::SimpleClientGoalState::SUCCEEDED){
                     ROS_INFO("Reached goal.");
                     sleep(1);
-                    reset=true;
+                  //  reset=true;
                 } else {
                     printf("No go %s\n",ac.getState().toString().c_str());
 
