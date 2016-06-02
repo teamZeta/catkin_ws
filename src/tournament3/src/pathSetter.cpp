@@ -82,6 +82,7 @@ void callbackSign (const visualization_msgs::MarkerArrayConstPtr& markerArray) {
     if (markerArray->markers[0].id == 3 || markerArray->markers[0].id == 1) {      // one way
     	printf("uh oh one way\n");
         once=true;
+        ros::spinOnce();
     }
 }
 void changeGoals(move_base_msgs::MoveBaseGoal Goals[],int size){
@@ -447,7 +448,12 @@ int main(int argc, char** argv){
     ros::Subscriber sub3 = nh4.subscribe<visualization_msgs::MarkerArray> ("/sign", 1, callbackSign);
     ros::Subscriber sub4 = nh5.subscribe<geometry_msgs::PoseWithCovarianceStamped> ("/amcl_pose", 1, callbackPose);
 
-    ros::spin();
+    //ros::spin();
+    ros::Rate r(10);
+    while (ros::ok()){
+      ros::spinOnce();               
+      r.sleep();
+    }
 
   	//return 0;
 }
