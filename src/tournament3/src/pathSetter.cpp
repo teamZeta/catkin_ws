@@ -164,6 +164,7 @@ void startSearch(move_base_msgs::MoveBaseGoal Goals[],int size){
 
         }
         k++;
+        ros::spinOnce();
     }
 
 }
