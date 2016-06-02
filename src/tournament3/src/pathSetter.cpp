@@ -142,7 +142,7 @@ void startSearch(move_base_msgs::MoveBaseGoal Goals[],int size){
         ac.waitForResult();
         if(ac.getState() == actionlib::SimpleClientGoalState::SUCCEEDED){
             ROS_INFO("Reached goal.");
-            sleep(0.2);
+            sleep(0.3);
             reset=true;
         } else {
             printf("No go, retrying %s\n",ac.getState().toString().c_str());
@@ -154,7 +154,7 @@ void startSearch(move_base_msgs::MoveBaseGoal Goals[],int size){
                 ac.waitForResult();
                 if(ac.getState() == actionlib::SimpleClientGoalState::SUCCEEDED){
                     ROS_INFO("Reached goal.");
-                    sleep(0.2);
+                    sleep(0.3);
                     reset=true;
                 } else {
                     printf("No go %s\n",ac.getState().toString().c_str());
@@ -407,8 +407,8 @@ void greenGoalsInit() {
 
 void blueGoalsInit() {
     int i=0;
-    blueGoals[i++]=createGoal(1.5,-1.6,1,0);    
-    blueGoals[i++]=createGoal(1.5,-1.6,0,-1);  
+    blueGoals[i++]=createGoal(1.5,-1.4,1,0);    
+    blueGoals[i++]=createGoal(1.5,-1.4,0,-1);  
     blueGoals[i++]=createGoal(0.7,-1.7,0,-1); 
     blueGoals[i++]=createGoal(0.7,-1.7,0,1);
     blueGoals[i++]=createGoal(-0.45,-1.4,0,-1); 
