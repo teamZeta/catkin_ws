@@ -372,6 +372,8 @@ void callbackFoundFace (const visualization_msgs::MarkerArrayConstPtr& markerArr
     ac.waitForResult(ros::Duration(5.0));
     if(ac.getState() == actionlib::SimpleClientGoalState::SUCCEEDED) {
         printf("ROBOT: '%s vstopi v taxi.' \n", trenutnaOseba.c_str());
+        iskanaOsebaID = 0;
+        sleep(2);
     } else {
         ROS_INFO("Goal unreachable: %s\n",ac.getState().toString().c_str());
     }
@@ -407,7 +409,7 @@ void blueGoalsInit() {
     blueGoals[i++]=createGoal(1.5,-1.6,0,-1);  
     blueGoals[i++]=createGoal(0.7,-1.7,0,-1); 
     blueGoals[i++]=createGoal(0.7,-1.7,0,1);
-    blueGoals[i++]=createGoal(-0.5,-1.55,0,-1); 
+    blueGoals[i++]=createGoal(-0.45,-1.4,0,-1); 
     blueGoals[i++]=createGoal(-1.9,-1.6,0,-1);
     blueGoals[i++]=createGoal(-1.9,-1.6,0,1);
 }
