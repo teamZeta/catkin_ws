@@ -168,14 +168,12 @@ static void mark_cluster(pcl::PointCloud<pcl::PointXYZRGB>::Ptr cloud_cluster, s
  int count = 0;
  float max2 = 0;
  for( size_t i = 0; i<cloud_cluster->points.size(); i+=10){
- 	
-	rc += cloud_cluster->points[i].r;
- 	gc += cloud_cluster->points[i].g;
- 	bc += cloud_cluster->points[i].b;
- 	count++;
- 	
- 	
- 	
+ 	if(cloud_cluster->points[i].a > 0){
+ 		rc += cloud_cluster->points[i].r;
+	 	gc += cloud_cluster->points[i].g;
+	 	bc += cloud_cluster->points[i].b;
+	 	count++;
+ 	}
  }
  rc /= count;
  gc /= count;
@@ -209,10 +207,10 @@ static void mark_cluster(pcl::PointCloud<pcl::PointXYZRGB>::Ptr cloud_cluster, s
   g = 0;//reinterpret_cast<float&>(gu)/256;
   b = 0;//reinterpret_cast<float&>(bu)/256;
 
-  if(hsv_barva.s < 0.1){
+  if(hsv_barva.s < 0.001){
   	return;
   }
-  if(hsv_barva.v < 0.01){
+  if(hsv_barva.v < 0.001){
   	return;
   }
   if(hsv_barva.h > 30 && hsv_barva.h < 60){
