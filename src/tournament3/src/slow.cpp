@@ -17,36 +17,28 @@
 using namespace std;
 
 void callback (const visualization_msgs::MarkerArrayConstPtr& markerArray) {
-    ros::NodeHandle nh;
-    geometry_msgs::Twist cmd_vel;
-    ros::Publisher vel_pub_;
-    vel_pub_ = nh.advertise<geometry_msgs::Twist>("/mobile_base/commands/velocity", 1);
-    int st=0;
+   // ros::NodeHandle nh;
+   // geometry_msgs::Twist cmd_vel;
+    //ros::Publisher vel_pub_;
+    //vel_pub_ = nh.advertise<geometry_msgs::Twist>("/mobile_base/commands/velocity", 1);
+    //int st=0;
     if (markerArray->markers[0].id == 2) {      // slow   rosrun dynamic_reconfigure dynparam set /navigation_velocity_smoother speed_lim_v 0.1
-        cmd_vel.linear.x = 0.1;
-        cmd_vel.linear.y = 0.1;
-        cmd_vel.angular.z = 0.0;
-        st =0;
-        while(ros::ok()&&st++<2000000)
-            vel_pub_.publish(cmd_vel);
+        int i = system("rosrun dynamic_reconfigure dynparam set /navigation_velocity_smoother speed_lim_v 0.1");
+        sleep(3)
     }else if (markerArray->markers[0].id == 4) {      // stop
-        cmd_vel.linear.x = 0.0;
-        cmd_vel.linear.y = 0.0;
-        cmd_vel.angular.z = 0.0;
-        st =0;
-        while(ros::ok()&&st++<2000000)
-            vel_pub_.publish(cmd_vel);
+        int i = system("rosrun dynamic_reconfigure dynparam set /navigation_velocity_smoother speed_lim_v 0");
     }
-    sleep(15);
+    sleep(2);
+    int i = system("rosrun dynamic_reconfigure dynparam set /navigation_velocity_smoother speed_lim_v 0.2");
 }
 
 int main(int argc, char** argv){
     ros::init(argc, argv, "slow");
     ros::NodeHandle nh;
-
+    int i = system("rosrun dynamic_reconfigure dynparam set /navigation_velocity_smoother speed_lim_v 0.2");
     ros::Subscriber sub = nh.subscribe<visualization_msgs::MarkerArray> ("/sign", 1, callback);
 
-    int i = system("rosrun dynamic_reconfigure dynparam set /navigation_velocity_smoother speed_lim_v 0.1");
+   // int i = system("rosrun dynamic_reconfigure dynparam set /navigation_velocity_smoother speed_lim_v 0.1");
 /*
     ros::Publisher vel_pub_;
     vel_pub_ = nh.advertise<geometry_msgs::Twist>("/mobile_base/commands/velocity", 1);
