@@ -207,7 +207,7 @@ static void mark_cluster(pcl::PointCloud<pcl::PointXYZRGB>::Ptr cloud_cluster, s
   g = 0;//reinterpret_cast<float&>(gu)/256;
   b = 0;//reinterpret_cast<float&>(bu)/256;
 
-  if(hsv_barva.s < 0.001){
+  if(hsv_barva.s < 0.1){
   	return;
   }
   if(hsv_barva.v < 0.001){
