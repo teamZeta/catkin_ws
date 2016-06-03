@@ -326,8 +326,14 @@ void callback (const pcl::PCLPointCloud2ConstPtr& cloud_blob) {
   // Create the filtering object: downsample the dataset using a leaf size of 1cm
   
 
+  // Create the filtering object: downsample the dataset using a leaf size of 1cm
+  pcl::VoxelGrid<pcl::PCLPointCloud2> sor;
+  sor.setInputCloud (cloud_blob);
+  sor.setLeafSize (0.03f, 0.03f, 0.03f);
+  sor.filter (*cloud_filtered_blob);
+
   // Convert to the templated PointCloud
-  pcl::fromPCLPointCloud2 (*cloud_blob, *cloud_filtered);
+  pcl::fromPCLPointCloud2 (*cloud_filtered_blob, *cloud_filtered);
 
   pcl::ModelCoefficients::Ptr coefficients (new pcl::ModelCoefficients ());
   pcl::PointIndices::Ptr inliers (new pcl::PointIndices ());
@@ -380,7 +386,7 @@ void callback (const pcl::PCLPointCloud2ConstPtr& cloud_blob) {
   seg2.setNormalDistanceWeight (0.1);
   seg2.setMaxIterations (10000);
   seg2.setDistanceThreshold (0.05);
-  seg2.setRadiusLimits (0.02, 0.25);
+  seg2.setRadiusLimits (0.07, 0.16);
   seg2.setInputCloud (cloud_filtered2);
   seg2.setInputNormals (cloud_normals2);
 
