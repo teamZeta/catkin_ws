@@ -13,19 +13,26 @@
 #include <unistd.h>
 
 using namespace std;
+static bool enkrat = true;
 
 void callback (const visualization_msgs::MarkerArrayConstPtr& markerArray) {
-    if (markerArray->markers[0].id == 5) {      // horn
-        ros::NodeHandle nh2;
-        sound_play::SoundClient sc;
-        if(nh2.ok()){
-            sleep(1);
-            sound_play::Sound s3 = sc.builtinSound(sound_play::SoundRequest::NEEDS_UNPLUGGING_BADLY);
-            s3.play();
-            sleep(30);
-            s3.stop();
-        }
+	if (enkrat) {
+	    if (markerArray->markers[0].id == 5) {      // horn
+	        ros::NodeHandle nh2;
+	        sound_play::SoundClient sc;
+	        if(nh2.ok()){
+	            sleep(1);
+	            sound_play::Sound s3 = sc.builtinSound(sound_play::SoundRequest::NEEDS_UNPLUGGING_BADLY);
+	            s3.play();
+	            enkrat = false;
+	            sleep(30);
+	            s3.stop();
+	        }
+	    } 
+	} else {
+    	enkrat = true;
     }
+
 }
 
 int main(int argc, char** argv){
