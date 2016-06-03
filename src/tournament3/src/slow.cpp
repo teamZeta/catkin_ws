@@ -12,6 +12,7 @@
 #include <sound_play/sound_play.h>
 #include <unistd.h>
 #include <move_base/move_base.h>
+#include <stdlib.h> 
 
 using namespace std;
 
@@ -21,7 +22,7 @@ void callback (const visualization_msgs::MarkerArrayConstPtr& markerArray) {
     ros::Publisher vel_pub_;
     vel_pub_ = nh.advertise<geometry_msgs::Twist>("/mobile_base/commands/velocity", 1);
     int st=0;
-    if (markerArray->markers[0].id == 2) {      // slow
+    if (markerArray->markers[0].id == 2) {      // slow   rosrun dynamic_reconfigure dynparam set /navigation_velocity_smoother speed_lim_v 0.1
         cmd_vel.linear.x = 0.1;
         cmd_vel.linear.y = 0.1;
         cmd_vel.angular.z = 0.0;
@@ -44,6 +45,8 @@ int main(int argc, char** argv){
     ros::NodeHandle nh;
 
     ros::Subscriber sub = nh.subscribe<visualization_msgs::MarkerArray> ("/sign", 1, callback);
+
+    int i = system("rosrun dynamic_reconfigure dynparam set /navigation_velocity_smoother speed_lim_v 0.1");
 /*
     ros::Publisher vel_pub_;
     vel_pub_ = nh.advertise<geometry_msgs::Twist>("/mobile_base/commands/velocity", 1);
