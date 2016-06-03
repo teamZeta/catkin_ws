@@ -27,9 +27,9 @@ static int destInd;
 void changeMap(float x, float y){
     printf("Racunam novo mapo\n");
     int mapInd=0;
-    if(y>1.1)
+    if(y>3.6)
         mapInd=1;
-    else if(y<-3.2)
+    else if(y<-0.4)
         mapInd=-1;
     destInd=1;
     if(x<-2)

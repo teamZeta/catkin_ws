@@ -196,9 +196,9 @@ void callbackChangeGoals (const std_msgs::String::ConstPtr& msg) {
     buffer >> dest; 
 
     dynamicDiff = (dest - goalInd)*diff;
-    goalInd = dest;
-
+    
     printf("Moving goals from %d to %d : %f\n",goalInd,dest,dynamicDiff);
+    goalInd = dest;
     changeGoals(redGoals,redSize);
     changeGoals(greenGoals,greenSize);
     changeGoals(blueGoals,blueSize);
