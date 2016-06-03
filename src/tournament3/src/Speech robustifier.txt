@@ -1,1 +1,2 @@
 blue = block, blood, (low)
+yellow = narrow
