@@ -21,6 +21,9 @@ static bool once = false;
 static float diff=6.05;
 static float dynamicDiff;
 static bool reset=false;
+static ros::Publisher chGoals;
+static int destInd;
+
 void changeMap(float x, float y){
     printf("Racunam novo mapo\n");
     int mapInd=0;
@@ -28,7 +31,7 @@ void changeMap(float x, float y){
         mapInd=1;
     else if(y<-3.2)
         mapInd=-1;
-    int destInd=1;
+    destInd=1;
     if(x<-2)
         destInd=-1;
 	if(reset){
@@ -68,11 +71,19 @@ void callbackPose(const geometry_msgs::PoseWithCovarianceStamped msg){
 
         posit.publish(pos);
         once = false;
+
+        std_msgs::String msg;
+        std::stringstream ss;
+        ss << destInd;
+        msg.data = ss.str();
+        chGoals.publish(msg);
+
     }
 }
 
 void callbackReset(const std_msgs::String::ConstPtr& msg){
 	reset=true;
+    once = true;
 }
 
 int main(int argc, char** argv){
@@ -85,6 +96,7 @@ int main(int argc, char** argv){
     ros::Subscriber sub = nh2.subscribe<visualization_msgs::MarkerArray> ("/sign", 1, callback);
     ros::Subscriber sub2 = nh3.subscribe<geometry_msgs::PoseWithCovarianceStamped> ("/amcl_pose", 1, callbackPose);
     ros::Subscriber sub3 = nh4.subscribe<std_msgs::String>("/reset", 1, callbackReset);
+    chGoals = nh.advertise<std_msgs::String>("/changeGoals", 1);
   
     ros::spin();
     

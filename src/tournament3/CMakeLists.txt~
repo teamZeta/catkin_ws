@@ -218,6 +218,6 @@ target_link_libraries(slow ${catkin_LIBRARIES})
 add_executable(oneway src/oneway.cpp)
 target_link_libraries(oneway ${catkin_LIBRARIES})
 
-add_executable(path src/path.cpp)
-target_link_libraries(path ${catkin_LIBRARIES})
+add_executable(pathSetter src/pathSetter.cpp)
+target_link_libraries(pathSetter ${catkin_LIBRARIES})
 

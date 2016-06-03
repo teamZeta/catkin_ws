@@ -13,6 +13,7 @@
 #include <unistd.h>
 #include <std_msgs/Header.h>
 #include <geometry_msgs/PoseWithCovarianceStamped.h>
+#include <string>
 
 using namespace std;
 
@@ -39,6 +40,7 @@ static bool reset = false;
 static int goalInd=0;
 static int whereTo = 0;     // 0 - undefined, 1234 - rgby
 static bool once = false;
+static ros::Publisher resetAdvertiser;
 
 
 /*
@@ -56,7 +58,7 @@ static bool once = false;
 
 typedef actionlib::SimpleActionClient<move_base_msgs::MoveBaseAction> MoveBaseClient;
 
-bool changeMap(float x, float y){
+/*bool changeMap(float x, float y){
     printf("Racunam novo mapo\n");
     int mapInd=0;
     if(y>1.1)
@@ -75,22 +77,30 @@ bool changeMap(float x, float y){
 	printf("Koordinate %f , %f ",x,y);
 	printf("Sem v: %d hocem v: %d teleport: %f",mapInd,destInd,dynamicDiff);
 	return dynamicDiff!=0;
+}*/
+
+void sendReset(){
+    std_msgs::String msg;
+    std::stringstream ss;
+    ss << "reset";
+    msg.data = ss.str();
+    resetAdvertiser.publish(msg);
 }
 
-void callbackSign (const visualization_msgs::MarkerArrayConstPtr& markerArray) {
+/*void callbackSign (const visualization_msgs::MarkerArrayConstPtr& markerArray) {
 	printf("vidim znak: %d\n", markerArray->markers[0].id);
     if (markerArray->markers[0].id == 3 || markerArray->markers[0].id == 1) {      // one way
     	printf("uh oh one way\n");
         once=true;
     }
-}
+}*/
 void changeGoals(move_base_msgs::MoveBaseGoal Goals[],int size){
     for(int i=0;i<size;i++){
         Goals[i].target_pose.pose.position.y+=dynamicDiff;
     }
 }
 
-void callbackPose(const geometry_msgs::PoseWithCovarianceStamped msg) {
+/*void callbackPose(const geometry_msgs::PoseWithCovarianceStamped msg) {
     if(once) {
         printf("...........................ONCE\n");
         if (changeMap((float)msg.pose.pose.position.x,(float)msg.pose.pose.position.y)) {
@@ -113,7 +123,7 @@ void callbackPose(const geometry_msgs::PoseWithCovarianceStamped msg) {
             once = false;
         }
     }
-}
+}*/
 
 static move_base_msgs::MoveBaseGoal createGoal(float xRobot, float yRobot, float xDirection, float yDirection){
     move_base_msgs::MoveBaseGoal goalC;
@@ -146,8 +156,10 @@ void startSearch(move_base_msgs::MoveBaseGoal Goals[],int size){
             ROS_INFO("Reached goal.");
             sleep(1);
           //  reset=true;
+            sendReset();
         } else {
-            printf("No go, retrying %s\n",ac.getState().toString().c_str());
+            printf("No go:%s retrying, spin::Once\n",ac.getState().toString().c_str());
+            ros::spinOnce();
             while(!ac.waitForServer(ros::Duration(5.0))){
                     ROS_INFO("Waiting for the move_base action server to come up");
                 }
@@ -158,6 +170,7 @@ void startSearch(move_base_msgs::MoveBaseGoal Goals[],int size){
                     ROS_INFO("Reached goal.");
                     sleep(1);
                   //  reset=true;
+                    sendReset();
                 } else {
                     printf("No go %s\n",ac.getState().toString().c_str());
 
@@ -177,7 +190,20 @@ bool cmp(string s1, string s2){
     for (i=0; s1[i]; i++) s2[i] = tolower(s2[i]);
     return !s1.compare(s2);
 }
+void callbackChangeGoals (const std_msgs::String::ConstPtr& msg) {
+    int dest;
+    istringstream buffer(msg->data.c_str());
+    buffer >> dest; 
 
+    dynamicDiff = (dest - goalInd)*diff;
+    goalInd = dest;
+
+    printf("Moving goals from %d to %d : %f\n",goalInd,dest,dynamicDiff);
+    changeGoals(redGoals,redSize);
+    changeGoals(greenGoals,greenSize);
+    changeGoals(blueGoals,blueSize);
+    changeGoals(yellowGoals,yellowSize);
+}
 
 void callback (const std_msgs::String::ConstPtr& msg) {
     string array[3];
@@ -435,6 +461,7 @@ int main(int argc, char** argv){
     ros::NodeHandle nh4;
     ros::NodeHandle nh5;
     ros::NodeHandle nh6;
+    ros::NodeHandle nh7,nh8;
 
     redGoalsInit();
     blueGoalsInit();
@@ -444,11 +471,13 @@ int main(int argc, char** argv){
     ros::Subscriber sub = nh.subscribe<std_msgs::String>("/newGoal", 1, callback);
     ros::Subscriber sub2 = nh2.subscribe<visualization_msgs::MarkerArray> ("/foundFace", 1, callbackFoundFace);
     updateTaxi = nh3.advertise<std_msgs::String>("/person", 1);
-    posit = nh6.advertise<geometry_msgs::PoseWithCovarianceStamped>("/initialpose", 1);
+    //posit = nh6.advertise<geometry_msgs::PoseWithCovarianceStamped>("/initialpose", 1);
     sleep(5);
-    ros::Subscriber sub3 = nh4.subscribe<visualization_msgs::MarkerArray> ("/sign", 1, callbackSign);
-    ros::Subscriber sub4 = nh5.subscribe<geometry_msgs::PoseWithCovarianceStamped> ("/amcl_pose", 1, callbackPose);
+   // ros::Subscriber sub3 = nh4.subscribe<visualization_msgs::MarkerArray> ("/sign", 1, callbackSign);
+    //ros::Subscriber sub4 = nh5.subscribe<geometry_msgs::PoseWithCovarianceStamped> ("/amcl_pose", 1, callbackPose);
+    resetAdvertiser = nh7.advertise<std_msgs::String>("/reset", 1);
 
+    ros::Subscriber sub5 = nh8.subscribe<std_msgs::String> ("/changeGoals", 1, callbackChangeGoals);
     //ros::spin();
     ros::Rate r(10);
     while (ros::ok()){

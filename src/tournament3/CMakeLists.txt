@@ -221,3 +221,7 @@ target_link_libraries(oneway ${catkin_LIBRARIES})
 add_executable(pathSetter src/pathSetter.cpp)
 target_link_libraries(pathSetter ${catkin_LIBRARIES})
 
+
+add_executable(teleport src/teleport.cpp)
+target_link_libraries(teleport ${catkin_LIBRARIES})
+
