@@ -22,7 +22,7 @@
   </include>
 
   <include file="$(find turtlebot_navigation)/launch/includes/move_base.launch.xml">
-    <arg name="cmd_vel" value=0.1 />
+    <arg name="cmd_vel" value="0.1" />
     <arg name="custom_param_file" value="$(arg custom_param_file)"/>
   </include>
 </launch>
