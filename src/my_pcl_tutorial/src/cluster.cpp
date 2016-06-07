@@ -30,7 +30,7 @@
 using namespace std;
 
 
-ros::Publisher pub;
+//ros::Publisher pub;
 static ros::Publisher marker_pose;
 
 
@@ -438,7 +438,7 @@ void callback (const pcl::PCLPointCloud2ConstPtr& cloud_blob) {
   sor.setLeafSize (0.01f, 0.01f, 0.01f);
   sor.filter (out_filtered_cloud);*/
 
-  pub.publish (outcloud);
+  //pub.publish (outcloud);
   mark_cluster(cloud_f, "boka", 1, 0.5,0.5,0.5);
 
 }
@@ -457,7 +457,7 @@ main (int argc, char** argv)
   ros::Subscriber sub = nh.subscribe<pcl::PCLPointCloud2> ("input", 1, callback);
 
   // Create a ROS publisher for the output point cloud
-  pub = nh.advertise<sensor_msgs::PointCloud2> ("cluster", 1);
+  //pub = nh.advertise<sensor_msgs::PointCloud2> ("cluster", 1);
   marker_pose = nh2.advertise<visualization_msgs:: Marker>("hotel", 1);
   // Spin
   ros::spin ();
