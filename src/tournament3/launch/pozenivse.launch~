@@ -16,6 +16,6 @@
 
 	<!-- <node name="horn" pkg="tournament3" type="horn" /> -->
 
-	<!-- <node name="slow" pkg="tournament3" type="slow" /> -->
+	<node name="slow" pkg="tournament3" type="slow" />
 
 </launch>

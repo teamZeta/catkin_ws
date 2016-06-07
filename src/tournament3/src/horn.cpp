@@ -11,14 +11,16 @@
 #include <sys/timeb.h>
 #include <sound_play/sound_play.h>
 #include <unistd.h>
+#include <stdlib.h> 
 
 using namespace std;
 static bool enkrat = true;
 
 void callback (const visualization_msgs::MarkerArrayConstPtr& markerArray) {
+	printf("callback\n");
 	if (enkrat) {
 	    if (markerArray->markers[0].id == 5) {      // horn
-	        ros::NodeHandle nh2;
+	     	/*  ros::NodeHandle nh2;
 	        
 	        if(nh2.ok()){
 			sound_play::SoundClient sc;
@@ -26,14 +28,16 @@ void callback (const visualization_msgs::MarkerArrayConstPtr& markerArray) {
 	            sound_play::Sound s3 = sc.builtinSound(sound_play::SoundRequest::NEEDS_UNPLUGGING_BADLY);
 	            s3.play();
 	            enkrat = false;
-	            sleep(30);
+	            sleep(5);
 	            s3.stop();
-	        }
+	        }*/
+		int i = system("rosrun sound_play playbuiltin.py 4");
+		enkrat = false;
+		sleep(30);
 	    } 
 	} else {
     	enkrat = true;
     }
-
 }
 
 int main(int argc, char** argv){
@@ -43,6 +47,11 @@ int main(int argc, char** argv){
     ros::Subscriber sub = nh.subscribe<visualization_msgs::MarkerArray> ("/sign", 1, callback);
 
     ros::spin();
+   /* ros::Rate r(0.3);
+    while (ros::ok()){
+      ros::spinOnce();               
+      r.sleep();
+    }*/
     
     //return 0;
 }
