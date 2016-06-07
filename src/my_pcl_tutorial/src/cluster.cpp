@@ -220,7 +220,7 @@ static void mark_cluster(pcl::PointCloud<pcl::PointXYZRGB>::Ptr cloud_cluster, s
   	b = 0;
   	ru = 0xff;
   	gu = 0xff;
-  	barva = 1;
+  	barva = 4;
   }else if(hsv_barva.h > 90 && hsv_barva.h < 140){
   	g = 1;
   	r = 0;
@@ -240,7 +240,7 @@ static void mark_cluster(pcl::PointCloud<pcl::PointXYZRGB>::Ptr cloud_cluster, s
   	r = 1;
   	b = 0;
   	ru = 0xff;
-  	barva = 4;
+  	barva = 1;
   }
   
   
