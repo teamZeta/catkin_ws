@@ -154,7 +154,7 @@ static move_base_msgs::MoveBaseGoal createGoal(float xRobot, float yRobot, float
     return goalC;
 }
 
-void startSearch(move_base_msgs::MoveBaseGoal Goals[],int size){
+void startSearch(move_base_msgs::MoveBaseGoal Goals[],int size,int slip){
     int k = 0;
     while (!foundFace && k<size && !foundHotel) {
         MoveBaseClient ac("move_base", true);
@@ -166,7 +166,7 @@ void startSearch(move_base_msgs::MoveBaseGoal Goals[],int size){
         ac.waitForResult();
         if(ac.getState() == actionlib::SimpleClientGoalState::SUCCEEDED){
             ROS_INFO("Reached goal.");
-            sleep(1);
+            sleep(slip);
           //  reset=true;
             sendReset();
         } else {
@@ -180,7 +180,7 @@ void startSearch(move_base_msgs::MoveBaseGoal Goals[],int size){
                 ac.waitForResult();
                 if(ac.getState() == actionlib::SimpleClientGoalState::SUCCEEDED){
                     ROS_INFO("Reached goal.");
-                    sleep(1);
+                    sleep(slip);
                   //  reset=true;
                     sendReset();
                 } else {
@@ -252,13 +252,13 @@ void callback (const std_msgs::String::ConstPtr& msg) {
         for(int i=0;i<4;i++){
             if(cmp(array[2],streetName[i])){
                 if (i == 0) {
-                    startSearch(redGoalsH,redSizeH);
+                    startSearch(redGoals,redSize,1);
                 } else if (i == 1) {
-                    startSearch(greenGoalsH,greenSizeH);
+                    startSearch(greenGoals,greenSize,1);
                 } else if (i == 2) {
-                    startSearch(blueGoalsH,blueSizeH);
+                    startSearch(blueGoals,blueSize,1);
                 } else if (i == 3) {
-                    startSearch(yellowGoalsH,yellowSizeH);
+                    startSearch(yellowGoals,yellowSize,1);
                 }
                 // ko najde faco izracunaj vektor in se priblizaj
                 foundFace = false;
@@ -280,16 +280,16 @@ void callback (const std_msgs::String::ConstPtr& msg) {
             if(cmp(array[2],streetName[i])){
                 if (i == 0) {
                     iskanHotelID = 1;
-                    startSearch(redGoalsH,redSizeH);
+                    startSearch(redGoalsH,redSizeH,5);
                 } else if (i == 1) {
                     iskanHotelID = 2;
-                    startSearch(greenGoalsH,greenSizeH);
+                    startSearch(greenGoalsH,greenSizeH,5);
                 } else if (i == 2) {
                     iskanHotelID = 3;
-                    startSearch(blueGoalsH,blueSizeH);
+                    startSearch(blueGoalsH,blueSizeH,5);
                 } else if (i == 3) {
                     iskanHotelID = 4;
-                    startSearch(yellowGoalsH,yellowSizeH);
+                    startSearch(yellowGoalsH,yellowSizeH,5);
                 }
                 // ko najde hotel izracunaj vektor in se priblizaj
                 foundHotel = false;
