@@ -343,7 +343,7 @@ void callback (const pcl::PCLPointCloud2ConstPtr& cloud_blob) {
   pcl::PassThrough<pcl::PointXYZRGB> pass_x;
   pass_x.setInputCloud (cloud_filtered_raw);
   pass_x.setFilterFieldName ("x");
-  pass_x.setFilterLimits (0, 1.5);
+  pass_x.setFilterLimits (0, 1);
   //pass_x.setFilterLimitsNegative (true);
   pass_x.filter (*cloud_filtered_x); 
 
@@ -357,7 +357,7 @@ void callback (const pcl::PCLPointCloud2ConstPtr& cloud_blob) {
   pcl::PassThrough<pcl::PointXYZRGB> pass_z;
   pass_z.setInputCloud (cloud_filtered_xy);
   pass_z.setFilterFieldName ("z");
-  pass_z.setFilterLimits (0, 0.5);
+  pass_z.setFilterLimits (0, 1);
   //pass_x.setFilterLimitsNegative (true);
   pass_z.filter (*cloud_filtered);
 
