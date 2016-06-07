@@ -29,7 +29,7 @@ void changeMap(float x, float y){
     int mapInd=0;
     if(y>3.6)
         mapInd=1;
-    else if(y<-0.4)
+    else if(y<-2.5)
         mapInd=-1;
     destInd=1;
     if(x<-2)
