@@ -14,7 +14,7 @@
 
 	<node name="map_server" pkg="map_server" type="map_server" args="/home/team_zeta/catkin_ws/Azeroth.yaml" />
 
-	<!-- <node name="horn" pkg="tournament3" type="horn" /> -->
+	<node name="horn" pkg="tournament3" type="horn" />
 
 	<node name="slow" pkg="tournament3" type="slow" />
 

@@ -38,13 +38,13 @@ static string osebe[][6] = {{"harry", "hairy", "perry","harry","harry","harry"},
 							{"tina", "pina", "dina","dana","tina","tina"},
 							{"peter", "peter", "peter","peter","peter","peter"},
 							{"tom", "tom", "tom","tom","tom","tom"},
-							{"ellen", "alen", "elen","erin","ellen","ellen"},
+							{"ellen", "alen", "allen","erin","ellen","ellen"},
 							{"kim", "kim", "kim","kim","kim","kim"},
 							{"scarlet", "scarlett", "scarlets","scarlet","scarlet","scarlet"},
 							{"matthew", "matthew", "matthew","matthew","matthew","matthew"}};
 
 static int barveDimensions = 9;
-static string barve[][9] = {{"red", "rat", "rad", "read", "right","bread","red","red","red"},
+static string barve[][9] = {{"red", "rat", "rad", "read", "right","bread","rath","red","red"},
 							{"green", "grill","grant","green","green","green","green","green","green"},
 							{"blue", "blow", "blah", "block", "blood", "bloor","bloodstream","bluff","blue"},
 							{"yellow", "narrow", "yellow", "yellow", "yellow", "narrow","yellow","yellow","yellow"}};
@@ -113,7 +113,7 @@ static bool personTake(std::string oseb, std::string trenutnaOseba) {
 	int st = -1;
 	for (int i=0; i<9; i++) {
 		for (int j=0; j<osebeDimensions; j++) {
-			if (!trenutnaOseba.compare(osebe[i][j])) {
+			if (cmp(trenutnaOseba, osebe[i][j])) {
 			    st = i;
 			    break;
 			}
