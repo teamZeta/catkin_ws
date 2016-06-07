@@ -35,6 +35,9 @@ static int greenSizeH = 3;
 static int blueSizeH = 3;
 static int yellowSizeH = 3;
 
+static bool isciOsebo = false;
+static bool isciHotel = false;
+
 static move_base_msgs::MoveBaseGoal goal;
 static int currentGoal = -1;
 static bool foundFace = false;
@@ -249,6 +252,7 @@ void callback (const std_msgs::String::ConstPtr& msg) {
     // ::::::::::::::::::::::
     // doloci kam mora it
     if (!array[0].compare("pick")) {
+        isciOsebo = true;
         for(int i=0;i<4;i++){
             if(cmp(array[2],streetName[i])){
                 if (i == 0) {
@@ -275,7 +279,7 @@ void callback (const std_msgs::String::ConstPtr& msg) {
     // ::::::::::::::::::::::
     // zacni izvajat iskanje prave zgradbe
    else if (!array[0].compare("take")) {
-
+        isciHotel = true;
         for(int i=0;i<4;i++){
             if(cmp(array[2],streetName[i])){
                 if (i == 0) {
@@ -324,6 +328,8 @@ void callback (const std_msgs::String::ConstPtr& msg) {
 // :::::::::::::::: FOUND FACE ::::::::::::::::
 // ::::::::::::::::::::::::::::::::::::::::::::
 void callbackFoundFace (const visualization_msgs::MarkerArrayConstPtr& markerArray) {
+    if (!isciOsebo)
+        return;
     printf("iskanaOsebaID: %d, zaznan id face: %d\n", iskanaOsebaID, markerArray->markers[0].id);
     if (iskanaOsebaID != markerArray->markers[0].id) {
         return;
@@ -434,6 +440,7 @@ void callbackFoundFace (const visualization_msgs::MarkerArrayConstPtr& markerArr
     if(ac.getState() == actionlib::SimpleClientGoalState::SUCCEEDED) {
         printf("ROBOT: '%s vstopi v taxi.' \n", trenutnaOseba.c_str());
         iskanaOsebaID = 0;
+        isciOsebo = false;
         sleep(2);
     } else {
         ROS_INFO("Goal unreachable: %s\n",ac.getState().toString().c_str());
@@ -512,6 +519,8 @@ void yellowGoalsHInit() {
 }
 
 void callbackHotel (const visualization_msgs::MarkerConstPtr& marker) {
+    if (!isciHotel)
+        return;
     printf("iskanHotelID: %d, zaznan id hotel: %d\n", iskanHotelID, marker->id);
     if (iskanHotelID != marker->id) {
         return;
@@ -622,6 +631,7 @@ void callbackHotel (const visualization_msgs::MarkerConstPtr& marker) {
     if(ac.getState() == actionlib::SimpleClientGoalState::SUCCEEDED) {
         printf("ROBOT: 'Sayonara %s.' \n", trenutnaOseba.c_str());
         iskanHotelID = 0;
+        isciHotel = false;
         std_msgs::String msg;
         std::stringstream ss;
         ss << trenutnaOseba;
