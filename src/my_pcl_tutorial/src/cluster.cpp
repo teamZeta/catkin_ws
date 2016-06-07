@@ -430,7 +430,7 @@ main (int argc, char** argv)
 
   // Create a ROS publisher for the output point cloud
   pub = nh.advertise<sensor_msgs::PointCloud2> ("cluster", 1);
-  marker_pose = nh2.advertise<visualization_msgs:: Marker>("steber", 1);
+  marker_pose = nh2.advertise<visualization_msgs:: Marker>("hotel", 1);
   // Spin
   ros::spin ();
 }
