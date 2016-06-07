@@ -221,11 +221,13 @@ void callback (const std_msgs::String::ConstPtr& msg) {
 				nPerson = 1;
 				building1 = barve[colorIndex(array[4])][0];;
 				newOrder = false;
+				order = 2;
 				printf("ROBOT: 'Should I take %s to the %s Building?'\n", person1.c_str(), building1.c_str());
 			} else if (personTake(person2,array[1])) {
 				nPerson = 2;
 				building2 = barve[colorIndex(array[4])][0];;
 				newOrder = false;
+				order = 2;
 				printf("ROBOT: 'Should I take %s to the %s Building?'\n", person2.c_str(), building2.c_str());
 			} else {
 				printf("ROBOT: 'No person with such name in the taxi.'\n");

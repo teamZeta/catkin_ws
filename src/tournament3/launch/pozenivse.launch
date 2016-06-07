@@ -18,6 +18,8 @@
 
 	<node name="slow" pkg="tournament3" type="slow" />
 
-	
+	<node name="teleport" pkg="tournament3" type="teleport" />
+
+	<include file="$(find my_pcl_tutorial)/launch/pcl.launch" />
 
 </launch>
