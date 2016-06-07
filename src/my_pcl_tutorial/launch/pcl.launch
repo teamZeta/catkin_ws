@@ -1,5 +1,5 @@
 <launch>
-  	<node name="example" pkg="my_pcl_tutorial" type="example" args="input:=/camera/depth_registered/points" />
-	<node name="plane" pkg="my_pcl_tutorial" type="plane" args="input:=/camera/depth_registered/points" />
+  	<!-- <node name="example" pkg="my_pcl_tutorial" type="example" args="input:=/camera/depth_registered/points" /> -->
+	<!-- <node name="plane" pkg="my_pcl_tutorial" type="plane" args="input:=/camera/depth_registered/points" /> -->
 	<node name="cluster" pkg="my_pcl_tutorial" type="cluster" args="input:=/camera/depth_registered/points" />
 </launch>

@@ -206,24 +206,27 @@ static void mark_cluster(pcl::PointCloud<pcl::PointXYZRGB>::Ptr cloud_cluster, s
   r = 0;//reinterpret_cast<float&>(ru)/256;
   g = 0;//reinterpret_cast<float&>(gu)/256;
   b = 0;//reinterpret_cast<float&>(bu)/256;
-
-  if(hsv_barva.s < 0.1){
+/*
+  if(hsv_barva.s < 0.001){
   	return;
   }
   if(hsv_barva.v < 0.001){
   	return;
-  }
+  }*/
+  	int barva = 0;
   if(hsv_barva.h > 30 && hsv_barva.h < 60){
   	g = 1;
   	r = 1;
   	b = 0;
   	ru = 0xff;
   	gu = 0xff;
+  	barva = 1;
   }else if(hsv_barva.h > 75 && hsv_barva.h < 105){
   	g = 1;
   	r = 0;
   	b = 0;
   	gu = 0xff;
+  	barva = 2;
 
   }else if(hsv_barva.h > 170 && hsv_barva.h < 105){
   	g = 1;
@@ -231,14 +234,16 @@ static void mark_cluster(pcl::PointCloud<pcl::PointXYZRGB>::Ptr cloud_cluster, s
   	b = 1;
   	gu = 0xff;
   	bu = 0xff;
+  	barva = 3;
   }else if(hsv_barva.h > 340 || hsv_barva.h < 15){
   	g = 0;
   	r = 1;
   	b = 0;
   	ru = 0xff;
+  	barva = 4;
   }
   
-  uint32_t barva = (ru<<16) | (gu<<8) | (bu);
+  
 
   const uint32_t green = 0x00ff00;
   const uint32_t magenta = 0xff00ff;
@@ -262,19 +267,12 @@ static void mark_cluster(pcl::PointCloud<pcl::PointXYZRGB>::Ptr cloud_cluster, s
  
   marker.ns = ns;
 
-  switch(barva){
-  	case green: id = 1; break;
-  	case magenta: id = 1; break;
-  	case yellow: id = 2; break;
-  	case cyan: id = 3; break;
-  	default: id=0; break;
-
-  }
-  if(id == 0){
+  
+  if(barva == 0){
   	return;
   }
 
-  marker.id = id;
+  marker.id = barva;
   marker.type = shape;
   marker.action = visualization_msgs::Marker::ADD;
  
@@ -329,11 +327,11 @@ void callback (const pcl::PCLPointCloud2ConstPtr& cloud_blob) {
   // Create the filtering object: downsample the dataset using a leaf size of 1cm
   pcl::VoxelGrid<pcl::PCLPointCloud2> sor;
   sor.setInputCloud (cloud_blob);
-  sor.setLeafSize (0.03f, 0.03f, 0.03f);
+  sor.setLeafSize (0.01f, 0.01f, 0.01f);
   sor.filter (*cloud_filtered_blob);
 
   // Convert to the templated PointCloud
-  pcl::fromPCLPointCloud2 (*cloud_filtered_blob, *cloud_filtered);
+  pcl::fromPCLPointCloud2 (*cloud_blob, *cloud_filtered);
 
   pcl::ModelCoefficients::Ptr coefficients (new pcl::ModelCoefficients ());
   pcl::PointIndices::Ptr inliers (new pcl::PointIndices ());
@@ -341,7 +339,7 @@ void callback (const pcl::PCLPointCloud2ConstPtr& cloud_blob) {
   // Estimate point normals
   ne.setSearchMethod (tree);
   ne.setInputCloud (cloud_filtered);
-  ne.setKSearch (50);
+  ne.setKSearch (10);
   ne.compute (*cloud_normals);
 
   //pcl::SACSegmentation<pcl::PointXYZRGB> seg;
@@ -350,7 +348,7 @@ void callback (const pcl::PCLPointCloud2ConstPtr& cloud_blob) {
   seg.setModelType (pcl::SACMODEL_NORMAL_PLANE);
   seg.setNormalDistanceWeight (0.1);
   seg.setMethodType (pcl::SAC_RANSAC);
-  seg.setMaxIterations (100);
+  seg.setMaxIterations (1000);
   seg.setDistanceThreshold (0.01);
   seg.setInputCloud (cloud_filtered);
   seg.setInputNormals (cloud_normals);
@@ -385,7 +383,7 @@ void callback (const pcl::PCLPointCloud2ConstPtr& cloud_blob) {
   seg2.setMethodType (pcl::SAC_RANSAC);
   seg2.setNormalDistanceWeight (0.1);
   seg2.setMaxIterations (10000);
-  seg2.setDistanceThreshold (0.05);
+  seg2.setDistanceThreshold (0.1);
   seg2.setRadiusLimits (0.07, 0.16);
   seg2.setInputCloud (cloud_filtered2);
   seg2.setInputNormals (cloud_normals2);
