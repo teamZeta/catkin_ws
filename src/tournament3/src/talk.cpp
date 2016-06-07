@@ -37,14 +37,14 @@ static string osebe[][6] = {{"harry", "hairy", "perry","harry","harry","harry"},
 							{"philip", "philips", "phillip","philip","philip","philip"},
 							{"tina", "pina", "dina","dana","tina","tina"},
 							{"peter", "peter", "peter","peter","peter","peter"},
-							{"tom", "tom", "tom","tom","tom","tom"},
-							{"ellen", "alen", "allen","erin","ellen","ellen"},
+							{"tom", "home", "dome","stone","tome","phone"},
+							{"ellen", "alen", "allen","erin","aaron","ellen"},
 							{"kim", "kim", "kim","kim","kim","kim"},
 							{"scarlet", "scarlett", "scarlets","scarlet","scarlet","scarlet"},
 							{"matthew", "matthew", "matthew","matthew","matthew","matthew"}};
 
 static int barveDimensions = 9;
-static string barve[][9] = {{"red", "rat", "rad", "read", "right","bread","rath","red","red"},
+static string barve[][9] = {{"red", "rat", "rad", "read", "right","bread","rath","road","red"},
 							{"green", "grill","grant","green","green","green","green","green","green"},
 							{"blue", "blow", "blah", "block", "blood", "bloor","bloodstream","bluff","blue"},
 							{"yellow", "narrow", "yellow", "yellow", "yellow", "narrow","yellow","yellow","yellow"}};
