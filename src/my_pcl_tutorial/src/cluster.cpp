@@ -318,6 +318,10 @@ void callback (const pcl::PCLPointCloud2ConstPtr& cloud_blob) {
   pcl::NormalEstimation<pcl::PointXYZRGB, pcl::Normal> ne;
   pcl::PCLPointCloud2::Ptr cloud_filtered_blob (new pcl::PCLPointCloud2);
   pcl::PointCloud<pcl::PointXYZRGB>::Ptr cloud_filtered (new pcl::PointCloud<pcl::PointXYZRGB>), cloud_p (new pcl::PointCloud<pcl::PointXYZRGB>), cloud_f (new pcl::PointCloud<pcl::PointXYZRGB>);
+  
+
+  pcl::PointCloud<pcl::PointXYZRGB>::Ptr cloud_filtered_raw (new pcl::PointCloud<pcl::PointXYZRGB>);
+
   pcl::PointCloud<pcl::PointXYZRGB>::Ptr cloud_filtered2 (new pcl::PointCloud<pcl::PointXYZRGB>);
  pcl::PointCloud<pcl::Normal>::Ptr cloud_normals (new pcl::PointCloud<pcl::Normal>);
   pcl::PointCloud<pcl::Normal>::Ptr cloud_normals2 (new pcl::PointCloud<pcl::Normal>);
@@ -331,7 +335,14 @@ void callback (const pcl::PCLPointCloud2ConstPtr& cloud_blob) {
   sor.filter (*cloud_filtered_blob);
 
   // Convert to the templated PointCloud
-  pcl::fromPCLPointCloud2 (*cloud_blob, *cloud_filtered);
+  pcl::fromPCLPointCloud2 (*cloud_blob, *cloud_filtered_raw);
+
+  pcl::PassThrough<pcl::PointXYZRGB> pass_x;
+  pass_x.setInputCloud (cloud_filtered_raw);
+  pass_x.setFilterFieldName ("x");
+  pass_x.setFilterLimits (0, 1.5);
+  //pass_x.setFilterLimitsNegative (true);
+  pass_x.filter (*cloud_filtered); 
 
   pcl::ModelCoefficients::Ptr coefficients (new pcl::ModelCoefficients ());
   pcl::PointIndices::Ptr inliers (new pcl::PointIndices ());
