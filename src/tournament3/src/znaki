@@ -58,7 +58,7 @@ class Faces():
 				[nbr_predicted, conf] = self.recognize(np.array(image).flatten().tolist())
 				nbr_predicted = nbr_predicted[0].astype(int)
 				print(conf)
-				if conf > 130000000:
+				if conf > 35000000:
 					return
 				#print(nbr_predicted)
 				#print(self.id_prep[nbr_predicted[0]])
