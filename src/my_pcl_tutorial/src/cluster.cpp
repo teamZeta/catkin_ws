@@ -313,7 +313,7 @@ if((marker.scale.z < 0.15 || marker.scale.z > 0.5) &&
 	return;
 }
    
-
+	marker.scale.z = 2;
 
   marker.color.r = r;
   marker.color.g = g;
