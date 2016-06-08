@@ -279,21 +279,25 @@ void callback (const std_msgs::String::ConstPtr& msg) {
     // ::::::::::::::::::::::
     // zacni izvajat iskanje prave zgradbe
    else if (!array[0].compare("take")) {
+        printf("take\n");
         isciHotel = true;
         for(int i=0;i<4;i++){
+            printf("i\n");
             if(cmp(array[2],streetName[i])){
                 if (i == 0) {
+                    printf("red\n");
                     iskanHotelID = 1;
-                    startSearch(redGoalsH,redSizeH,5);
+                    startSearch(redGoalsH,redSizeH,6);
                 } else if (i == 1) {
                     iskanHotelID = 2;
-                    startSearch(greenGoalsH,greenSizeH,5);
+                    startSearch(greenGoalsH,greenSizeH,6);
                 } else if (i == 2) {
+
                     iskanHotelID = 3;
-                    startSearch(blueGoalsH,blueSizeH,5);
+                    startSearch(blueGoalsH,blueSizeH,6);
                 } else if (i == 3) {
                     iskanHotelID = 4;
-                    startSearch(yellowGoalsH,yellowSizeH,5);
+                    startSearch(yellowGoalsH,yellowSizeH,6);
                 }
                 // ko najde hotel izracunaj vektor in se priblizaj
                 foundHotel = false;
@@ -439,6 +443,7 @@ void callbackFoundFace (const visualization_msgs::MarkerArrayConstPtr& markerArr
     ac.waitForResult(ros::Duration(5.0));
     if(ac.getState() == actionlib::SimpleClientGoalState::SUCCEEDED) {
         printf("ROBOT: '%s vstopi v taxi.' \n", trenutnaOseba.c_str());
+       // int i = system("rosrun sound_play say.py \"Hello "+trenutnaOseba.c_str()+"\"");
         iskanaOsebaID = 0;
         isciOsebo = false;
         sleep(2);
@@ -630,6 +635,7 @@ void callbackHotel (const visualization_msgs::MarkerConstPtr& marker) {
     ac.waitForResult(ros::Duration(5.0));
     if(ac.getState() == actionlib::SimpleClientGoalState::SUCCEEDED) {
         printf("ROBOT: 'Sayonara %s.' \n", trenutnaOseba.c_str());
+       // int i = system("rosrun sound_play say.py \"Sayonara "+trenutnaOseba.c_str()+"\"");
         iskanHotelID = 0;
         isciHotel = false;
         std_msgs::String msg;

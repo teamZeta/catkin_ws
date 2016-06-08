@@ -13,6 +13,7 @@
 #include <iostream>
 #include <string>
 #include <unistd.h>
+#include <stdlib.h> 
 
 using namespace std;
 using namespace boost;
@@ -166,6 +167,7 @@ void callback (const std_msgs::String::ConstPtr& msg) {
 					newOrder = false;
 					order = 1;
 					printf("ROBOT: 'Should I pick %s on the %s Street?'\n", person1.c_str(), street1.c_str());
+					//int i = std::system(std::string("rosrun sound_play say.py \"Should i pick ")+std::string(person1.c_str())+std::string(" on the ")+std::string(street1.c_str())+std::string(" Street?\""));
 
 				} else if (!person1.compare("")) {										// Samo prvi sedez je prazen
 					if (female(array[1])) {
@@ -177,6 +179,7 @@ void callback (const std_msgs::String::ConstPtr& msg) {
 					if (sex1 == sex2) {
 						sex1 = 0;
 						printf("ROBOT: 'This is a no gays allowed taxi. Can't take two of the same sex.'\n");
+						int i = std::system("rosrun sound_play say.py \"This is a no gays allowed taxi\"");
 					} else {
 						nPerson = 1;
 						person1 = osebe[personIndex(array[1])][0];
@@ -184,6 +187,7 @@ void callback (const std_msgs::String::ConstPtr& msg) {
 						newOrder = false;
 						order = 1;
 						printf("ROBOT: 'Should I pick %s on the %s Street?'\n",person1.c_str(), street1.c_str());
+						//int i = system("rosrun sound_play say.py \"Should i pick "+person1.c_str()+" on the "+street1.c_str()+" Street?\"");
 					}
 
 				} else if (!person2.compare("")) {											// Samo drugi sedez je prazen
@@ -195,21 +199,25 @@ void callback (const std_msgs::String::ConstPtr& msg) {
 					// Preveri ce sta razlicen spol
 					if (sex1 == sex2) {
 						sex2 = 0;
-						printf("ROBOT: 'This is a no gays allowed taxi. Can't take two of the same sex.'\n");						
+						printf("ROBOT: 'This is a no gays allowed taxi. Can't take two of the same sex.'\n");
+						//int i = system("rosrun sound_play say.py \"This is a no gays allowed taxi\"");						
 					} else {
 						nPerson = 2;
 						person2 = osebe[personIndex(array[1])][0];
 						street2 = barve[colorIndex(array[4])][0];
 						newOrder = false;
 						order = 1;
-						printf("ROBOT: 'Should I pick %s on the %s Street?'\n", person2.c_str(), street2.c_str());	
+						printf("ROBOT: 'Should I pick %s on the %s Street?'\n", person2.c_str(), street2.c_str());
+						//int i = system("rosrun sound_play say.py \"Should i pick "+person2.c_str()+" on the "+street2.c_str()+" Street?\"");	
 					}
 
 				} else {																	// Oba sedeza sta zasedena
 					printf("ROBOT: 'There is no space left in the taxi.'\n");
+					//int i = system("rosrun sound_play say.py \"There is no space left in the taxi.\"");
 				}
 			} else {
 				printf("ROBOT: 'I didn't understand the order. Please repeat it.'\n");
+				//int i = system("rosrun sound_play say.py \"I didn't understand the order. Please repeat it.\"");
 			}
 
 		// :::::::::::::::::::::::::::::::::::::::::::::::
@@ -223,14 +231,17 @@ void callback (const std_msgs::String::ConstPtr& msg) {
 				newOrder = false;
 				order = 2;
 				printf("ROBOT: 'Should I take %s to the %s Building?'\n", person1.c_str(), building1.c_str());
+				//int i = system("rosrun sound_play say.py \"Should i take "+person1.c_str()+" to the "+building1.c_str()+" Building?\"");
 			} else if (personTake(person2,array[1])) {
 				nPerson = 2;
 				building2 = barve[colorIndex(array[4])][0];;
 				newOrder = false;
 				order = 2;
 				printf("ROBOT: 'Should I take %s to the %s Building?'\n", person2.c_str(), building2.c_str());
+				//int i = system("rosrun sound_play say.py \"Should i take "+person1.c_str()+" to the "+building1.c_str()+" Building?\"");
 			} else {
 				printf("ROBOT: 'No person with such name in the taxi.'\n");
+				//int i = system("rosrun sound_play say.py \"No person with such name in the taxi.\"");
 			}
 		} else {
 			printf("ROBOT: 'I didn't understand the order. Please repeat it.'\n");
