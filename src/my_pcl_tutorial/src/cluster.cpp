@@ -214,34 +214,37 @@ static void mark_cluster(pcl::PointCloud<pcl::PointXYZRGB>::Ptr cloud_cluster, s
   	return;
   }*/
   	int barva = 0;
-  if(hsv_barva.h > 30 && hsv_barva.h < 70){
-  	g = 1;
-  	r = 1;
-  	b = 0;
-  	ru = 0xff;
-  	gu = 0xff;
-  	barva = 4;
-  }else if(hsv_barva.h > 90 && hsv_barva.h < 140){
-  	g = 1;
-  	r = 0;
-  	b = 0;
-  	gu = 0xff;
-  	barva = 2;
+  if(hsv_barva.s > 0.3 && hsv_barva.v > 0.05){
+  	if(hsv_barva.h > 30 && hsv_barva.h < 70){
+	  	g = 1;
+	  	r = 1;
+	  	b = 0;
+	  	ru = 0xff;
+	  	gu = 0xff;
+	  	barva = 4;
+	  }else if(hsv_barva.h > 90 && hsv_barva.h < 140){
+	  	g = 1;
+	  	r = 0;
+	  	b = 0;
+	  	gu = 0xff;
+	  	barva = 2;
 
-  }else if(hsv_barva.h > 170 && hsv_barva.h < 270){
-  	g = 1;
-  	r = 0;
-  	b = 1;
-  	gu = 0xff;
-  	bu = 0xff;
-  	barva = 3;
-  }else if(hsv_barva.h > 340 || hsv_barva.h < 20){
-  	g = 0;
-  	r = 1;
-  	b = 0;
-  	ru = 0xff;
-  	barva = 1;
+	  }else if(hsv_barva.h > 170 && hsv_barva.h < 270){
+	  	g = 1;
+	  	r = 0;
+	  	b = 1;
+	  	gu = 0xff;
+	  	bu = 0xff;
+	  	barva = 3;
+	  }else if(hsv_barva.h > 340 || hsv_barva.h < 20){
+	  	g = 0;
+	  	r = 1;
+	  	b = 0;
+	  	ru = 0xff;
+	  	barva = 1;
+	  }
   }
+  
   
   
 
