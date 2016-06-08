@@ -169,9 +169,9 @@ void callback (const std_msgs::String::ConstPtr& msg) {
 					printf("ROBOT: 'Should I pick %s on the %s Street?'\n", person1.c_str(), street1.c_str());
 					std::stringstream ss;
 					ss << "rosrun sound_play say.py \"Should I pick " << person1.c_str() << " on the " << street1.c_str() <<  " Street?\"";
+					int i = std::system(ss.str().c_str());
 					//int i = std::system(std::string("rosrun sound_play say.py \"Should i pick ")+std::string(person1.c_str())+std::string(" on the ")+std::string(street1.c_str())+std::string(" Street?\""));
 					//auto x = ss.str();
-					int i = std::system(ss.str().c_str());
 				} else if (!person1.compare("")) {										// Samo prvi sedez je prazen
 					if (female(array[1])) {
 						sex1 = 2;
@@ -190,6 +190,9 @@ void callback (const std_msgs::String::ConstPtr& msg) {
 						newOrder = false;
 						order = 1;
 						printf("ROBOT: 'Should I pick %s on the %s Street?'\n",person1.c_str(), street1.c_str());
+						std::stringstream ss;
+						ss << "rosrun sound_play say.py \"Should I pick " << person1.c_str() << " on the " << street1.c_str() <<  " Street?\"";
+						int i = std::system(ss.str().c_str());
 						//int i = system("rosrun sound_play say.py \"Should i pick "+person1.c_str()+" on the "+street1.c_str()+" Street?\"");
 					}
 
@@ -211,6 +214,9 @@ void callback (const std_msgs::String::ConstPtr& msg) {
 						newOrder = false;
 						order = 1;
 						printf("ROBOT: 'Should I pick %s on the %s Street?'\n", person2.c_str(), street2.c_str());
+						std::stringstream ss;
+						ss << "rosrun sound_play say.py \"Should I pick " << person2.c_str() << " on the " << street2.c_str() <<  " street?\"";
+						int i = std::system(ss.str().c_str());
 						//int i = system("rosrun sound_play say.py \"Should i pick "+person2.c_str()+" on the "+street2.c_str()+" Street?\"");	
 					}
 
@@ -234,6 +240,9 @@ void callback (const std_msgs::String::ConstPtr& msg) {
 				newOrder = false;
 				order = 2;
 				printf("ROBOT: 'Should I take %s to the %s Building?'\n", person1.c_str(), building1.c_str());
+				std::stringstream ss;
+				ss << "rosrun sound_play say.py \"Should I take " << person1.c_str() << " to the " << street1.c_str() <<  " building?\"";
+				int i = std::system(ss.str().c_str());
 				//int i = system("rosrun sound_play say.py \"Should i take "+person1.c_str()+" to the "+building1.c_str()+" Building?\"");
 			} else if (personTake(person2,array[1])) {
 				nPerson = 2;
@@ -241,10 +250,13 @@ void callback (const std_msgs::String::ConstPtr& msg) {
 				newOrder = false;
 				order = 2;
 				printf("ROBOT: 'Should I take %s to the %s Building?'\n", person2.c_str(), building2.c_str());
+				std::stringstream ss;
+				ss << "rosrun sound_play say.py \"Should I take " << person1.c_str() << " to the " << street1.c_str() <<  " building?\"";
+				int i = std::system(ss.str().c_str());
 				//int i = system("rosrun sound_play say.py \"Should i take "+person1.c_str()+" to the "+building1.c_str()+" Building?\"");
 			} else {
 				printf("ROBOT: 'No person with such name in the taxi.'\n");
-				//int i = system("rosrun sound_play say.py \"No person with such name in the taxi.\"");
+				int i = std::system("rosrun sound_play say.py \"No person with such name in the taxi.\"");
 			}
 		} else {
 			printf("ROBOT: 'I didn't understand the order. Please repeat it.'\n");
@@ -314,6 +326,7 @@ void callback (const std_msgs::String::ConstPtr& msg) {
 				}
 			} else {
 				printf("ROBOT: 'Please repeat the confirmation.\n'");
+
 			}
 		} else if (order == 2) {														// odpelji osebo do zgradbe
 			if (!array[0].compare("yes")) {			// izvedi ukaz

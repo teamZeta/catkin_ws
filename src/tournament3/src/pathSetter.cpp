@@ -443,6 +443,9 @@ void callbackFoundFace (const visualization_msgs::MarkerArrayConstPtr& markerArr
     ac.waitForResult(ros::Duration(5.0));
     if(ac.getState() == actionlib::SimpleClientGoalState::SUCCEEDED) {
         printf("ROBOT: '%s vstopi v taxi.' \n", trenutnaOseba.c_str());
+        std::stringstream ss2;
+        ss2 << "rosrun sound_play say.py \"Hello " << trenutnaOseba.c_str();
+        int i = std::system(ss2.str().c_str());
        // int i = system("rosrun sound_play say.py \"Hello "+trenutnaOseba.c_str()+"\"");
         iskanaOsebaID = 0;
         isciOsebo = false;
@@ -635,6 +638,9 @@ void callbackHotel (const visualization_msgs::MarkerConstPtr& marker) {
     ac.waitForResult(ros::Duration(5.0));
     if(ac.getState() == actionlib::SimpleClientGoalState::SUCCEEDED) {
         printf("ROBOT: 'Sayonara %s.' \n", trenutnaOseba.c_str());
+        std::stringstream ss3;
+        ss3 << "rosrun sound_play say.py \"Sayonara " << trenutnaOseba.c_str();
+        int i = std::system(ss3.str().c_str());
        // int i = system("rosrun sound_play say.py \"Sayonara "+trenutnaOseba.c_str()+"\"");
         iskanHotelID = 0;
         isciHotel = false;
