@@ -203,7 +203,7 @@ void callback (const std_msgs::String::ConstPtr& msg) {
 					if (sex1 == sex2) {
 						sex2 = 0;
 						printf("ROBOT: 'This is a no gays allowed taxi. Can't take two of the same sex.'\n");
-						int i = system("rosrun sound_play say.py \"This is a no gays allowed taxi\"");						
+						int i = std::system("rosrun sound_play say.py \"This is a no gays allowed taxi\"");						
 					} else {
 						nPerson = 2;
 						person2 = osebe[personIndex(array[1])][0];
