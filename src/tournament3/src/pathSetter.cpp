@@ -43,7 +43,7 @@ static int currentGoal = -1;
 static bool foundFace = false;
 static bool foundHotel = false;
 static ros::Publisher updateTaxi;
-static string osebe[] = {"harry", "philip", "tina", "peter", "forrest", "ellen", "kim", "scarlet", "matthew"};
+static string osebe[] = {"harry", "philip", "tina", "peter", "tom", "ellen", "kim", "scarlet", "matthew"};
 static string streetName[] = {"red","green","blue","yellow"};
 static int iskanaOsebaID = 0;
 static int iskanHotelID = 0; //rgby 

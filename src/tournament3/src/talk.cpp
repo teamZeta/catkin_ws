@@ -167,8 +167,11 @@ void callback (const std_msgs::String::ConstPtr& msg) {
 					newOrder = false;
 					order = 1;
 					printf("ROBOT: 'Should I pick %s on the %s Street?'\n", person1.c_str(), street1.c_str());
+					std::stringstream ss;
+					ss << "rosrun sound_play say.py \"Should I pick " << person1.c_str() << " on the " << street1.c_str() <<  " Street?\"";
 					//int i = std::system(std::string("rosrun sound_play say.py \"Should i pick ")+std::string(person1.c_str())+std::string(" on the ")+std::string(street1.c_str())+std::string(" Street?\""));
-
+					//auto x = ss.str();
+					int i = std::system(ss.str().c_str());
 				} else if (!person1.compare("")) {										// Samo prvi sedez je prazen
 					if (female(array[1])) {
 						sex1 = 2;
@@ -200,7 +203,7 @@ void callback (const std_msgs::String::ConstPtr& msg) {
 					if (sex1 == sex2) {
 						sex2 = 0;
 						printf("ROBOT: 'This is a no gays allowed taxi. Can't take two of the same sex.'\n");
-						//int i = system("rosrun sound_play say.py \"This is a no gays allowed taxi\"");						
+						int i = system("rosrun sound_play say.py \"This is a no gays allowed taxi\"");						
 					} else {
 						nPerson = 2;
 						person2 = osebe[personIndex(array[1])][0];
