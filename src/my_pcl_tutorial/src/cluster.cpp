@@ -307,13 +307,13 @@ static void mark_cluster(pcl::PointCloud<pcl::PointXYZRGB>::Ptr cloud_cluster, s
     return;
 }
 
-if((marker.scale.z < 0.15 || marker.scale.z > 0.5) && 
-	(marker.scale.x < 0.15 || marker.scale.x > 0.5) &&
-	(marker.scale.y < 0.15 || marker.scale.y > 0.5)){
+if((marker.scale.z < 0.15 || marker.scale.z > 0.35) && 
+	(marker.scale.x < 0.15 || marker.scale.x > 0.35) &&
+	(marker.scale.y < 0.30 || marker.scale.y > 0.5)){
 	return;
 }
    
-	marker.scale.z = 2;
+	
 
   marker.color.r = r;
   marker.color.g = g;
