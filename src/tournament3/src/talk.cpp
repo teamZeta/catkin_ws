@@ -251,7 +251,7 @@ void callback (const std_msgs::String::ConstPtr& msg) {
 				order = 2;
 				printf("ROBOT: 'Should I take %s to the %s Building?'\n", person2.c_str(), building2.c_str());
 				std::stringstream ss;
-				ss << "rosrun sound_play say.py \"Should I take " << person1.c_str() << " to the " << street1.c_str() <<  " building?\"";
+				ss << "rosrun sound_play say.py \"Should I take " << person2.c_str() << " to the " << street2.c_str() <<  " building?\"";
 				int i = std::system(ss.str().c_str());
 				//int i = system("rosrun sound_play say.py \"Should i take "+person1.c_str()+" to the "+building1.c_str()+" Building?\"");
 			} else {
