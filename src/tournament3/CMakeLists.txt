@@ -225,3 +225,6 @@ target_link_libraries(pathSetter ${catkin_LIBRARIES})
 add_executable(teleport src/teleport.cpp)
 target_link_libraries(teleport ${catkin_LIBRARIES})
 
+add_executable(cancel src/cancel.cpp)
+target_link_libraries(cancel ${catkin_LIBRARIES})
+
