@@ -11,11 +11,15 @@
 #include <cstdlib>
 #include <sys/timeb.h>
 
+typedef actionlib::SimpleActionClient<move_base_msgs::MoveBaseAction> MoveBaseClient;
+
 int main(int argc, char** argv){
     ros::init(argc, argv, "cancel");
     
-    int i = system("rostopic pub /move_base/cancel actionlib_msgs/GoalID '{}'");
-  
+    //int i = system("rostopic pub /move_base/cancel actionlib_msgs/GoalID '{}'");
+	MoveBaseClient ac("move_base", true);
+    ac.cancelGoal();  
+
     ros::spin();
   
   }
