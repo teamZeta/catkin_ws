@@ -282,12 +282,12 @@ void callback (const std_msgs::String::ConstPtr& msg) {
                 }
                 // ko najde faco izracunaj vektor in se priblizaj
                 foundFace = false;
-                std_msgs::String msg2;
+               /* std_msgs::String msg2;
                 std::stringstream ss2;
                 ss2 << "stop "<< std::string(0);
                 msg2.data = ss2.str();
                 idSearchAdvertiser.publish(msg2);
-                printf("Posiljam stop search\n");
+                printf("Posiljam stop search\n");*/
             }
         }
     }
@@ -329,12 +329,12 @@ void callback (const std_msgs::String::ConstPtr& msg) {
                 }
                 // ko najde hotel izracunaj vektor in se priblizaj
                 foundHotel = false;
-                std_msgs::String msg2;
+               /* std_msgs::String msg2;
                 std::stringstream ss2;
                 ss2 << "stop "<< std::string(0);
                 msg2.data = ss2.str();
                 idSearchAdvertiser.publish(msg2);
-                printf("Posiljam stop");
+                printf("Posiljam stop");*/
             }
         }
 

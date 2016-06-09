@@ -307,11 +307,6 @@ void callbackIdSearch(const std_msgs::String::ConstPtr& msg){
         isciOsebo=true;
         oseba = true;
         printf("iscem osebo\n");
-    }else {
-        iskanHotelID = 0;
-        isciHotel = false;
-        iskanaOsebaID = 0;
-        isciOsebo = false;
     }
 }
 
@@ -319,6 +314,11 @@ void callbackTalk (const std_msgs::String::ConstPtr& msg1) {
     //printf("TAXI: dobil sem msg\n");
     printf("Dobil sem %s\n",msg1->data.c_str());
     if (!strcmp(msg1->data.c_str(),"pathEnded") && found){
+        
+        iskanHotelID = 0;
+        isciHotel = false;
+        iskanaOsebaID = 0;
+        isciOsebo = false;
 
         MoveBaseClient ac("move_base", true);
         //wait for the action server to come up
