@@ -296,13 +296,14 @@ void callbackIdSearch(const std_msgs::String::ConstPtr& msg){
         strings >> array[i];
         i++;
     }
-    if(cmp(array[1],"hotel")){
-        iskanHotelID = atoi(array[2].c_str());
+    printf("%s %s\n",array[0].c_str(),array[1].c_str());
+    if(cmp(array[0],"hotel")){
+        iskanHotelID = atoi(array[1].c_str());
         isciHotel=true;
         oseba = false;
         printf("iscem hotel\n");
-    }else if(cmp(array[1],"oseba")){
-        iskanaOsebaID = atoi(array[2].c_str());
+    }else if(cmp(array[0],"oseba")){
+        iskanaOsebaID = atoi(array[1].c_str());
         isciOsebo=true;
         oseba = true;
         printf("iscem osebo\n");
@@ -310,7 +311,7 @@ void callbackIdSearch(const std_msgs::String::ConstPtr& msg){
         iskanHotelID = 0;
         isciHotel = false;
         iskanaOsebaID = 0;
-        isciOsebo = 0;
+        isciOsebo = false;
     }
 }
 
