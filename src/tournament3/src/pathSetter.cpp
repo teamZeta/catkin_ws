@@ -284,20 +284,21 @@ void callback (const std_msgs::String::ConstPtr& msg) {
         for(int i=0;i<4;i++){
             printf("i\n");
             if(cmp(array[2],streetName[i])){
+                int cas = 10;
                 if (i == 0) {
                     printf("red\n");
                     iskanHotelID = 1;
-                    startSearch(redGoalsH,redSizeH,6);
+                    startSearch(redGoalsH,redSizeH,cas);
                 } else if (i == 1) {
                     iskanHotelID = 2;
-                    startSearch(greenGoalsH,greenSizeH,6);
+                    startSearch(greenGoalsH,greenSizeH,cas);
                 } else if (i == 2) {
 
                     iskanHotelID = 3;
-                    startSearch(blueGoalsH,blueSizeH,6);
+                    startSearch(blueGoalsH,blueSizeH,cas);
                 } else if (i == 3) {
                     iskanHotelID = 4;
-                    startSearch(yellowGoalsH,yellowSizeH,6);
+                    startSearch(yellowGoalsH,yellowSizeH,cas);
                 }
                 // ko najde hotel izracunaj vektor in se priblizaj
                 foundHotel = false;
@@ -468,8 +469,8 @@ void redGoalsInit() {
 
 void greenGoalsInit() {
     int i=0;
-    greenGoals[i++]=createGoal(-2,-0.2,0,1);
-    greenGoals[i++]=createGoal(-2,-0.2,0,-1);
+    greenGoals[i++]=createGoal(-2,-0.1,0,1);
+    greenGoals[i++]=createGoal(-2,-0.1,0,-1);
     greenGoals[i++]=createGoal(-0.9,-0.25,0,1);
     greenGoals[i++]=createGoal(-0.4,-0.7,1,0);
     greenGoals[i++]=createGoal(0.17,-0.3,0,1);
@@ -514,7 +515,7 @@ void greenGoalsHInit() {
 
 void blueGoalsHInit() {
     int i=0;
-    blueGoalsH[i++]=createGoal(1.5,-1.4,1,-1); 
+    blueGoalsH[i++]=createGoal(1.5,-1.4,1,-2); 
     blueGoalsH[i++]=createGoal(1.5,-1.4,-20,-1);
     blueGoalsH[i++]=createGoal(-1.9,-1.6,20,-1);
 }
