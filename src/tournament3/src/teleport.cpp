@@ -72,6 +72,8 @@ void callbackPose(const geometry_msgs::PoseWithCovarianceStamped msg){
         posit.publish(pos);
         once = false;
 
+        int i = system("rostopic pub /move_base/cancel actionlib_msgs/GoalID '{}'");
+
         std_msgs::String msg;
         std::stringstream ss;
         ss << destInd;
