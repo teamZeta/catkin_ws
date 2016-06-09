@@ -369,14 +369,14 @@ void callbackTalk (const std_msgs::String::ConstPtr& msg1) {
 }
 
 int main(int argc, char** argv){
-    ros::init(argc, argv, "pathSetter");
-    ros::NodeHandle nh,nh2,nh3;
+    ros::init(argc, argv, "approach");
+    ros::NodeHandle nh,nh2,nh3,nh4;
 
 
     ros::Subscriber sub = nh.subscribe<visualization_msgs::MarkerArray> ("/foundFace", 1, callbackFoundFace);
     ros::Subscriber sub2 = nh2.subscribe<visualization_msgs::Marker> ("/hotel", 1, callbackHotel);
     ros::Subscriber sub3 = nh3.subscribe<std_msgs::String>("/idSearch", 1,callbackIdSearch);
-    ros::Subscriber subTalk = nh3.subscribe<std_msgs::String>("/tournament3/talk", 1, callbackTalk);
+    ros::Subscriber subTalk = nh4.subscribe<std_msgs::String>("/tournament3/talk", 1, callbackTalk);
 
     pathSearch = nh2.advertise<std_msgs::String>("/tournament3/search", 1);
     //ros::spin();
