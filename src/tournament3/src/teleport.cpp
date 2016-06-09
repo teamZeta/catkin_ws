@@ -77,7 +77,7 @@ void callbackPose(const geometry_msgs::PoseWithCovarianceStamped msg){
         //MoveBaseClient ac("move_base", true);
         //ac.cancelGoal();
 
-        int i = system("rostopic pub /move_base/cancel actionlib_msgs/GoalID '{}'");
+        //int i = system("rostopic pub /move_base/cancel actionlib_msgs/GoalID '{}'");
 
         std_msgs::String msg;
         std::stringstream ss;
