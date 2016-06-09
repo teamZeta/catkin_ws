@@ -34,14 +34,14 @@ static int sex2 = 0;
 static int nPerson = 0;
 static int order = 0;			// 0 - undefined, 1 - pick up, 2 - take to
 static int osebeDimensions = 6;
-static string osebe[][6] = {{"harry", "hairy", "perry","harry","harry","harry"},
+static string osebe[][6] = {{"harry", "hairy", "perry","harriet","Ferry","Carrie"},
 							{"philip", "philips", "phillip","philip","philip","philip"},
 							{"tina", "pina", "dina","dana","tina","tina"},
 							{"peter", "peter", "peter","peter","peter","peter"},
 							{"tom", "home", "dome","stone","tome","phone"},
 							{"ellen", "alen", "allen","erin","aaron","ellen"},
 							{"kim", "kim", "kim","kim","kim","kim"},
-							{"scarlet", "scarlett", "scarlets","scarlet","scarlet","scarlet"},
+							{"scarlet", "scarlett", "scarlets","scotland","scarlet","scarlet"},
 							{"matthew", "matthew", "matthew","matthew","matthew","matthew"}};
 
 static int barveDimensions = 9;
@@ -241,7 +241,7 @@ void callback (const std_msgs::String::ConstPtr& msg) {
 				order = 2;
 				printf("ROBOT: 'Should I take %s to the %s Building?'\n", person1.c_str(), building1.c_str());
 				std::stringstream ss;
-				ss << "rosrun sound_play say.py \"Should I take " << person1.c_str() << " to the " << street1.c_str() <<  " building?\"";
+				ss << "rosrun sound_play say.py \"Should I take " << person1.c_str() << " to the " << building1.c_str() <<  " building?\"";
 				int i = std::system(ss.str().c_str());
 				//int i = system("rosrun sound_play say.py \"Should i take "+person1.c_str()+" to the "+building1.c_str()+" Building?\"");
 			} else if (personTake(person2,array[1])) {
@@ -251,7 +251,7 @@ void callback (const std_msgs::String::ConstPtr& msg) {
 				order = 2;
 				printf("ROBOT: 'Should I take %s to the %s Building?'\n", person2.c_str(), building2.c_str());
 				std::stringstream ss;
-				ss << "rosrun sound_play say.py \"Should I take " << person2.c_str() << " to the " << street2.c_str() <<  " building?\"";
+				ss << "rosrun sound_play say.py \"Should I take " << person2.c_str() << " to the " << building2.c_str() <<  " building?\"";
 				int i = std::system(ss.str().c_str());
 				//int i = system("rosrun sound_play say.py \"Should i take "+person1.c_str()+" to the "+building1.c_str()+" Building?\"");
 			} else {

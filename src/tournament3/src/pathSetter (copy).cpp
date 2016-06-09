@@ -56,9 +56,6 @@ static int goalInd=0;
 static int whereTo = 0;     // 0 - undefined, 1234 - rgby
 static bool once = false;
 static ros::Publisher resetAdvertiser;
-static ros::Publisher idSearchAdvertiser;
-static ros::Publisher pathEnded;
-static bool stopSearch=false;
 
 
 /*
@@ -199,12 +196,6 @@ void startSearch(move_base_msgs::MoveBaseGoal Goals[],int size,int slip){
         k++;
         ros::spinOnce();
     }
-    std_msgs::String msg;
-    std::stringstream ss;
-    ss << "pathEnded";
-    msg.data = ss.str();
-    pathEnded.publish(msg);
-    printf("posiljam pathEnded\n");
 
 }
 
@@ -253,13 +244,6 @@ void callback (const std_msgs::String::ConstPtr& msg) {
         for (int i=0; i<9; i++) {
             if (!trenutnaOseba.compare(osebe[i])) {
                 iskanaOsebaID = i+1;
-
-                std_msgs::String msg;
-                std::stringstream ss;
-                ss << "oseba "<< iskanaOsebaID;
-                msg.data = ss.str();
-                idSearchAdvertiser.publish(msg);
-                printf("Posiljam isci osebo: %d\n",iskanaOsebaID);
                 break;
             }
         }
@@ -282,12 +266,6 @@ void callback (const std_msgs::String::ConstPtr& msg) {
                 }
                 // ko najde faco izracunaj vektor in se priblizaj
                 foundFace = false;
-                std_msgs::String msg2;
-                std::stringstream ss2;
-                ss2 << "stop "<< std::string(0);
-                msg2.data = ss2.str();
-                idSearchAdvertiser.publish(msg2);
-                printf("Posiljam stop search\n");
             }
         }
     }
@@ -307,12 +285,6 @@ void callback (const std_msgs::String::ConstPtr& msg) {
             printf("i\n");
             if(cmp(array[2],streetName[i])){
                 int cas = 10;
-                std_msgs::String msg;
-                std::stringstream ss;
-                ss << "hotel "<< (i+1);
-                msg.data = ss.str();
-                idSearchAdvertiser.publish(msg);
-                printf("Posiljam isci hotel: %d",i+1);
                 if (i == 0) {
                     printf("red\n");
                     iskanHotelID = 1;
@@ -321,6 +293,7 @@ void callback (const std_msgs::String::ConstPtr& msg) {
                     iskanHotelID = 2;
                     startSearch(greenGoalsH,greenSizeH,cas);
                 } else if (i == 2) {
+
                     iskanHotelID = 3;
                     startSearch(blueGoalsH,blueSizeH,cas);
                 } else if (i == 3) {
@@ -329,12 +302,6 @@ void callback (const std_msgs::String::ConstPtr& msg) {
                 }
                 // ko najde hotel izracunaj vektor in se priblizaj
                 foundHotel = false;
-                std_msgs::String msg2;
-                std::stringstream ss2;
-                ss2 << "stop "<< std::string(0);
-                msg2.data = ss2.str();
-                idSearchAdvertiser.publish(msg2);
-                printf("Posiljam stop");
             }
         }
 
@@ -365,7 +332,7 @@ void callback (const std_msgs::String::ConstPtr& msg) {
 // ::::::::::::::::::::::::::::::::::::::::::::
 // :::::::::::::::: FOUND FACE ::::::::::::::::
 // ::::::::::::::::::::::::::::::::::::::::::::
-/*void callbackFoundFace (const visualization_msgs::MarkerArrayConstPtr& markerArray) {
+void callbackFoundFace (const visualization_msgs::MarkerArrayConstPtr& markerArray) {
     if (!isciOsebo)
         return;
     printf("iskanaOsebaID: %d, zaznan id face: %d\n", iskanaOsebaID, markerArray->markers[0].id);
@@ -378,7 +345,7 @@ void callback (const std_msgs::String::ConstPtr& msg) {
 
    /* ros::NodeHandle node;
     ros::Publisher vis_pub = node.advertise<visualization_msgs::Marker>( "visualization_marker", 1 );
-    
+    */
     goal.target_pose.header.frame_id = "/map";
     goal.target_pose.header.stamp = ros::Time::now();
     tf::TransformListener listener;
@@ -441,7 +408,7 @@ void callback (const std_msgs::String::ConstPtr& msg) {
     goal.target_pose.pose.orientation.w = q.w();//transform.getRotation().w();
     goal.target_pose.pose.position.x = xTarget;
     goal.target_pose.pose.position.y = yTarget;
-
+/*
     // Postavi marker kje je goal
     visualization_msgs::Marker  marker;
     marker.header.frame_id = "/map";
@@ -464,7 +431,7 @@ void callback (const std_msgs::String::ConstPtr& msg) {
     vis_pub.publish(marker);
     // konec markerja kje je goal
     printf("\nSetting Goal: %f %f\n\n",xTarget,yTarget);
-
+*/
     MoveBaseClient ac("move_base", true);
     //wait for the action server to come up
     while(!ac.waitForServer(ros::Duration(5.0))){
@@ -489,7 +456,6 @@ void callback (const std_msgs::String::ConstPtr& msg) {
     }
 
 }
-*/
 
 
 void redGoalsInit() {
@@ -561,7 +527,7 @@ void yellowGoalsHInit() {
     yellowGoalsH[i++]=createGoal(-3.4,0,-1,0); 
 }
 
-/*void callbackHotel (const visualization_msgs::MarkerConstPtr& marker) {
+void callbackHotel (const visualization_msgs::MarkerConstPtr& marker) {
     if (!isciHotel)
         return;
     printf("iskanHotelID: %d, zaznan id hotel: %d\n", iskanHotelID, marker->id);
@@ -574,7 +540,7 @@ void yellowGoalsHInit() {
 
    /* ros::NodeHandle node;
     ros::Publisher vis_pub = node.advertise<visualization_msgs::Marker>( "visualization_marker", 1 );
-    
+    */
     goal.target_pose.header.frame_id = "/map";
     goal.target_pose.header.stamp = ros::Time::now();
     tf::TransformListener listener;
@@ -660,7 +626,7 @@ void yellowGoalsHInit() {
     vis_pub.publish(marker);
     // konec markerja kje je goal
     printf("\nSetting Goal: %f %f\n\n",xTarget,yTarget);
-
+*/
     MoveBaseClient ac("move_base", true);
     //wait for the action server to come up
     while(!ac.waitForServer(ros::Duration(5.0))){
@@ -692,12 +658,7 @@ void yellowGoalsHInit() {
     }
 
 }
-*/
-void callbackPath (const std_msgs::String::ConstPtr& msg) {
-    foundFace=true;
-    foundHotel=true;
-    printf("Dobil sem stop, ustavljam iskanje goalov\n");
-}
+
 
 int main(int argc, char** argv){
     ros::init(argc, argv, "pathSetter");
@@ -707,7 +668,7 @@ int main(int argc, char** argv){
     ros::NodeHandle nh4;
     ros::NodeHandle nh5;
     ros::NodeHandle nh6;
-    ros::NodeHandle nh7,nh8,nh9,nh10,nh11,nh12;
+    ros::NodeHandle nh7,nh8,nh9;
 
     redGoalsInit();
     blueGoalsInit();
@@ -719,7 +680,7 @@ int main(int argc, char** argv){
     yellowGoalsHInit();
 
     ros::Subscriber sub = nh.subscribe<std_msgs::String>("/newGoal", 1, callback);
-    //ros::Subscriber sub2 = nh2.subscribe<visualization_msgs::MarkerArray> ("/foundFace", 1, callbackFoundFace);
+    ros::Subscriber sub2 = nh2.subscribe<visualization_msgs::MarkerArray> ("/foundFace", 1, callbackFoundFace);
     updateTaxi = nh3.advertise<std_msgs::String>("/person", 1);
     //posit = nh6.advertise<geometry_msgs::PoseWithCovarianceStamped>("/initialpose", 1);
     sleep(5);
@@ -729,12 +690,7 @@ int main(int argc, char** argv){
 
     ros::Subscriber sub5 = nh8.subscribe<std_msgs::String> ("/changeGoals", 1, callbackChangeGoals);
 
-    //ros::Subscriber sub6 = nh9.subscribe<visualization_msgs::Marker> ("/hotel", 1, callbackHotel);
-
-    idSearchAdvertiser = nh10.advertise<std_msgs::String>("/idSearch", 1);
-
-    ros::Subscriber sub6 = nh11.subscribe<std_msgs::String>("/tournament3/search", 1, callbackPath);
-    pathEnded = nh12.advertise<std_msgs::String>("/tournament3/talk", 1);
+    ros::Subscriber sub6 = nh9.subscribe<visualization_msgs::Marker> ("/hotel", 1, callbackHotel);
     //ros::spin();
     ros::Rate r(10);
     while (ros::ok()){
