@@ -31,10 +31,10 @@ static int iskanaOsebaID = 0;
 static int iskanHotelID = 0; //rgby 
 static int goalInd=0;
 static bool oseba = true;
-static bool false;
+static bool found = false;
 static ros::Publisher pathSearch;
 
-
+typedef actionlib::SimpleActionClient<move_base_msgs::MoveBaseAction> MoveBaseClient;
 
 bool cmp(string s1, string s2){
     int i;
@@ -297,12 +297,12 @@ void callbackIdSearch(const std_msgs::String::ConstPtr& msg){
         i++;
     }
     if(cmp(array[1],"hotel")){
-        iskanHotelID = atoi(array[2]);
+        iskanHotelID = atoi(array[2].c_str());
         isciHotel=true;
         oseba = false;
         printf("iscem hotel\n");
     }else if(cmp(array[1],"oseba")){
-        iskanaOsebaID = atoi(array[2]);
+        iskanaOsebaID = atoi(array[2].c_str());
         isciOsebo=true;
         oseba = true;
         printf("iscem osebo\n");
@@ -331,9 +331,9 @@ void callbackTalk (const std_msgs::String::ConstPtr& msg1) {
         ac.waitForResult(ros::Duration(5.0));
         if(oseba){
             if(ac.getState() == actionlib::SimpleClientGoalState::SUCCEEDED) {
-                printf("ROBOT: '%s vstopi v taxi.' \n", trenutnaOseba.c_str());
+                printf("ROBOT: '%s vstopi v taxi.' \n", osebe[iskanaOsebaID-1].c_str());
                 std::stringstream ss2;
-                ss2 << "rosrun sound_play say.py \"Hello " << trenutnaOseba.c_str() << " come on in it's cold outside\"";
+                ss2 << "rosrun sound_play say.py \"Hello " << streetName[iskanHotelID-1].c_str() << " come on in it's cold outside\"";
                 int i = std::system(ss2.str().c_str());
                // int i = system("rosrun sound_play say.py \"Hello "+trenutnaOseba.c_str()+"\"");
                 iskanaOsebaID = 0;
@@ -344,16 +344,16 @@ void callbackTalk (const std_msgs::String::ConstPtr& msg1) {
             }
         }else{
             if(ac.getState() == actionlib::SimpleClientGoalState::SUCCEEDED) {
-                    printf("ROBOT: 'Sayonara %s.' \n", trenutnaOseba.c_str());
+                    printf("ROBOT: 'Sayonara %s.' \n", osebe[iskanaOsebaID-1].c_str());
                     std::stringstream ss3;
-                    ss3 << "rosrun sound_play say.py \"Sayonara " << trenutnaOseba.c_str() << "\"";
+                    ss3 << "rosrun sound_play say.py \"Sayonara " << osebe[iskanaOsebaID-1].c_str() << "\"";
                     int i = std::system(ss3.str().c_str());
                    // int i = system("rosrun sound_play say.py \"Sayonara "+trenutnaOseba.c_str()+"\"");
                     iskanHotelID = 0;
                     isciHotel = false;
                     std_msgs::String msg;
                     std::stringstream ss;
-                    ss << trenutnaOseba;
+                    ss << iskanaOsebaID;
                     msg.data = ss.str();
                     updateTaxi.publish(msg);
                         
