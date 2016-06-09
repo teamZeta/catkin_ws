@@ -16,6 +16,8 @@
 
 using namespace std;
 
+typedef actionlib::SimpleActionClient<move_base_msgs::MoveBaseAction> MoveBaseClient;
+
 static ros::Publisher posit;
 static bool once = false;
 static float diff=6.05;
@@ -72,7 +74,10 @@ void callbackPose(const geometry_msgs::PoseWithCovarianceStamped msg){
         posit.publish(pos);
         once = false;
 
-        int i = system("rostopic pub /move_base/cancel actionlib_msgs/GoalID '{}'");
+        MoveBaseClient ac("move_base", true);
+        ac.cancelGoal();
+
+        //int i = system("rostopic pub /move_base/cancel actionlib_msgs/GoalID '{}'");
 
         std_msgs::String msg;
         std::stringstream ss;
