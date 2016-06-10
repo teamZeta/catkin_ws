@@ -345,6 +345,13 @@ void callbackTalk (const std_msgs::String::ConstPtr& msg1) {
                 sleep(2);
             } else {
                 ROS_INFO("Goal unreachable: %s\n",ac.getState().toString().c_str());
+                printf("ROBOT: '%s vstopi v taxi.' \n", osebe[iskanaOsebaID-1].c_str());
+                std::stringstream ss2;
+                ss2 << "rosrun sound_play say.py \"Hello " << osebe[iskanaOsebaID-1].c_str() << " come on in it's cold outside\"";
+                int i = std::system(ss2.str().c_str());
+               // int i = system("rosrun sound_play say.py \"Hello "+trenutnaOseba.c_str()+"\"");
+                iskanaOsebaID = 0;
+                isciOsebo = false;
             }
         }else{
             if(ac.getState() == actionlib::SimpleClientGoalState::SUCCEEDED) {
