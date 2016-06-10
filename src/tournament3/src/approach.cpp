@@ -362,7 +362,7 @@ void callbackTalk (const std_msgs::String::ConstPtr& msg1) {
                    // int i = system("rosrun sound_play say.py \"Sayonara "+trenutnaOseba.c_str()+"\"");
                     iskanHotelID = 0;
                     isciHotel = false;
-                        
+
                     ros::spinOnce();
                     sleep(2);
                 } else {
@@ -372,7 +372,7 @@ void callbackTalk (const std_msgs::String::ConstPtr& msg1) {
                     ss3 << "rosrun sound_play say.py \"Sayonara " << osebe[iskanaOsebaID-1].c_str() << ".\"";
                     int i = std::system(ss3.str().c_str());
                 }
-
+                foundHotel=false;
                 std_msgs::String msg;
                 std::stringstream ss;
                 ss << osebe[iskanaOsebaID-1];
