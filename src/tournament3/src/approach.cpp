@@ -62,7 +62,7 @@ void callbackFoundFace (const visualization_msgs::MarkerArrayConstPtr& markerArr
     printf("posiljam stop\n");
     std_msgs::String msg;
     std::stringstream ss;
-    ss << "stop";
+    ss << "face";
     msg.data = ss.str();
     pathSearch.publish(msg);
 
@@ -179,7 +179,7 @@ void callbackHotel (const visualization_msgs::MarkerConstPtr& marker) {
     printf("posiljam stop\n");
     std_msgs::String msg;
     std::stringstream ss;
-    ss << "stop";
+    ss << "hotel";
     msg.data = ss.str();
     pathSearch.publish(msg);
 

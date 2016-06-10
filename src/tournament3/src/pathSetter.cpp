@@ -694,9 +694,22 @@ void yellowGoalsHInit() {
 }
 */
 void callbackPath (const std_msgs::String::ConstPtr& msg) {
-    foundFace=true;
-    foundHotel=true;
-    printf("Dobil sem stop, ustavljam iskanje goalov\n");
+
+    string array[1];
+    int i = 0;
+    stringstream strings(msg->data.c_str());
+    while (strings.good() && i<1) {
+        strings >> array[i];
+        i++;
+    }
+
+    if (cmp(array[0],"face")) {
+        foundFace=true;
+        printf("Nasu sem faco, ustavljam iskanje goalov\n");
+    } else if (cmp(array[0],"hotel")) {
+        foundHotel=true;
+        printf("Nasu sem faco, ustavljam iskanje goalov\n");
+    }
 }
 
 int main(int argc, char** argv){
