@@ -34,22 +34,22 @@ static int sex2 = 0;
 static int nPerson = 0;
 static int order = 0;			// 0 - undefined, 1 - pick up, 2 - take to
 static int osebeDimensions = 10;
-static string osebe[][10] = {{"harry", "hairy", "perry","harriet","Ferry","Carrie","Carry","Carry","Carry","Carry"},
-							{"philip", "philips", "phillip","fedex","philip","philip","philip","philip","philip","philip"},
-							{"tina", "pina", "dina","dana","dealer","nina","tina""tina""tina""tina"},
-							{"peter", "peter", "peter","peter","peter","peter","peter","peter","peter","peter"},
+static string osebe[][10] = {{"harry", "hairy", "perry","harriet","Ferry","Carrie","Carry","heri","Carry","Carry"},
+							{"philip", "philips", "phillip","fedex","filip","philip","philip","philip","philip","philip"},
+							{"tina", "pina", "dina","dana","tena","nina","tina""tina""tina""tina"},
+							{"peter", "piter", "teather","better","biter","peter","peter","peter","peter","peter"},
 							{"tom", "home", "dome","stone","tome","phone","Dom","time","tom","tom"},
-							{"ellen", "alen", "allen","erin","aaron","ellen","ellen","ellen","ellen","ellen"},
+							{"ellen", "alen", "allen","erin","aaron","eren","ellen","ellen","ellen","ellen"},
 							{"kim", "king", "kim","kim","kim","kim","kim","kim","kim","kim"},
-							{"scarlet", "scarlett", "scarlets","scotland","scarlet","scarlet","scarlet","scarlet","scarlet","scarlet"},
-							{"matthew", "matro", "metro","matthew","matthew","matthew","matthew","matthew","matthew","matthew"}};
+							{"scarlet", "scarlett", "scarlets","scotland","skarlet","scarlet","scarlet","scarlet","scarlet","scarlet"},
+							{"matthew", "matro", "metro","metjeu","matthew","matthew","matthew","matthew","matthew","matthew"}};
 
 
 static int barveDimensions = 14;
-static string barve[][14] = {{"red", "rat", "rad", "read", "right","bread","rath","road","ruth","ridge","reed","rhett","red","red"},
-							{"green", "grill","grant","green","green","green","green","green","green","green","green","green","green","green"},
-							{"blue", "blow", "blah", "block", "blood", "bloor","bloodstream","bluff","clue","clue","clue","clue","clue","clue"},
-							{"yellow", "narrow", "yellow", "yellow", "yellow", "narrow","yellow","yellow","yellow","yellow","yellow","yellow","yellow","yellow"}};
+static string barve[][14] = {{"red", "rat", "rad", "read", "right","rhett","rath","road","ruth","ridge","reed","red","red","red"},
+							{"green", "grill","grant","grin","green","green","green","green","green","green","green","green","green","green"},
+							{"blue", "blow", "blah", "block", "blood", "bloor","bloodstream","bluff","clue","blu","clue","clue","clue","clue"},
+							{"yellow", "narrow", "yelou", "yerrow", "yellow", "narrow","yellow","yellow","yellow","yellow","yellow","yellow","yellow","yellow"}};
 
 static string osebeL[] = {"harry", "philip", "tina", "peter", "tom", "ellen", "kim", "scarlet", "matthew"};
 static string barveL[] = {"red","green","blue","yellow"};
@@ -138,7 +138,7 @@ static int colorIndex(std::string barva){
 			if(lev<min){
 				min=lev;
 				minInd=i;
-				printf("Distance %s - %s is: %d\n",barva.c_str(),barve[i][j].c_str(),lev);
+				//printf("Distance %s - %s is: %d\n",barva.c_str(),barve[i][j].c_str(),lev);
 			}
 		}
 	}
@@ -159,7 +159,7 @@ static int personIndex(std::string trenutnaOseba){
 		for(int j=0;j<osebeDimensions;j++){
 			int lev = leven(trenutnaOseba,osebe[i][j]);
 			if(lev<min){
-				printf("Distance %s - %s is: %d\n",trenutnaOseba.c_str(),osebe[i][j].c_str(),lev);
+				//printf("Distance %s - %s is: %d\n",trenutnaOseba.c_str(),osebe[i][j].c_str(),lev);
 				min=lev;
 				minInd=i;
 			}

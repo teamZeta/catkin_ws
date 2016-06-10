@@ -53,13 +53,13 @@ bool cmp(string s1, string s2){
 void callbackFoundFace (const visualization_msgs::MarkerArrayConstPtr& markerArray) {
     if (!isciOsebo)
         return;
-    printf("iskanaOsebaID: %d, zaznan id face: %d\n", iskanaOsebaID, markerArray->markers[0].id);
+    printf("Detected: %s\n",osebe[markerArray->markers[0].id-1].c_str());
     if (iskanaOsebaID != markerArray->markers[0].id) {
         return;
     }
     found = true;
 
-    printf("posiljam stop\n");
+    //printf("posiljam stop\n");
     std_msgs::String msg;
     std::stringstream ss;
     ss << "face";
@@ -67,7 +67,7 @@ void callbackFoundFace (const visualization_msgs::MarkerArrayConstPtr& markerArr
     pathSearch.publish(msg);
 
     foundFace = true;
-    printf("ROBOT: 'I found the person.'\n");
+    printf("I found %s.\n", osebe[iskanaOsebaID-1].c_str());
 
    /* ros::NodeHandle node;
     ros::Publisher vis_pub = node.advertise<visualization_msgs::Marker>( "visualization_marker", 1 );
@@ -170,13 +170,13 @@ void callbackFoundFace (const visualization_msgs::MarkerArrayConstPtr& markerArr
 void callbackHotel (const visualization_msgs::MarkerConstPtr& marker) {
     if (!isciHotel)
         return;
-    printf("iskanHotelID: %d, zaznan id hotel: %d\n", iskanHotelID, marker->id);
+    printf("Detected: %s\n",streetName[marker->id-1].c_str());
     if (iskanHotelID != marker->id) {
         return;
     }
     found = true;
 
-    printf("posiljam stop\n");
+    //printf("posiljam stop\n");
     std_msgs::String msg;
     std::stringstream ss;
     ss << "hotel";
@@ -184,7 +184,10 @@ void callbackHotel (const visualization_msgs::MarkerConstPtr& marker) {
     pathSearch.publish(msg);
 
     foundHotel = true;
-    printf("ROBOT: 'I found the hotel.'\n");
+    printf("I found the %s Hotel.'\n",streetName[iskanHotelID-1].c_str());
+    std::stringstream ss3;
+    ss3 << "rosrun sound_play say.py \"I found the" << streetName[iskanHotelID-1].c_str() << " hotel\"";
+    int i = std::system(ss3.str().c_str());
 
    /* ros::NodeHandle node;
     ros::Publisher vis_pub = node.advertise<visualization_msgs::Marker>( "visualization_marker", 1 );
@@ -302,12 +305,12 @@ void callbackIdSearch(const std_msgs::String::ConstPtr& msg){
         iskanaOsebaID = atoi(array[2].c_str());
         isciHotel=true;
         oseba = false;
-        printf("iscem hotel\n");
+        //printf("iscem hotel\n");
     }else if(cmp(array[0],"oseba")){
         iskanaOsebaID = atoi(array[1].c_str());
         isciOsebo=true;
         oseba = true;
-        printf("iscem osebo\n");
+        //printf("iscem osebo\n");
     }
 }
 

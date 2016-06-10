@@ -167,11 +167,11 @@ void startSearch(move_base_msgs::MoveBaseGoal Goals[],int size,int slip){
         while(!ac.waitForServer(ros::Duration(5.0))){
             ROS_INFO("Waiting for the move_base action server to come up");
         }
-        printf("Goal  %.2f - %.2f \n", Goals[k].target_pose.pose.position.x, Goals[k].target_pose.pose.position.y );
+       // printf("Goal  %.2f - %.2f \n", Goals[k].target_pose.pose.position.x, Goals[k].target_pose.pose.position.y );
         ac.sendGoal(Goals[k]);
         ac.waitForResult();
         if(ac.getState() == actionlib::SimpleClientGoalState::SUCCEEDED){
-            ROS_INFO("Reached goal.");
+            //ROS_INFO("Reached goal.");
             sleep(slip);
           //  reset=true;
             sendReset();
@@ -181,11 +181,11 @@ void startSearch(move_base_msgs::MoveBaseGoal Goals[],int size,int slip){
             while(!ac.waitForServer(ros::Duration(5.0))){
                     ROS_INFO("Waiting for the move_base action server to come up");
                 }
-                printf("Goal  %.2f - %.2f \n", Goals[k].target_pose.pose.position.x, Goals[k].target_pose.pose.position.y );
+               // printf("Goal  %.2f - %.2f \n", Goals[k].target_pose.pose.position.x, Goals[k].target_pose.pose.position.y );
                 ac.sendGoal(Goals[k]);
                 ac.waitForResult();
                 if(ac.getState() == actionlib::SimpleClientGoalState::SUCCEEDED){
-                    ROS_INFO("Reached goal.");
+                   // ROS_INFO("Reached goal.");
                     sleep(slip);
                   //  reset=true;
                     sendReset();
@@ -222,7 +222,7 @@ void startSearch(move_base_msgs::MoveBaseGoal Goals[],int size,int slip){
     ss << "pathEnded";
     msg.data = ss.str();
     pathEnded.publish(msg);
-    printf("posiljam pathEnded\n");
+   // printf("posiljam pathEnded\n");
 
 }
 
@@ -240,7 +240,7 @@ void callbackChangeGoals (const std_msgs::String::ConstPtr& msg) {
 
     dynamicDiff = (dest - goalInd)*diff;
     
-    printf("Moving goals from %d to %d : %f\n",goalInd,dest,dynamicDiff);
+   // printf("Moving goals from %d to %d : %f\n",goalInd,dest,dynamicDiff);
     goalInd = dest;
     changeGoals(redGoals,redSize);
     changeGoals(greenGoals,greenSize);
@@ -262,7 +262,7 @@ void callback (const std_msgs::String::ConstPtr& msg) {
         i++;
     }
 
-    printf("Callback: %s, %s, %s\n", array[0].c_str(), array[1].c_str(), array[2].c_str());
+  //  printf("Callback: %s, %s, %s\n", array[0].c_str(), array[1].c_str(), array[2].c_str());
 
     // ::::::::::::::::::::::
     // doloci katero osebo iscemo
@@ -277,7 +277,7 @@ void callback (const std_msgs::String::ConstPtr& msg) {
                 ss << "oseba "<< iskanaOsebaID;
                 msg.data = ss.str();
                 idSearchAdvertiser.publish(msg);
-                printf("Posiljam isci osebo: %d\n",iskanaOsebaID);
+               // printf("Posiljam isci osebo: %d\n",iskanaOsebaID);
                 break;
             }
         }
@@ -320,10 +320,10 @@ void callback (const std_msgs::String::ConstPtr& msg) {
     // ::::::::::::::::::::::
     // zacni izvajat iskanje prave zgradbe
    else if (!array[0].compare("take")) {
-        printf("take\n");
+       // printf("take\n");
         isciHotel = true;
         for(int i=0;i<4;i++){
-            printf("i\n");
+            //printf("i\n");
             if(cmp(array[2],streetName[i])){
                 int cas = 30;
                 std_msgs::String msg;
@@ -331,9 +331,8 @@ void callback (const std_msgs::String::ConstPtr& msg) {
                 ss << "hotel "<< (i+1) << " "<< iskanaOsebaID;
                 msg.data = ss.str();
                 idSearchAdvertiser.publish(msg);
-                printf("Posiljam isci hotel: %d",i+1);
+                //printf("Posiljam isci hotel: %d",i+1);
                 if (i == 0) {
-                    printf("red\n");
                     iskanHotelID = 1;
                     startSearch(redGoalsH,redSizeH,cas);
                 } else if (i == 1) {
@@ -522,6 +521,7 @@ void redGoalsInit() {
 
 void greenGoalsInit() {
     int i=0;
+
     greenGoals[i++]=createGoal(-2,-0.1,0,1);
     greenGoals[i++]=createGoal(-2,-0.1,0,-1);
     greenGoals[i++]=createGoal(-0.9,-0.25,0,1);
@@ -531,15 +531,17 @@ void greenGoalsInit() {
     greenGoals[i++]=createGoal(1.6,-0.3,0,1);
     greenGoals[i++]=createGoal(1.6,-0.3,1,0);
     greenGoals[i++]=createGoal(1.6,-0.3,-1,0);
+
 }
 
 void blueGoalsInit() {
     int i=0;
-    blueGoals[i++]=createGoal(1.5,-1.4,1,0);    
-    blueGoals[i++]=createGoal(1.5,-1.4,0,-1);  
+
+    blueGoals[i++]=createGoal(1.5,-1.4,1,0);  
+    blueGoals[i++]=createGoal(1.5,-1.4,0,-1);
     blueGoals[i++]=createGoal(0.7,-1.7,0,1); 
     blueGoals[i++]=createGoal(0.5,-1.7,0,-1);
-    blueGoals[i++]=createGoal(-0.6,-1.4,0,-1); 
+    blueGoals[i++]=createGoal(-0.75,-1.4,0,-1);
     blueGoals[i++]=createGoal(-1.9,-1.6,0,-1);
     blueGoals[i++]=createGoal(-1.9,-1.6,0,1);
 }
