@@ -57,7 +57,7 @@ class Faces():
 				#cv2.imwrite("/home/team_zeta/slikeZ/"+str(100)+".png", equ)
 				[nbr_predicted, conf] = self.recognize(np.array(image).flatten().tolist())
 				nbr_predicted = nbr_predicted[0].astype(int)
-				#print(conf)
+				print(conf)
 				if conf > 35000000:
 					return
 				#print(nbr_predicted)
