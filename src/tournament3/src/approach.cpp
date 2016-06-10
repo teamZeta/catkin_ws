@@ -331,7 +331,7 @@ void callbackTalk (const std_msgs::String::ConstPtr& msg1) {
         ac.waitForResult(ros::Duration(5.0));
         if(oseba){
             if(ac.getState() == actionlib::SimpleClientGoalState::SUCCEEDED) {
-                printf("%d\n",iskanaOsebaID);
+                //printf("Searching for%d\n",iskanaOsebaID);
                 printf("ROBOT: '%s vstopi v taxi.' \n", osebe[iskanaOsebaID-1].c_str());
                 std::stringstream ss2;
                 ss2 << "rosrun sound_play say.py \"Hello " << osebe[iskanaOsebaID-1].c_str() << " come on in it's cold outside\"";

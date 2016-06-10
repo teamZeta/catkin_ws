@@ -167,7 +167,8 @@ void startSearch(move_base_msgs::MoveBaseGoal Goals[],int size,int slip){
         while(!ac.waitForServer(ros::Duration(5.0))){
             ROS_INFO("Waiting for the move_base action server to come up");
         }
-       // printf("Goal  %.2f - %.2f \n", Goals[k].target_pose.pose.position.x, Goals[k].target_pose.pose.position.y );
+       printf("Goal %d [%.2f %.2f]\n",k, Goals[k].target_pose.pose.position.x, Goals[k].target_pose.pose.position.y );
+       // printf("Goal[%d]\n",k);
         ac.sendGoal(Goals[k]);
         ac.waitForResult();
         if(ac.getState() == actionlib::SimpleClientGoalState::SUCCEEDED){
@@ -521,29 +522,29 @@ void redGoalsInit() {
 
 void greenGoalsInit() {
     int i=0;
-
-    greenGoals[i++]=createGoal(-2,-0.1,0,1);
-    greenGoals[i++]=createGoal(-2,-0.1,0,-1);
-    greenGoals[i++]=createGoal(-0.9,-0.25,0,1);
-    greenGoals[i++]=createGoal(-0.4,-0.7,1,0);
-    greenGoals[i++]=createGoal(0.17,-0.3,0,1);
-    greenGoals[i++]=createGoal(0.7,-0.3,0,-1);
-    greenGoals[i++]=createGoal(1.6,-0.3,0,1);
-    greenGoals[i++]=createGoal(1.6,-0.3,1,0);
     greenGoals[i++]=createGoal(1.6,-0.3,-1,0);
+    greenGoals[i++]=createGoal(1.6,-0.3,1,0);
+    greenGoals[i++]=createGoal(1.6,-0.3,0,1);
+    greenGoals[i++]=createGoal(0.7,-0.3,0,-1);
+    greenGoals[i++]=createGoal(0.17,-0.3,0,1);
+    greenGoals[i++]=createGoal(-0.4,-0.7,1,0);
+    greenGoals[i++]=createGoal(-0.9,-0.25,0,1);
+    greenGoals[i++]=createGoal(-2,-0.1,0,-1);
+    greenGoals[i++]=createGoal(-2,-0.1,0,1);
+
 
 }
 
 void blueGoalsInit() {
     int i=0;
-
-    blueGoals[i++]=createGoal(1.5,-1.4,1,0);  
-    blueGoals[i++]=createGoal(1.5,-1.4,0,-1);
-    blueGoals[i++]=createGoal(0.7,-1.7,0,1); 
-    blueGoals[i++]=createGoal(0.5,-1.7,0,-1);
-    blueGoals[i++]=createGoal(-0.75,-1.4,0,-1);
-    blueGoals[i++]=createGoal(-1.9,-1.6,0,-1);
+   
     blueGoals[i++]=createGoal(-1.9,-1.6,0,1);
+    blueGoals[i++]=createGoal(-1.9,-1.6,0,-1);
+    blueGoals[i++]=createGoal(-0.75,-1.4,0,-1);
+    blueGoals[i++]=createGoal(0.5,-1.7,0,-1);
+    blueGoals[i++]=createGoal(0.7,-1.7,0,1);
+    blueGoals[i++]=createGoal(1.5,-1.4,0,-1);
+    blueGoals[i++]=createGoal(1.5,-1.4,1,0);
 }
 
 void yellowGoalsInit() {
@@ -563,7 +564,7 @@ void redGoalsHInit() {
 
 void greenGoalsHInit() {
     int i=0;
-    greenGoalsH[i++]=createGoal(-2.5,-0.15,20,1);
+    greenGoalsH[i++]=createGoal(-1.5,-0.05,10,1);
     greenGoalsH[i++]=createGoal(-0.9,-0.25,20,1);
     greenGoalsH[i++]=createGoal(1.6,-0.3,-1,1);
 }
@@ -577,7 +578,7 @@ void blueGoalsHInit() {
 
 void yellowGoalsHInit() {
     int i=0;
-    yellowGoalsH[i++]=createGoal(-3.3,-1.55,-1,-1); 
+    yellowGoalsH[i++]=createGoal(-3.2,-1.65,-1.2,-1); 
     yellowGoalsH[i++]=createGoal(-3.3,-1.55,-1,20); 
     yellowGoalsH[i++]=createGoal(-3.4,0,-1,0); 
 }
