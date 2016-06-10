@@ -44,11 +44,16 @@ static string osebe[][10] = {{"harry", "hairy", "perry","harriet","Ferry","Carri
 							{"scarlet", "scarlett", "scarlets","scotland","scarlet","scarlet","scarlet","scarlet","scarlet","scarlet"},
 							{"matthew", "matro", "metro","matthew","matthew","matthew","matthew","matthew","matthew","matthew"}};
 
+
 static int barveDimensions = 14;
 static string barve[][14] = {{"red", "rat", "rad", "read", "right","bread","rath","road","ruth","ridge","reed","rhett","red","red"},
 							{"green", "grill","grant","green","green","green","green","green","green","green","green","green","green","green"},
 							{"blue", "blow", "blah", "block", "blood", "bloor","bloodstream","bluff","clue","clue","clue","clue","clue","clue"},
 							{"yellow", "narrow", "yellow", "yellow", "yellow", "narrow","yellow","yellow","yellow","yellow","yellow","yellow","yellow","yellow"}};
+
+static string osebeL[] = {"harry", "philip", "tina", "peter", "tom", "ellen", "kim", "scarlet", "matthew"};
+static string barveL[] = {"red","green","blue","yellow"};
+
 static ros::Publisher setGoal;
 
 bool cmp(string s1, string s2) {
@@ -60,7 +65,49 @@ bool cmp(string s1, string s2) {
     return !s1.compare(s2);
 }
 
-static bool color(std::string barva) {
+size_t leven(const std::string &s1, const std::string &s2)
+{
+  const size_t m(s1.size());
+  const size_t n(s2.size());
+ 
+  if( m==0 ) return n;
+  if( n==0 ) return m;
+ 
+  size_t *costs = new size_t[n + 1];
+ 
+  for( size_t k=0; k<=n; k++ ) costs[k] = k;
+ 
+  size_t i = 0;
+  for ( std::string::const_iterator it1 = s1.begin(); it1 != s1.end(); ++it1, ++i )
+  {
+    costs[0] = i+1;
+    size_t corner = i;
+ 
+    size_t j = 0;
+    for ( std::string::const_iterator it2 = s2.begin(); it2 != s2.end(); ++it2, ++j )
+    {
+      size_t upper = costs[j+1];
+      if( *it1 == *it2 )
+      {
+		  costs[j+1] = corner;
+	  }
+      else
+	  {
+		size_t t(upper<corner?upper:corner);
+        costs[j+1] = (costs[j]<t?costs[j]:t)+1;
+	  }
+ 
+      corner = upper;
+    }
+  }
+ 
+  size_t result = costs[n];
+  delete [] costs;
+ 	
+  return result;
+}
+
+static bool colorS(std::string barva) {
 	for (int i=0; i<4; i++) {
 		for (int j=0; j<barveDimensions; j++) {
 			if (cmp(barva, barve[i][j])) {
@@ -71,7 +118,7 @@ static bool color(std::string barva) {
 	return false;
 }
 
-static int colorIndex(std::string barva) {
+static int colorIndexS(std::string barva) {
 	for (int i=0; i<4; i++) {
 		for (int j=0; j<barveDimensions; j++) {
 			if (cmp(barva, barve[i][j])) {
@@ -82,7 +129,49 @@ static int colorIndex(std::string barva) {
 	return -1;
 }
 
-static bool person(std::string trenutnaOseba) {
+static int colorIndex(std::string barva){
+	int min = 8008135;
+	int minInd = -1;
+	for(int i=0;i<4;i++){
+		int lev = leven(barva,barveL[i]);
+		printf("Distance %s - %s is: %d\n",barva.c_str(),barveL[i].c_str(),lev);
+		if(lev<min){
+			min=lev;
+			minInd=i;
+		}
+	}
+	return minInd;
+}
+
+static bool color(std::string barva){
+	int ind = colorIndex(barva);
+	if(leven(barva,barveL[ind])<10)
+		return true;
+	return false;
+}
+
+static int personIndex(std::string trenutnaOseba){
+	int min = 8008135;
+	int minInd = -1;
+	for(int i=0;i<9;i++){
+		int lev = leven(trenutnaOseba,osebeL[i]);
+		printf("Distance %s - %s is: %d\n",trenutnaOseba.c_str(),osebeL[i].c_str(),lev);
+		if(lev<min){
+			min=lev;
+			minInd=i;
+		}
+	}
+	return minInd;
+}
+
+static bool person(std::string trenutnaOseba){
+	int ind = colorIndex(trenutnaOseba);
+	if(leven(trenutnaOseba,osebeL[ind])<10)
+		return true;
+	return false;
+}
+
+static bool personS(std::string trenutnaOseba) {
 	for (int i=0; i<9; i++) {
 		for (int j=0; j<osebeDimensions; j++) {
 			if (cmp(trenutnaOseba, osebe[i][j])) {
@@ -93,7 +182,7 @@ static bool person(std::string trenutnaOseba) {
 	return false;
 }
 
-static int personIndex(std::string trenutnaOseba) {
+static int personIndexS(std::string trenutnaOseba) {
 	for (int i=0; i<9; i++) {
 		for (int j=0; j<osebeDimensions; j++) {
 			if (cmp(trenutnaOseba, osebe[i][j])) {
@@ -152,7 +241,8 @@ void callback (const std_msgs::String::ConstPtr& msg) {
 		// :::::::::::::::: POBERI OSEBO ::::::::::::::::
 		// ::::::::::::::::::::::::::::::::::::::::::::::
 
-		if (!array[0].compare("find")) {
+		//if (!array[0].compare("find")) {
+		if(leven(array[0],"find")<3){
 			if (person(array[1]) && color(array[3])) {
 
 				if (!person1.compare("") && !person2.compare("")) {							// Oba sedeza sta prazna
@@ -233,7 +323,7 @@ void callback (const std_msgs::String::ConstPtr& msg) {
 		// :::::::::::::::: ODPELJI OSEBO ::::::::::::::::
 		// :::::::::::::::::::::::::::::::::::::::::::::::
 			
-		} else if (!array[0].compare("take") && color(array[3])) {
+		} else if(leven(array[0],"find")<3 && color(array[3])) {
 			if (personTake(person1,array[1])) {
 				nPerson = 1;
 				building1 = barve[colorIndex(array[3])][0];;
