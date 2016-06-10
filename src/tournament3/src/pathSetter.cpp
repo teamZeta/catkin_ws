@@ -199,6 +199,11 @@ void startSearch(move_base_msgs::MoveBaseGoal Goals[],int size,int slip){
         k++;
         ros::spinOnce();
     }
+
+
+    isciOsebo = false;
+    isciHotel = false;
+
     std_msgs::String msg;
     std::stringstream ss;
     ss << "pathEnded";
@@ -694,21 +699,22 @@ void yellowGoalsHInit() {
 }
 */
 void callbackPath (const std_msgs::String::ConstPtr& msg) {
+    if (isciHotel || isciOsebo) {
+        string array[1];
+        int i = 0;
+        stringstream strings(msg->data.c_str());
+        while (strings.good() && i<1) {
+            strings >> array[i];
+            i++;
+        }
 
-    string array[1];
-    int i = 0;
-    stringstream strings(msg->data.c_str());
-    while (strings.good() && i<1) {
-        strings >> array[i];
-        i++;
-    }
-
-    if (cmp(array[0],"face")) {
-        foundFace=true;
-        printf("Nasu sem faco, ustavljam iskanje goalov\n");
-    } else if (cmp(array[0],"hotel")) {
-        foundHotel=true;
-        printf("Nasu sem faco, ustavljam iskanje goalov\n");
+        if (isciOsebo && cmp(array[0],"face")) {
+            foundFace=true;
+            printf("Nasu sem faco, ustavljam iskanje goalov\n");
+        } else if (isciHotel && cmp(array[0],"hotel")) {
+            foundHotel=true;
+            printf("Nasu sem faco, ustavljam iskanje goalov\n");
+        }
     }
 }
 
