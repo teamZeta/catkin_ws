@@ -311,7 +311,7 @@ void callback (const std_msgs::String::ConstPtr& msg) {
         for(int i=0;i<4;i++){
             printf("i\n");
             if(cmp(array[2],streetName[i])){
-                int cas = 10;
+                int cas = 15;
                 std_msgs::String msg;
                 std::stringstream ss;
                 ss << "hotel "<< (i+1) << " "<< iskanaOsebaID;
@@ -554,7 +554,7 @@ void greenGoalsHInit() {
 
 void blueGoalsHInit() {
     int i=0;
-    blueGoalsH[i++]=createGoal(1.5,-1.4,1,-2); 
+    blueGoalsH[i++]=createGoal(1.4,-1.5,1,-4); 
     blueGoalsH[i++]=createGoal(1.5,-1.4,-20,-1);
     blueGoalsH[i++]=createGoal(-1.9,-1.6,20,-1);
 }
