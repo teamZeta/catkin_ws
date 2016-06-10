@@ -230,3 +230,5 @@ target_link_libraries(cancel ${catkin_LIBRARIES})
 add_executable(approach src/approach.cpp)
 target_link_libraries(approach ${catkin_LIBRARIES})
 
+add_executable(izpisZnakov src/izpisZnakov.cpp)
+target_link_libraries(izpisZnakov ${catkin_LIBRARIES})
