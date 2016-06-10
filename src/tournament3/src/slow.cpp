@@ -23,7 +23,7 @@ void callback (const visualization_msgs::MarkerArrayConstPtr& markerArray) {
     //vel_pub_ = nh.advertise<geometry_msgs::Twist>("/mobile_base/commands/velocity", 1);
     //int st=0;
     if (markerArray->markers[0].id == 2) {      // slow   rosrun dynamic_reconfigure dynparam set /navigation_velocity_smoother speed_lim_v 0.1
-        int i = system("rosrun dynamic_reconfigure dynparam set /navigation_velocity_smoother speed_lim_v 0.1");
+        int i = system("rosrun dynamic_reconfigure dynparam set /navigation_velocity_smoother speed_lim_v 0.07");
         sleep(3);
     }else if (markerArray->markers[0].id == 4) {      // stop
         int i = system("rosrun dynamic_reconfigure dynparam set /navigation_velocity_smoother speed_lim_v 0");

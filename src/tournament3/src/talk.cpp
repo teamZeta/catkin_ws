@@ -35,20 +35,20 @@ static int nPerson = 0;
 static int order = 0;			// 0 - undefined, 1 - pick up, 2 - take to
 static int osebeDimensions = 10;
 static string osebe[][10] = {{"harry", "hairy", "perry","harriet","Ferry","Carrie","Carry","Carry","Carry","Carry"},
-							{"philip", "philips", "phillip","philip","philip","philip","philip","philip","philip","philip"},
+							{"philip", "philips", "phillip","fedex","philip","philip","philip","philip","philip","philip"},
 							{"tina", "pina", "dina","dana","tina","tina","tina""tina""tina""tina"},
 							{"peter", "peter", "peter","peter","peter","peter","peter","peter","peter","peter"},
 							{"tom", "home", "dome","stone","tome","phone","Dom","time","tom","tom"},
 							{"ellen", "alen", "allen","erin","aaron","ellen","ellen","ellen","ellen","ellen"},
 							{"kim", "kim", "kim","kim","kim","kim","kim","kim","kim","kim"},
 							{"scarlet", "scarlett", "scarlets","scotland","scarlet","scarlet","scarlet","scarlet","scarlet","scarlet"},
-							{"matthew", "matthew", "matthew","matthew","matthew","matthew","matthew","matthew","matthew","matthew"}};
+							{"matthew", "matro", "metro","matthew","matthew","matthew","matthew","matthew","matthew","matthew"}};
 
-static int barveDimensions = 9;
-static string barve[][9] = {{"red", "rat", "rad", "read", "right","bread","rath","road","ruth"},
-							{"green", "grill","grant","green","green","green","green","green","green"},
-							{"blue", "blow", "blah", "block", "blood", "bloor","bloodstream","bluff","clue"},
-							{"yellow", "narrow", "yellow", "yellow", "yellow", "narrow","yellow","yellow","yellow"}};
+static int barveDimensions = 14;
+static string barve[][14] = {{"red", "rat", "rad", "read", "right","bread","rath","road","ruth","ridge","reed","rhett","red","red"},
+							{"green", "grill","grant","green","green","green","green","green","green","green","green","green","green","green"},
+							{"blue", "blow", "blah", "block", "blood", "bloor","bloodstream","bluff","clue","clue","clue","clue","clue","clue"},
+							{"yellow", "narrow", "yellow", "yellow", "yellow", "narrow","yellow","yellow","yellow","yellow","yellow","yellow","yellow","yellow"}};
 static ros::Publisher setGoal;
 
 bool cmp(string s1, string s2) {

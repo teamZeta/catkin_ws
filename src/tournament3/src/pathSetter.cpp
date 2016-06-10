@@ -289,14 +289,15 @@ void callback (const std_msgs::String::ConstPtr& msg) {
         isciOsebo = true;
         for(int i=0;i<4;i++){
             if(cmp(array[2],streetName[i])){
+                int cas = 2;
                 if (i == 0) {
-                    startSearch(redGoals,redSize,1);
+                    startSearch(redGoals,redSize,cas);
                 } else if (i == 1) {
-                    startSearch(greenGoals,greenSize,1);
+                    startSearch(greenGoals,greenSize,cas);
                 } else if (i == 2) {
-                    startSearch(blueGoals,blueSize,1);
+                    startSearch(blueGoals,blueSize,cas);
                 } else if (i == 3) {
-                    startSearch(yellowGoals,yellowSize,1);
+                    startSearch(yellowGoals,yellowSize,cas);
                 }
                 // ko najde faco izracunaj vektor in se priblizaj
                 foundFace = false;
@@ -536,8 +537,8 @@ void blueGoalsInit() {
     int i=0;
     blueGoals[i++]=createGoal(1.5,-1.4,1,0);    
     blueGoals[i++]=createGoal(1.5,-1.4,0,-1);  
-    blueGoals[i++]=createGoal(0.7,-1.7,0,-1); 
-    blueGoals[i++]=createGoal(0.7,-1.7,0,1);
+    blueGoals[i++]=createGoal(0.7,-1.7,0,1); 
+    blueGoals[i++]=createGoal(0.5,-1.7,0,-1);
     blueGoals[i++]=createGoal(-0.6,-1.4,0,-1); 
     blueGoals[i++]=createGoal(-1.9,-1.6,0,-1);
     blueGoals[i++]=createGoal(-1.9,-1.6,0,1);

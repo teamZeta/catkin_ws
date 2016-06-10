@@ -85,6 +85,28 @@ void callbackPose(const geometry_msgs::PoseWithCovarianceStamped msg){
         msg.data = ss.str();
         chGoals.publish(msg);
 
+        //Da goal na trenutnem mestu, da prekine prejsnji goal na stari mapi
+
+        move_base_msgs::MoveBaseGoal goal;
+        goal.target_pose.header.frame_id = "/map";
+        goal.target_pose.pose.orientation.x = pos.pose.pose.orientation.x;
+        goal.target_pose.pose.orientation.y = pos.pose.pose.orientation.y;
+        goal.target_pose.pose.orientation.z = pos.pose.pose.orientation.z;
+        goal.target_pose.pose.orientation.w = pos.pose.pose.orientation.w;
+        goal.target_pose.pose.position.x = pos.pose.pose.position.x;
+        goal.target_pose.pose.position.y = pos.pose.pose.position.y;
+        goal.target_pose.pose.position.z = pos.pose.pose.position.z;
+
+        MoveBaseClient ac("move_base", true);
+            while(!ac.waitForServer(ros::Duration(5.0))){
+                ROS_INFO("Waiting for the move_base action server to come up");
+            }
+            printf("Aborting current goal\n");
+            ac.sendGoal(goal);
+            ac.waitForResult();
+            if(ac.getState() == actionlib::SimpleClientGoalState::SUCCEEDED){
+                ROS_INFO("Reached goal.");}
+
     }
 }
 
