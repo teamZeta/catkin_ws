@@ -289,16 +289,17 @@ void callbackHotel (const visualization_msgs::MarkerConstPtr& marker) {
 
 }
 void callbackIdSearch(const std_msgs::String::ConstPtr& msg){
-    string array[2];
+    string array[3];
     int i = 0;
     stringstream strings(msg->data.c_str());
-    while (strings.good() && i<2) {
+    while (strings.good() && i<3) {
         strings >> array[i];
         i++;
     }
     printf("%s %s\n",array[0].c_str(),array[1].c_str());
     if(cmp(array[0],"hotel")){
         iskanHotelID = atoi(array[1].c_str());
+        iskanaOsebaID = atoi(array[2].c_str());
         isciHotel=true;
         oseba = false;
         printf("iscem hotel\n");

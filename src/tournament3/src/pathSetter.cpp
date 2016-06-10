@@ -254,11 +254,11 @@ void callback (const std_msgs::String::ConstPtr& msg) {
     // ::::::::::::::::::::::
     // doloci katero osebo iscemo
     trenutnaOseba = array[1];
-    if (!array[0].compare("pick")) {
-        for (int i=0; i<9; i++) {
-            if (!trenutnaOseba.compare(osebe[i])) {
-                iskanaOsebaID = i+1;
-
+    
+    for (int i=0; i<9; i++) {
+        if (!trenutnaOseba.compare(osebe[i])) {
+            iskanaOsebaID = i+1;
+            if (!array[0].compare("pick")) {
                 std_msgs::String msg;
                 std::stringstream ss;
                 ss << "oseba "<< iskanaOsebaID;
@@ -314,7 +314,7 @@ void callback (const std_msgs::String::ConstPtr& msg) {
                 int cas = 10;
                 std_msgs::String msg;
                 std::stringstream ss;
-                ss << "hotel "<< (i+1);
+                ss << "hotel "<< (i+1) << " "<< iskanaOsebaID;
                 msg.data = ss.str();
                 idSearchAdvertiser.publish(msg);
                 printf("Posiljam isci hotel: %d",i+1);
@@ -713,7 +713,7 @@ void callbackPath (const std_msgs::String::ConstPtr& msg) {
             printf("Nasu sem faco, ustavljam iskanje goalov\n");
         } else if (isciHotel && cmp(array[0],"hotel")) {
             foundHotel=true;
-            printf("Nasu sem faco, ustavljam iskanje goalov\n");
+            printf("Nasu sem hotel, ustavljam iskanje goalov\n");
         }
     }
 }
