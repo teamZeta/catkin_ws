@@ -33,16 +33,16 @@ static std::string building2 = "";
 static int sex2 = 0;
 static int nPerson = 0;
 static int order = 0;			// 0 - undefined, 1 - pick up, 2 - take to
-static int osebeDimensions = 7;
-static string osebe[][7] = {{"harry", "hairy", "perry","harriet","Ferry","Carrie","Carry"},
-							{"philip", "philips", "phillip","philip","philip","philip","philip"},
-							{"tina", "pina", "dina","dana","tina","tina","tina"},
-							{"peter", "peter", "peter","peter","peter","peter","peter"},
-							{"tom", "home", "dome","stone","tome","phone","tom"},
-							{"ellen", "alen", "allen","erin","aaron","ellen","ellen"},
-							{"kim", "kim", "kim","kim","kim","kim","kim"},
-							{"scarlet", "scarlett", "scarlets","scotland","scarlet","scarlet","scarlet"},
-							{"matthew", "matthew", "matthew","matthew","matthew","matthew","matthew"}};
+static int osebeDimensions = 10;
+static string osebe[][10] = {{"harry", "hairy", "perry","harriet","Ferry","Carrie","Carry","Carry","Carry","Carry"},
+							{"philip", "philips", "phillip","philip","philip","philip","philip","philip","philip","philip"},
+							{"tina", "pina", "dina","dana","tina","tina","tina""tina""tina""tina"},
+							{"peter", "peter", "peter","peter","peter","peter","peter","peter","peter","peter"},
+							{"tom", "home", "dome","stone","tome","phone","Dom","time","tom","tom"},
+							{"ellen", "alen", "allen","erin","aaron","ellen","ellen","ellen","ellen","ellen"},
+							{"kim", "kim", "kim","kim","kim","kim","kim","kim","kim","kim"},
+							{"scarlet", "scarlett", "scarlets","scotland","scarlet","scarlet","scarlet","scarlet","scarlet","scarlet"},
+							{"matthew", "matthew", "matthew","matthew","matthew","matthew","matthew","matthew","matthew","matthew"}};
 
 static int barveDimensions = 9;
 static string barve[][9] = {{"red", "rat", "rad", "read", "right","bread","rath","road","red"},
