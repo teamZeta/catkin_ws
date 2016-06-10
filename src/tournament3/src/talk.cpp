@@ -133,11 +133,13 @@ static int colorIndex(std::string barva){
 	int min = 8008135;
 	int minInd = -1;
 	for(int i=0;i<4;i++){
-		int lev = leven(barva,barveL[i]);
-		printf("Distance %s - %s is: %d\n",barva.c_str(),barveL[i].c_str(),lev);
-		if(lev<min){
-			min=lev;
-			minInd=i;
+		for(int j=0;j<barveDimensions;j++){
+			int lev = leven(barva,barve[i][j]);
+			if(lev<min){
+				min=lev;
+				minInd=i;
+				printf("Distance %s - %s is: %d\n",barva.c_str(),barve[i][j].c_str(),lev);
+			}
 		}
 	}
 	return minInd;
@@ -154,11 +156,13 @@ static int personIndex(std::string trenutnaOseba){
 	int min = 8008135;
 	int minInd = -1;
 	for(int i=0;i<9;i++){
-		int lev = leven(trenutnaOseba,osebeL[i]);
-		printf("Distance %s - %s is: %d\n",trenutnaOseba.c_str(),osebeL[i].c_str(),lev);
-		if(lev<min){
-			min=lev;
-			minInd=i;
+		for(int j=0;j<osebeDimensions;j++){
+			int lev = leven(trenutnaOseba,osebe[i][j]);
+			if(lev<min){
+				printf("Distance %s - %s is: %d\n",trenutnaOseba.c_str(),osebe[i][j].c_str(),lev);
+				min=lev;
+				minInd=i;
+			}
 		}
 	}
 	return minInd;
@@ -230,6 +234,12 @@ void callback (const std_msgs::String::ConstPtr& msg) {
 		strings >> array[i];
 		i++;
 	}
+	for(i=0;i<6;i++)		//da vse besede v lowercase
+		for (int j=0; array[i][j]; j++)
+    		array[i][j] = tolower(array[i][j]);
+		
+	
+
 	if (!array[0].compare("details")) {
 		printf("Sedez 1: %s, pobrana na: %s, namenjena na: %s\n", person1.c_str(), street1.c_str(), building1.c_str());
 		printf("Sedez 2: %s, pobrana na: %s, namenjena na: %s\n", person2.c_str(), street2.c_str(), building2.c_str());
@@ -323,7 +333,7 @@ void callback (const std_msgs::String::ConstPtr& msg) {
 		// :::::::::::::::: ODPELJI OSEBO ::::::::::::::::
 		// :::::::::::::::::::::::::::::::::::::::::::::::
 			
-		} else if(leven(array[0],"find")<3 && color(array[3])) {
+		} else if(leven(array[0],"take")<3 && color(array[3])) {
 			if (personTake(person1,array[1])) {
 				nPerson = 1;
 				building1 = barve[colorIndex(array[3])][0];;
