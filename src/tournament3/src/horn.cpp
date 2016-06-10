@@ -31,7 +31,7 @@ void callback (const visualization_msgs::MarkerArrayConstPtr& markerArray) {
 	            sleep(5);
 	            s3.stop();
 	        }*/
-		int i = system("rosrun sound_play /home/team_zeta/catkin_ws/src/horn.wav");
+		int i = system("rosrun sound_play play.py /home/team_zeta/catkin_ws/src/horn.wav");
 		enkrat = false;
 		sleep(30);
 	    } 
