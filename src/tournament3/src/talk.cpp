@@ -339,9 +339,9 @@ void callback (const std_msgs::String::ConstPtr& msg) {
 				building1 = barve[colorIndex(array[3])][0];;
 				newOrder = false;
 				order = 2;
-				printf("ROBOT: 'Should I take %s to the %s Building?'\n", person1.c_str(), building1.c_str());
+				printf("ROBOT: 'Should I take %s to the %s hotel?'\n", person1.c_str(), building1.c_str());
 				std::stringstream ss;
-				ss << "rosrun sound_play say.py \"Should I take " << person1.c_str() << " to the " << building1.c_str() <<  " building?\"";
+				ss << "rosrun sound_play say.py \"Should I take " << person1.c_str() << " to the " << building1.c_str() <<  " hotel?\"";
 				int i = std::system(ss.str().c_str());
 				//int i = system("rosrun sound_play say.py \"Should i take "+person1.c_str()+" to the "+building1.c_str()+" Building?\"");
 			} else if (personTake(person2,array[1])) {
@@ -349,9 +349,9 @@ void callback (const std_msgs::String::ConstPtr& msg) {
 				building2 = barve[colorIndex(array[3])][0];;
 				newOrder = false;
 				order = 2;
-				printf("ROBOT: 'Should I take %s to the %s Building?'\n", person2.c_str(), building2.c_str());
+				printf("ROBOT: 'Should I take %s to the %s hotel?'\n", person2.c_str(), building2.c_str());
 				std::stringstream ss;
-				ss << "rosrun sound_play say.py \"Should I take " << person2.c_str() << " to the " << building2.c_str() <<  " building?\"";
+				ss << "rosrun sound_play say.py \"Should I take " << person2.c_str() << " to the " << building2.c_str() <<  " hotel?\"";
 				int i = std::system(ss.str().c_str());
 				//int i = system("rosrun sound_play say.py \"Should i take "+person1.c_str()+" to the "+building1.c_str()+" Building?\"");
 			} else {

@@ -183,11 +183,14 @@ void callbackHotel (const visualization_msgs::MarkerConstPtr& marker) {
     msg.data = ss.str();
     pathSearch.publish(msg);
 
+    if (!foundHotel) {
+        printf("I found the %s Hotel.'\n",streetName[iskanHotelID-1].c_str());
+        std::stringstream ss3;
+        ss3 << "rosrun sound_play say.py \"I found the " << streetName[iskanHotelID-1].c_str() << " hotel\"";
+        int i = std::system(ss3.str().c_str());
+    }
+
     foundHotel = true;
-    printf("I found the %s Hotel.'\n",streetName[iskanHotelID-1].c_str());
-    std::stringstream ss3;
-    ss3 << "rosrun sound_play say.py \"I found the" << streetName[iskanHotelID-1].c_str() << " hotel\"";
-    int i = std::system(ss3.str().c_str());
 
    /* ros::NodeHandle node;
     ros::Publisher vis_pub = node.advertise<visualization_msgs::Marker>( "visualization_marker", 1 );
@@ -299,7 +302,7 @@ void callbackIdSearch(const std_msgs::String::ConstPtr& msg){
         strings >> array[i];
         i++;
     }
-    printf("%s %s\n",array[0].c_str(),array[1].c_str());
+    //printf("%s %s\n",array[0].c_str(),array[1].c_str());
     if(cmp(array[0],"hotel")){
         iskanHotelID = atoi(array[1].c_str());
         iskanaOsebaID = atoi(array[2].c_str());
