@@ -32,6 +32,7 @@ using namespace std;
 
 //ros::Publisher pub;
 static ros::Publisher marker_pose;
+static ros::Publisher marker_pose_white;
 
 
 
@@ -162,6 +163,7 @@ rgb hsv2rgb(hsv in)
 static void mark_cluster(pcl::PointCloud<pcl::PointXYZRGB>::Ptr cloud_cluster, std::string ns ,int id, float r, float g, float b)
 {
 
+  bool esc = false;
  float rc = 0;
  float gc = 0;
  float bc = 0;
@@ -272,7 +274,7 @@ static void mark_cluster(pcl::PointCloud<pcl::PointXYZRGB>::Ptr cloud_cluster, s
 
   
   if(barva == 0){
-  	return;
+  	esc = true;
   }
 
   marker.id = barva;
@@ -293,24 +295,24 @@ static void mark_cluster(pcl::PointCloud<pcl::PointXYZRGB>::Ptr cloud_cluster, s
  
   if (marker.scale.x ==0){
       marker.scale.x=0.1;
-      return;
+      esc = true;
   }
 
   if (marker.scale.y ==0){
 
     	marker.scale.y=0.1;
-    	return;
+    	esc = true;
 	}
 
   if (marker.scale.z ==0){
     marker.scale.z=0.1;
-    return;
+    esc = true;
 }
 
 if((marker.scale.z < 0.15 || marker.scale.z > 0.35) && 
 	(marker.scale.x < 0.15 || marker.scale.x > 0.35) &&
 	(marker.scale.y < 0.30 || marker.scale.y > 0.5)){
-	return;
+	esc = true;
 }
    
 	
@@ -322,7 +324,11 @@ if((marker.scale.z < 0.15 || marker.scale.z > 0.35) &&
 
   marker.lifetime = ros::Duration();
   //marker.lifetime = ros::Duration();
-  marker_pose.publish (marker);
+  if(esc == false){
+    marker_pose.publish (marker);
+  }
+  
+  marker_pose_white.publish(marker);
   
 } 
 
@@ -468,6 +474,7 @@ main (int argc, char** argv)
   ros::init (argc, argv, "my_pcl_tutorial");
   ros::NodeHandle nh;
   ros::NodeHandle nh2;
+  ros::NodeHandle nh3;
 
   // Create a ROS subscriber for the input point cloud
   ros::Subscriber sub = nh.subscribe<pcl::PCLPointCloud2> ("input", 1, callback);
@@ -475,6 +482,7 @@ main (int argc, char** argv)
   // Create a ROS publisher for the output point cloud
   //pub = nh.advertise<sensor_msgs::PointCloud2> ("cluster", 1);
   marker_pose = nh2.advertise<visualization_msgs:: Marker>("hotel", 1);
+  marker_pose_white = nh3.advertise<visualization_msgs:: Marker>("hotelW", 1);
   // Spin
   ros::Rate r(0.5);
     while (ros::ok()){
