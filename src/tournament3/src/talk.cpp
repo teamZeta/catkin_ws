@@ -153,11 +153,11 @@ void callback (const std_msgs::String::ConstPtr& msg) {
 		// ::::::::::::::::::::::::::::::::::::::::::::::
 
 		if (!array[0].compare("find")) {
-			if (person(array[1]) && color(array[4])) {
+			if (person(array[1]) && color(array[3])) {
 
 				if (!person1.compare("") && !person2.compare("")) {							// Oba sedeza sta prazna
 					person1 = osebe[personIndex(array[1])][0];
-					street1 = barve[colorIndex(array[4])][0];
+					street1 = barve[colorIndex(array[3])][0];
 					if (female(array[1])) {
 						sex1 = 2;
 					} else {
@@ -186,7 +186,7 @@ void callback (const std_msgs::String::ConstPtr& msg) {
 					} else {
 						nPerson = 1;
 						person1 = osebe[personIndex(array[1])][0];
-						street1 = barve[colorIndex(array[4])][0];
+						street1 = barve[colorIndex(array[3])][0];
 						newOrder = false;
 						order = 1;
 						printf("ROBOT: 'Should I pick %s on the %s Street?'\n",person1.c_str(), street1.c_str());
@@ -210,7 +210,7 @@ void callback (const std_msgs::String::ConstPtr& msg) {
 					} else {
 						nPerson = 2;
 						person2 = osebe[personIndex(array[1])][0];
-						street2 = barve[colorIndex(array[4])][0];
+						street2 = barve[colorIndex(array[3])][0];
 						newOrder = false;
 						order = 1;
 						printf("ROBOT: 'Should I pick %s on the %s Street?'\n", person2.c_str(), street2.c_str());
@@ -233,10 +233,10 @@ void callback (const std_msgs::String::ConstPtr& msg) {
 		// :::::::::::::::: ODPELJI OSEBO ::::::::::::::::
 		// :::::::::::::::::::::::::::::::::::::::::::::::
 			
-		} else if (!array[0].compare("take") && color(array[4])) {
+		} else if (!array[0].compare("take") && color(array[3])) {
 			if (personTake(person1,array[1])) {
 				nPerson = 1;
-				building1 = barve[colorIndex(array[4])][0];;
+				building1 = barve[colorIndex(array[3])][0];;
 				newOrder = false;
 				order = 2;
 				printf("ROBOT: 'Should I take %s to the %s Building?'\n", person1.c_str(), building1.c_str());
@@ -246,7 +246,7 @@ void callback (const std_msgs::String::ConstPtr& msg) {
 				//int i = system("rosrun sound_play say.py \"Should i take "+person1.c_str()+" to the "+building1.c_str()+" Building?\"");
 			} else if (personTake(person2,array[1])) {
 				nPerson = 2;
-				building2 = barve[colorIndex(array[4])][0];;
+				building2 = barve[colorIndex(array[3])][0];;
 				newOrder = false;
 				order = 2;
 				printf("ROBOT: 'Should I take %s to the %s Building?'\n", person2.c_str(), building2.c_str());
@@ -433,7 +433,7 @@ int main(int argc, char** argv){
 	ros::spin();
 }
 
-// "Find Peter on the Blue Street"
-// "Take Peter to the Blue Building"
+// "Find Peter on Blue Street"
+// "Take Peter to Blue Building"
 // "Details"
 // "Yes" / "No"
