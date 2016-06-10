@@ -476,6 +476,10 @@ main (int argc, char** argv)
   //pub = nh.advertise<sensor_msgs::PointCloud2> ("cluster", 1);
   marker_pose = nh2.advertise<visualization_msgs:: Marker>("hotel", 1);
   // Spin
-  ros::spin ();
+  ros::Rate r(0.5);
+    while (ros::ok()){
+      ros::spinOnce();               
+      r.sleep();
+    }
 }
 
