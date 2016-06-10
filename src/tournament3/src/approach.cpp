@@ -349,17 +349,22 @@ void callbackTalk (const std_msgs::String::ConstPtr& msg1) {
                    // int i = system("rosrun sound_play say.py \"Sayonara "+trenutnaOseba.c_str()+"\"");
                     iskanHotelID = 0;
                     isciHotel = false;
-                    std_msgs::String msg;
-                    std::stringstream ss;
-                    ss << iskanaOsebaID;
-                    msg.data = ss.str();
-                    updateTaxi.publish(msg);
                         
                     ros::spinOnce();
                     sleep(2);
                 } else {
                     ROS_INFO("Goal unreachable: %s\n",ac.getState().toString().c_str());
+                    printf("ROBOT: 'Sayonara %s. Found the hotel. Can't approach it. \n", osebe[iskanaOsebaID-1].c_str());
+                    std::stringstream ss3;
+                    ss3 << "rosrun sound_play say.py \"Sayonara " << osebe[iskanaOsebaID-1].c_str() << ". Found the hotel. Can't approach it.\"";
+                    int i = std::system(ss3.str().c_str());
                 }
+
+                std_msgs::String msg;
+                std::stringstream ss;
+                ss << osebe[iskanaOsebaID-1];
+                msg.data = ss.str();
+                updateTaxi.publish(msg);
 
         }
         found = false;
@@ -372,13 +377,14 @@ void callbackTalk (const std_msgs::String::ConstPtr& msg1) {
 
 int main(int argc, char** argv){
     ros::init(argc, argv, "approach");
-    ros::NodeHandle nh,nh2,nh3,nh4;
+    ros::NodeHandle nh,nh2,nh3,nh4,nh5;
 
 
     ros::Subscriber sub = nh.subscribe<visualization_msgs::MarkerArray> ("/foundFace", 1, callbackFoundFace);
     ros::Subscriber sub2 = nh2.subscribe<visualization_msgs::Marker> ("/hotel", 1, callbackHotel);
     ros::Subscriber sub3 = nh3.subscribe<std_msgs::String>("/idSearch", 1,callbackIdSearch);
     ros::Subscriber subTalk = nh4.subscribe<std_msgs::String>("/tournament3/talk", 1, callbackTalk);
+    updateTaxi = nh5.advertise<std_msgs::String>("/person", 1);
 
     pathSearch = nh2.advertise<std_msgs::String>("/tournament3/search", 1);
     //ros::spin();

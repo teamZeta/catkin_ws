@@ -200,6 +200,19 @@ void startSearch(move_base_msgs::MoveBaseGoal Goals[],int size,int slip){
         ros::spinOnce();
     }
 
+    if (isciHotel && !foundHotel) {
+        printf("ROBOT: 'Can't find the hotel. Sayonara %s. \n", osebe[iskanaOsebaID-1].c_str());
+        std::stringstream ss3;
+        ss3 << "rosrun sound_play say.py \"Can't find the hotel. Sayonara " << osebe[iskanaOsebaID-1].c_str() << "\"";
+        int i = std::system(ss3.str().c_str());
+
+        std_msgs::String msg;
+        std::stringstream ss;
+        ss << osebe[iskanaOsebaID-1];
+        msg.data = ss.str();
+        updateTaxi.publish(msg);
+    }
+
 
     isciOsebo = false;
     isciHotel = false;
@@ -311,7 +324,7 @@ void callback (const std_msgs::String::ConstPtr& msg) {
         for(int i=0;i<4;i++){
             printf("i\n");
             if(cmp(array[2],streetName[i])){
-                int cas = 15;
+                int cas = 30;
                 std_msgs::String msg;
                 std::stringstream ss;
                 ss << "hotel "<< (i+1) << " "<< iskanaOsebaID;
@@ -525,7 +538,7 @@ void blueGoalsInit() {
     blueGoals[i++]=createGoal(1.5,-1.4,0,-1);  
     blueGoals[i++]=createGoal(0.7,-1.7,0,-1); 
     blueGoals[i++]=createGoal(0.7,-1.7,0,1);
-    blueGoals[i++]=createGoal(-0.45,-1.4,0,-1); 
+    blueGoals[i++]=createGoal(-0.6,-1.4,0,-1); 
     blueGoals[i++]=createGoal(-1.9,-1.6,0,-1);
     blueGoals[i++]=createGoal(-1.9,-1.6,0,1);
 }
