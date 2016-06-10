@@ -354,7 +354,7 @@ void callback (const pcl::PCLPointCloud2ConstPtr& cloud_blob) {
   sor.filter (*cloud_filtered_blob);
 
   // Convert to the templated PointCloud
-  pcl::fromPCLPointCloud2 (*cloud_filtered_blob, *cloud_filtered_raw);
+  pcl::fromPCLPointCloud2 (*cloud_blob, *cloud_filtered_raw);
 
   pcl::PassThrough<pcl::PointXYZRGB> pass_x;
   pass_x.setInputCloud (cloud_filtered_raw);
