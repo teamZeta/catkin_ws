@@ -18,11 +18,11 @@
 using namespace std;
 
 static move_base_msgs::MoveBaseGoal redGoals[5];
-static move_base_msgs::MoveBaseGoal greenGoals[8];
+static move_base_msgs::MoveBaseGoal greenGoals[6];
 static move_base_msgs::MoveBaseGoal blueGoals[7];
 static move_base_msgs::MoveBaseGoal yellowGoals[4];
 static int redSize = 5;
-static int greenSize = 8;
+static int greenSize = 6;
 static int blueSize = 7;
 static int yellowSize = 4;
 
@@ -522,15 +522,14 @@ void redGoalsInit() {
 
 void greenGoalsInit() {
     int i=0;
-    //greenGoals[i++]=createGoal(1.6,-0.3,-1,0);
-    greenGoals[i++]=createGoal(1.6,-0.3,1,0);
-    greenGoals[i++]=createGoal(1.6,-0.3,0,1);
-    greenGoals[i++]=createGoal(0.7,-0.3,0,-1);
-    greenGoals[i++]=createGoal(0.17,-0.3,0,1);
-    greenGoals[i++]=createGoal(-0.4,-0.7,1,0);
+    //greenGoals[i++]=createGoal(1.6,-0.3,-1,0);  
     greenGoals[i++]=createGoal(-0.8,-0.3,0,1);
-    greenGoals[i++]=createGoal(-2,-0.1,0,-1);
-    greenGoals[i++]=createGoal(-2,-0.1,0,1);
+    greenGoals[i++]=createGoal(-0.4,-0.7,1,0);
+    greenGoals[i++]=createGoal(0.17,-0.3,0,1);
+    greenGoals[i++]=createGoal(0.7,-0.3,0,-1);
+    greenGoals[i++]=createGoal(1.6,-0.3,0,1);
+    greenGoals[i++]=createGoal(1.6,-0.3,1,0);  
+
 
 
 }
