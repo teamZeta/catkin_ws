@@ -36,11 +36,11 @@ static int order = 0;			// 0 - undefined, 1 - pick up, 2 - take to
 static int osebeDimensions = 10;
 static string osebe[][10] = {{"harry", "hairy", "perry","harriet","Ferry","Carrie","Carry","Carry","Carry","Carry"},
 							{"philip", "philips", "phillip","fedex","philip","philip","philip","philip","philip","philip"},
-							{"tina", "pina", "dina","dana","tina","tina","tina""tina""tina""tina"},
+							{"tina", "pina", "dina","dana","dealer","nina","tina""tina""tina""tina"},
 							{"peter", "peter", "peter","peter","peter","peter","peter","peter","peter","peter"},
 							{"tom", "home", "dome","stone","tome","phone","Dom","time","tom","tom"},
 							{"ellen", "alen", "allen","erin","aaron","ellen","ellen","ellen","ellen","ellen"},
-							{"kim", "kim", "kim","kim","kim","kim","kim","kim","kim","kim"},
+							{"kim", "king", "kim","kim","kim","kim","kim","kim","kim","kim"},
 							{"scarlet", "scarlett", "scarlets","scotland","scarlet","scarlet","scarlet","scarlet","scarlet","scarlet"},
 							{"matthew", "matro", "metro","matthew","matthew","matthew","matthew","matthew","matthew","matthew"}};
 
