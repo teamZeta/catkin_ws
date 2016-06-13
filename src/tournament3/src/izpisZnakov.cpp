@@ -24,16 +24,16 @@ void callback (const visualization_msgs::MarkerArrayConstPtr& markerArray) {
             once=1;
         } else if (markerArray->markers[0].id == 2 && once!=2) {      // stop
             printf("Omejitev hitrosti\n");
-            once=1;
+            once=2;
         } else if (markerArray->markers[0].id == 3 && once!=3) {      // stop
             printf("Enosmerna\n");
-            once=1;
+            once=3;
         } else if (markerArray->markers[0].id == 4 && once!=4) {      // stop
             printf("Stop\n");
-            once=1;
+            once=4;
         } else if (markerArray->markers[0].id == 5 && once!=5) {      // stop
             printf("Obvezno potrobi\n");
-            once=1;
+            once=5;
         }
 
 }
