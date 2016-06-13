@@ -29,11 +29,11 @@ static int yellowSize = 4;
 static move_base_msgs::MoveBaseGoal redGoalsH[3];
 static move_base_msgs::MoveBaseGoal greenGoalsH[3];
 static move_base_msgs::MoveBaseGoal blueGoalsH[3];
-static move_base_msgs::MoveBaseGoal yellowGoalsH[2];
+static move_base_msgs::MoveBaseGoal yellowGoalsH[3];
 static int redSizeH = 3;
 static int greenSizeH = 3;
 static int blueSizeH = 3;
-static int yellowSizeH = 2;
+static int yellowSizeH = 3;
 
 static bool isciOsebo = false;
 static bool isciHotel = false;
@@ -578,8 +578,9 @@ void blueGoalsHInit() {
 
 void yellowGoalsHInit() {
     int i=0;
+    yellowGoalsH[i++]=createGoal(-2.48,-1.8,-10,-1);
     yellowGoalsH[i++]=createGoal(-3.4,-1.2,-1,-2); 
-    yellowGoalsH[i++]=createGoal(-3.3,-1.55,-1,20); 
+    yellowGoalsH[i++]=createGoal(-3.3,-1.55,-1,20);  
 }
 
 /*void callbackHotel (const visualization_msgs::MarkerConstPtr& marker) {
