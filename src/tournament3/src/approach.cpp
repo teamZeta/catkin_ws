@@ -19,7 +19,7 @@ using namespace std;
 
 static bool isciOsebo = false;
 static bool isciHotel = false;
-
+static int onceId = -1;
 static move_base_msgs::MoveBaseGoal goal;
 static int currentGoal = -1;
 static bool foundFace = false;
@@ -53,7 +53,10 @@ bool cmp(string s1, string s2){
 void callbackFoundFace (const visualization_msgs::MarkerArrayConstPtr& markerArray) {
     if (!isciOsebo)
         return;
-    printf("Detected: %s\n",osebe[markerArray->markers[0].id-1].c_str());
+    if(onceId!=markerArray->markers[0].id){
+        printf("Detected: %s\n",osebe[markerArray->markers[0].id-1].c_str());
+        onceId=markerArray->markers[0].id;
+    }
     if (iskanaOsebaID != markerArray->markers[0].id) {
         return;
     }
