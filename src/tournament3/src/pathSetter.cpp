@@ -578,7 +578,7 @@ void blueGoalsHInit() {
 
 void yellowGoalsHInit() {
     int i=0;
-    yellowGoalsH[i++]=createGoal(-3.18,-1.8,-10,-1);
+    yellowGoalsH[i++]=createGoal(-3.18,-1.9,-5,-1);
     yellowGoalsH[i++]=createGoal(-3.4,-1.2,-1,-2); 
     yellowGoalsH[i++]=createGoal(-3.3,-1.55,-1,20);  
 }
