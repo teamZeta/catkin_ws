@@ -40,7 +40,7 @@ static string osebe[][10] = {{"harry", "hairy", "perry","harriet","Ferry","Carri
 							{"peter", "piter", "teather","better","biter","peter","peter","peter","peter","peter"},
 							{"tom", "home", "dome","stone","tome","phone","Dom","time","tom","tom"},
 							{"ellen", "alen", "allen","erin","aaron","eren","ellen","ellen","ellen","ellen"},
-							{"kim", "king", "kim","kim","kim","kim","kim","kim","kim","kim"},
+							{"kim", "king", "him","kim","kim","kim","kim","kim","kim","kim"},
 							{"scarlet", "scarlett", "scarlets","scotland","skarlet","scarlet","scarlet","scarlet","scarlet","scarlet"},
 							{"matthew", "matro", "metro","metjeu","matthew","matthew","matthew","matthew","matthew","matthew"}};
 
@@ -252,7 +252,7 @@ void callback (const std_msgs::String::ConstPtr& msg) {
 		// ::::::::::::::::::::::::::::::::::::::::::::::
 
 		//if (!array[0].compare("find")) {
-		if(leven(array[0],"find")<3){
+		if(leven(array[0],"find")<4){
 			if (person(array[1]) && color(array[3])) {
 
 				if (!person1.compare("") && !person2.compare("")) {							// Oba sedeza sta prazna
