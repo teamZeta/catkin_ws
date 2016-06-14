@@ -26,6 +26,7 @@
 #include <std_msgs/String.h>
 #include <sstream>
 #include <unistd.h>
+#include <sys/time.h>
 
 using namespace std;
 
@@ -33,8 +34,12 @@ using namespace std;
 //ros::Publisher pub;
 static ros::Publisher marker_pose;
 static ros::Publisher marker_pose_white;
+static long int time1;
 
 
+static int stevec;
+static int ids1;
+static int ids2;
 
 
 typedef struct {
@@ -324,11 +329,22 @@ if((marker.scale.z < 0.15 || marker.scale.z > 0.6) ||
 
   marker.lifetime = ros::Duration();
   //marker.lifetime = ros::Duration();
-  if(esc == false){
-    marker_pose.publish (marker);
-  }
+  struct timeval tp;
+  gettimeofday(&tp, NULL);
+  long int ms = tp.tv_sec * 1000 + tp.tv_usec / 1000;
   
-  marker_pose_white.publish(marker);
+  ids1 = ids2;
+  ids2 = barva;
+  if(ids2 == ids1 && ms - time1 > 7000){
+    time1 = ms;
+    stevec++;
+  }else{
+    stevec = 0;
+    time1 = ms;
+  }
+  if(ids1 == ids2 && stevec > 1){
+    marker_pose_white.publish(marker);
+  }
   
 } 
 
@@ -476,7 +492,9 @@ main (int argc, char** argv)
   ros::NodeHandle nh;
   ros::NodeHandle nh2;
   ros::NodeHandle nh3;
-
+  stevec = 0;
+  ids1 = 0;
+  ids2 = 0;
   // Create a ROS subscriber for the input point cloud
   ros::Subscriber sub = nh.subscribe<pcl::PCLPointCloud2> ("input", 1, callback);
 
@@ -485,6 +503,10 @@ main (int argc, char** argv)
   marker_pose = nh2.advertise<visualization_msgs:: Marker>("hotel", 1);
   marker_pose_white = nh3.advertise<visualization_msgs:: Marker>("hotelW", 1);
   // Spin
+  struct timeval tp;
+  gettimeofday(&tp, NULL);
+  time1 = tp.tv_sec * 1000 + tp.tv_usec / 1000;
+
   ros::Rate r(0.5);
     while (ros::ok()){
       ros::spinOnce();               
