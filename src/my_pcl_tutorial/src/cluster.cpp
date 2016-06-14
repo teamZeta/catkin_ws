@@ -328,6 +328,7 @@ if((marker.scale.z < 0.15 || marker.scale.z > 0.6) ||
   marker.color.a = 1;
 
   marker.lifetime = ros::Duration();
+  marker_pose_white.publish(marker);
   //marker.lifetime = ros::Duration();
   struct timeval tp;
   gettimeofday(&tp, NULL);
@@ -335,7 +336,7 @@ if((marker.scale.z < 0.15 || marker.scale.z > 0.6) ||
   
   ids1 = ids2;
   ids2 = barva;
-  if(ids2 == ids1 && ms - time1 > 7000){
+  if(ids2 == ids1 && ms - time1 < 7000){
     time1 = ms;
     stevec++;
   }else{
@@ -343,7 +344,7 @@ if((marker.scale.z < 0.15 || marker.scale.z > 0.6) ||
     time1 = ms;
   }
   if(ids1 == ids2 && stevec > 1){
-    marker_pose_white.publish(marker);
+    marker_pose.publish(marker);
   }
   
 } 
