@@ -27,11 +27,11 @@ static int blueSize = 7;
 static int yellowSize = 4;
 
 static move_base_msgs::MoveBaseGoal redGoalsH[3];
-static move_base_msgs::MoveBaseGoal greenGoalsH[3];
+static move_base_msgs::MoveBaseGoal greenGoalsH[4];
 static move_base_msgs::MoveBaseGoal blueGoalsH[3];
 static move_base_msgs::MoveBaseGoal yellowGoalsH[3];
 static int redSizeH = 3;
-static int greenSizeH = 3;
+static int greenSizeH = 4;
 static int blueSizeH = 3;
 static int yellowSizeH = 3;
 
@@ -564,9 +564,10 @@ void redGoalsHInit() {
 void greenGoalsHInit() {
     int i=0;
     //greenGoalsH[i++]=createGoal(-3,0,10,1);
+    greenGoalsH[i++]=createGoal(1.6,-0.23,1,1);
+    greenGoalsH[i++]=createGoal(1.6,-0.3,-1,1);
     greenGoalsH[i++]=createGoal(-2.9,-0.186,1,1);
     greenGoalsH[i++]=createGoal(-0.9,-0.25,20,1);
-    greenGoalsH[i++]=createGoal(1.6,-0.3,-1,1);
 }
 
 void blueGoalsHInit() {
