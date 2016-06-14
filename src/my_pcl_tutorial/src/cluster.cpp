@@ -26,7 +26,6 @@
 #include <std_msgs/String.h>
 #include <sstream>
 #include <unistd.h>
-#include <sys/time.h>
 
 using namespace std;
 
@@ -34,12 +33,8 @@ using namespace std;
 //ros::Publisher pub;
 static ros::Publisher marker_pose;
 static ros::Publisher marker_pose_white;
-static long int time1;
 
 
-static int stevec;
-static int ids1;
-static int ids2;
 
 
 typedef struct {
@@ -221,36 +216,36 @@ static void mark_cluster(pcl::PointCloud<pcl::PointXYZRGB>::Ptr cloud_cluster, s
   	return;
   }*/
   	int barva = 0;
-  
-  	if(hsv_barva.h > 75 && hsv_barva.h < 140 && hsv_barva.s < 17){
+  if(hsv_barva.s > 0.3 && hsv_barva.v > -1){
+  	if(hsv_barva.h > 30 && hsv_barva.h < 80){
+	  	g = 1;
+	  	r = 1;
+	  	b = 0;
+	  	ru = 0xff;
+	  	gu = 0xff;
+	  	barva = 4;
+	  }else if(hsv_barva.h > 85 && hsv_barva.h < 140){
 	  	g = 1;
 	  	r = 0;
 	  	b = 0;
 	  	gu = 0xff;
 	  	barva = 2;
 
-	  }else if(hsv_barva.h > 170 && hsv_barva.h < 270 && hsv_barva.s < 17){
+	  }else if(hsv_barva.h > 170 && hsv_barva.h < 270){
 	  	g = 1;
 	  	r = 0;
 	  	b = 1;
 	  	gu = 0xff;
 	  	bu = 0xff;
 	  	barva = 3;
-	  }else if(hsv_barva.h > 340 || hsv_barva.h < 20 && hsv_barva.s < 20){
+	  }else if(hsv_barva.h > 340 || hsv_barva.h < 20){
 	  	g = 0;
 	  	r = 1;
 	  	b = 0;
 	  	ru = 0xff;
 	  	barva = 1;
-	  }else if(hsv_barva.h > 30 && hsv_barva.h < 70 && hsv_barva.s < 17){
-      g = 1;
-      r = 1;
-      b = 0;
-      ru = 0xff;
-      gu = 0xff;
-      barva = 4;
-    }
-  
+	  }
+  }
   
   
   
@@ -314,9 +309,9 @@ static void mark_cluster(pcl::PointCloud<pcl::PointXYZRGB>::Ptr cloud_cluster, s
     esc = true;
 }
 
-if((marker.scale.z < 0.15 || marker.scale.z > 0.6) || 
-	(marker.scale.x < 0.15 || marker.scale.x > 0.6) ||
-	(marker.scale.y < 0.20 || marker.scale.y > 0.6)){
+if((marker.scale.z < 0.15 || marker.scale.z > 0.35) || 
+	(marker.scale.x < 0.15 || marker.scale.x > 0.35) ||
+	(marker.scale.y < 0.30 || marker.scale.y > 0.5)){
 	esc = true;
 }
    
@@ -328,24 +323,12 @@ if((marker.scale.z < 0.15 || marker.scale.z > 0.6) ||
   marker.color.a = 1;
 
   marker.lifetime = ros::Duration();
-  marker_pose_white.publish(marker);
   //marker.lifetime = ros::Duration();
-  struct timeval tp;
-  gettimeofday(&tp, NULL);
-  long int ms = tp.tv_sec * 1000 + tp.tv_usec / 1000;
+  if(esc == false){
+    marker_pose.publish (marker);
+  }
   
-  ids1 = ids2;
-  ids2 = barva;
-  if(ids2 == ids1 && ms - time1 < 7000){
-    time1 = ms;
-    stevec++;
-  }else{
-    stevec = 0;
-    time1 = ms;
-  }
-  if(ids1 == ids2 && stevec > 1){
-    marker_pose.publish(marker);
-  }
+  marker_pose_white.publish(marker);
   
 } 
 
@@ -409,7 +392,6 @@ void callback (const pcl::PCLPointCloud2ConstPtr& cloud_blob) {
   ne.setKSearch (10);
   ne.compute (*cloud_normals);
 
-  /*
   //pcl::SACSegmentation<pcl::PointXYZRGB> seg;
   pcl::SACSegmentationFromNormals<pcl::PointXYZRGB, pcl::Normal> seg; 
   seg.setOptimizeCoefficients (true);
@@ -440,8 +422,8 @@ void callback (const pcl::PCLPointCloud2ConstPtr& cloud_blob) {
   extract_normals.setInputCloud (cloud_normals);
   extract_normals.setIndices (inliers);
   extract_normals.filter (*cloud_normals2);
-*/
-  pcl::ExtractIndices<pcl::PointXYZRGB> extract;
+
+
   pcl::ModelCoefficients::Ptr coefficients2 (new pcl::ModelCoefficients ());
   pcl::PointIndices::Ptr inliers2 (new pcl::PointIndices ()); 
   //pcl::fromPCLPointCloud2 (*cloud_filtered_blob, *cloud_filtered2);
@@ -453,8 +435,8 @@ void callback (const pcl::PCLPointCloud2ConstPtr& cloud_blob) {
   seg2.setMaxIterations (10000);
   seg2.setDistanceThreshold (0.1);
   seg2.setRadiusLimits (0.07, 0.16);
-  seg2.setInputCloud (cloud_filtered);
-  seg2.setInputNormals (cloud_normals);
+  seg2.setInputCloud (cloud_filtered2);
+  seg2.setInputNormals (cloud_normals2);
 
   seg2.segment (*inliers2, *coefficients2);
   // Extract points of found plane
@@ -462,7 +444,7 @@ void callback (const pcl::PCLPointCloud2ConstPtr& cloud_blob) {
   if (inliers2->indices.size () == 0) return;
 
 
-  extract.setInputCloud(cloud_filtered);
+  extract.setInputCloud(cloud_filtered2);
   extract.setIndices(inliers2);
   extract.setNegative(false);
   extract.filter(*cloud_f);
@@ -493,9 +475,7 @@ main (int argc, char** argv)
   ros::NodeHandle nh;
   ros::NodeHandle nh2;
   ros::NodeHandle nh3;
-  stevec = 0;
-  ids1 = 0;
-  ids2 = 0;
+
   // Create a ROS subscriber for the input point cloud
   ros::Subscriber sub = nh.subscribe<pcl::PCLPointCloud2> ("input", 1, callback);
 
@@ -504,10 +484,6 @@ main (int argc, char** argv)
   marker_pose = nh2.advertise<visualization_msgs:: Marker>("hotel", 1);
   marker_pose_white = nh3.advertise<visualization_msgs:: Marker>("hotelW", 1);
   // Spin
-  struct timeval tp;
-  gettimeofday(&tp, NULL);
-  time1 = tp.tv_sec * 1000 + tp.tv_usec / 1000;
-
   ros::Rate r(0.5);
     while (ros::ok()){
       ros::spinOnce();               
