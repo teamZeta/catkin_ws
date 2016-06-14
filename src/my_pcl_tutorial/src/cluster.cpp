@@ -392,6 +392,7 @@ void callback (const pcl::PCLPointCloud2ConstPtr& cloud_blob) {
   ne.setKSearch (10);
   ne.compute (*cloud_normals);
 
+  /*
   //pcl::SACSegmentation<pcl::PointXYZRGB> seg;
   pcl::SACSegmentationFromNormals<pcl::PointXYZRGB, pcl::Normal> seg; 
   seg.setOptimizeCoefficients (true);
@@ -422,8 +423,8 @@ void callback (const pcl::PCLPointCloud2ConstPtr& cloud_blob) {
   extract_normals.setInputCloud (cloud_normals);
   extract_normals.setIndices (inliers);
   extract_normals.filter (*cloud_normals2);
-
-
+*/
+  pcl::ExtractIndices<pcl::PointXYZRGB> extract;
   pcl::ModelCoefficients::Ptr coefficients2 (new pcl::ModelCoefficients ());
   pcl::PointIndices::Ptr inliers2 (new pcl::PointIndices ()); 
   //pcl::fromPCLPointCloud2 (*cloud_filtered_blob, *cloud_filtered2);
@@ -435,8 +436,8 @@ void callback (const pcl::PCLPointCloud2ConstPtr& cloud_blob) {
   seg2.setMaxIterations (10000);
   seg2.setDistanceThreshold (0.1);
   seg2.setRadiusLimits (0.07, 0.16);
-  seg2.setInputCloud (cloud_filtered2);
-  seg2.setInputNormals (cloud_normals2);
+  seg2.setInputCloud (cloud_filtered);
+  seg2.setInputNormals (cloud_normals);
 
   seg2.segment (*inliers2, *coefficients2);
   // Extract points of found plane
@@ -444,7 +445,7 @@ void callback (const pcl::PCLPointCloud2ConstPtr& cloud_blob) {
   if (inliers2->indices.size () == 0) return;
 
 
-  extract.setInputCloud(cloud_filtered2);
+  extract.setInputCloud(cloud_filtered);
   extract.setIndices(inliers2);
   extract.setNegative(false);
   extract.filter(*cloud_f);
