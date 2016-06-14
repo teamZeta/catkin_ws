@@ -433,8 +433,8 @@ void callback (const pcl::PCLPointCloud2ConstPtr& cloud_blob) {
   seg2.setMethodType (pcl::SAC_RANSAC);
   seg2.setNormalDistanceWeight (0.1);
   seg2.setMaxIterations (10000);
-  seg2.setDistanceThreshold (0.1);
-  seg2.setRadiusLimits (0.07, 0.16);
+  seg2.setDistanceThreshold (0.03);
+  seg2.setRadiusLimits (0.1, 0.14);
   seg2.setInputCloud (cloud_filtered2);
   seg2.setInputNormals (cloud_normals2);
 
