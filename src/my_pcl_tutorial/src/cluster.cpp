@@ -216,7 +216,7 @@ static void mark_cluster(pcl::PointCloud<pcl::PointXYZRGB>::Ptr cloud_cluster, s
   	return;
   }*/
   	int barva = 0;
-  if(hsv_barva.s > 0.3 && hsv_barva.v > -1){
+  if(hsv_barva.s > -1 && hsv_barva.v > -1){
   	if(hsv_barva.h > 30 && hsv_barva.h < 80){
 	  	g = 1;
 	  	r = 1;
@@ -309,9 +309,9 @@ static void mark_cluster(pcl::PointCloud<pcl::PointXYZRGB>::Ptr cloud_cluster, s
     esc = true;
 }
 
-if((marker.scale.z < 0.15 || marker.scale.z > 0.35) && 
-	(marker.scale.x < 0.15 || marker.scale.x > 0.35) &&
-	(marker.scale.y < 0.30 || marker.scale.y > 0.5)){
+if((marker.scale.z < 0.15 || marker.scale.z > 0.6) || 
+	(marker.scale.x < 0.15 || marker.scale.x > 0.6) ||
+	(marker.scale.y < 0.20 || marker.scale.y > 0.6)){
 	esc = true;
 }
    
