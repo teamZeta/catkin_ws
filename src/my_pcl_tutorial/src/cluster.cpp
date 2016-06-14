@@ -217,7 +217,7 @@ static void mark_cluster(pcl::PointCloud<pcl::PointXYZRGB>::Ptr cloud_cluster, s
   }*/
   	int barva = 0;
   
-  	if(hsv_barva.h > 90 && hsv_barva.h < 140 && hsv_barva.s > -1){
+  	if(hsv_barva.h > 75 && hsv_barva.h < 140 && hsv_barva.s > -1){
 	  	g = 1;
 	  	r = 0;
 	  	b = 0;
@@ -237,7 +237,7 @@ static void mark_cluster(pcl::PointCloud<pcl::PointXYZRGB>::Ptr cloud_cluster, s
 	  	b = 0;
 	  	ru = 0xff;
 	  	barva = 1;
-	  }else if(hsv_barva.h > 30 && hsv_barva.h < 80 && hsv_barva.s > -1){
+	  }else if(hsv_barva.h > 30 && hsv_barva.h < 70 && hsv_barva.s > -1){
       g = 1;
       r = 1;
       b = 0;
