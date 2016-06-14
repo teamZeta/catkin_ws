@@ -216,36 +216,36 @@ static void mark_cluster(pcl::PointCloud<pcl::PointXYZRGB>::Ptr cloud_cluster, s
   	return;
   }*/
   	int barva = 0;
-  if(hsv_barva.s > 15 && hsv_barva.v > -1){
-  	if(hsv_barva.h > 30 && hsv_barva.h < 80){
+  
+  	if(hsv_barva.h > 30 && hsv_barva.h < 80 && hsv_barva.s > 7){
 	  	g = 1;
 	  	r = 1;
 	  	b = 0;
 	  	ru = 0xff;
 	  	gu = 0xff;
 	  	barva = 4;
-	  }else if(hsv_barva.h > 90 && hsv_barva.h < 140){
+	  }else if(hsv_barva.h > 90 && hsv_barva.h < 140 && hsv_barva.s > 7){
 	  	g = 1;
 	  	r = 0;
 	  	b = 0;
 	  	gu = 0xff;
 	  	barva = 2;
 
-	  }else if(hsv_barva.h > 170 && hsv_barva.h < 270){
+	  }else if(hsv_barva.h > 170 && hsv_barva.h < 270 && hsv_barva.s > 17){
 	  	g = 1;
 	  	r = 0;
 	  	b = 1;
 	  	gu = 0xff;
 	  	bu = 0xff;
 	  	barva = 3;
-	  }else if(hsv_barva.h > 340 || hsv_barva.h < 20){
+	  }else if(hsv_barva.h > 340 || hsv_barva.h < 20 && hsv_barva.s > 17){
 	  	g = 0;
 	  	r = 1;
 	  	b = 0;
 	  	ru = 0xff;
 	  	barva = 1;
 	  }
-  }
+  
   
   
   
