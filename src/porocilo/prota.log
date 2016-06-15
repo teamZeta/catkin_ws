@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.1415926-2.5-1.40.14 (TeX Live 2013/Debian) (format=pdflatex 2016.5.23)  13 JUN 2016 23:08
+This is pdfTeX, Version 3.1415926-2.5-1.40.14 (TeX Live 2013/Debian) (format=pdflatex 2016.5.23)  15 JUN 2016 21:33
 entering extended mode
  restricted \write18 enabled.
  %&-line parsing enabled.
@@ -638,63 +638,103 @@ LaTeX Font Info:    Font shape `OT1/ptm/bx/n' in size <14.4> not available
 
 Package mathptmx Warning: There are no bold math fonts on input line 41.
 
-LaTeX Font Info:    Font shape `OT1/ptm/bx/n' in size <9> not available
-(Font)              Font shape `OT1/ptm/b/n' tried instead on input line 43.
 LaTeX Font Info:    Font shape `OT1/ptm/bx/n' in size <12> not available
-(Font)              Font shape `OT1/ptm/b/n' tried instead on input line 49.
+(Font)              Font shape `OT1/ptm/b/n' tried instead on input line 46.
+
+Overfull \hbox (28.07307pt too wide) in paragraph at lines 47--48
+\OT1/ptm/m/n/10 smo morali im-ple-men-ti-rati za-z-na-vanje in pre-poz-na-vanje
+ obra-zov, pre-poz-na-vanje in upo[]stevanje
+ []
+
 LaTeX Font Info:    Font shape `OT1/ptm/bx/n' in size <10> not available
-(Font)              Font shape `OT1/ptm/b/n' tried instead on input line 50.
-LaTeX Font Info:    Try loading font information for OT1+ztmcm on input line 55
+(Font)              Font shape `OT1/ptm/b/n' tried instead on input line 55.
+LaTeX Font Info:    Try loading font information for OT1+ztmcm on input line 65
 .
 (/usr/share/texlive/texmf-dist/tex/latex/psnfss/ot1ztmcm.fd
 File: ot1ztmcm.fd 2000/01/03 Fontinst v1.801 font definitions for OT1/ztmcm.
 )
-LaTeX Font Info:    Try loading font information for OML+ztmcm on input line 55
+LaTeX Font Info:    Try loading font information for OML+ztmcm on input line 65
 .
 
 (/usr/share/texlive/texmf-dist/tex/latex/psnfss/omlztmcm.fd
 File: omlztmcm.fd 2000/01/03 Fontinst v1.801 font definitions for OML/ztmcm.
 )
-LaTeX Font Info:    Try loading font information for OMS+ztmcm on input line 55
+LaTeX Font Info:    Try loading font information for OMS+ztmcm on input line 65
 .
 
 (/usr/share/texlive/texmf-dist/tex/latex/psnfss/omsztmcm.fd
 File: omsztmcm.fd 2000/01/03 Fontinst v1.801 font definitions for OMS/ztmcm.
 )
-LaTeX Font Info:    Try loading font information for OMX+ztmcm on input line 55
+LaTeX Font Info:    Try loading font information for OMX+ztmcm on input line 65
 .
 
 (/usr/share/texlive/texmf-dist/tex/latex/psnfss/omxztmcm.fd
 File: omxztmcm.fd 2000/01/03 Fontinst v1.801 font definitions for OMX/ztmcm.
 )
 LaTeX Font Info:    Font shape `OT1/ptm/bx/n' in size <7.4> not available
-(Font)              Font shape `OT1/ptm/b/n' tried instead on input line 55.
+(Font)              Font shape `OT1/ptm/b/n' tried instead on input line 65.
 LaTeX Font Info:    Font shape `OT1/ptm/bx/n' in size <6> not available
-(Font)              Font shape `OT1/ptm/b/n' tried instead on input line 55.
+(Font)              Font shape `OT1/ptm/b/n' tried instead on input line 65.
  [1
 
 {/var/lib/texmf/fonts/map/pdftex/updmap/pdftex.map}]
-Overfull \hbox (6.08395pt too wide) in paragraph at lines 68--69
+Overfull \hbox (6.08395pt too wide) in paragraph at lines 78--79
 \OT1/ptm/m/n/10 nam vrne napoved in ver-jet-nost te napovedi. Ve[]cja je ver-je
 t-nost, bolj zanes-liva je napoved.
  []
 
-[2] (./prota.aux) ) 
+[2]
+Overfull \hbox (61.40236pt too wide) in paragraph at lines 83--86
+\OT1/ptm/m/n/10 nami[]cno nas-tavitvijo. sys-tem("rosrun dynamic$[]$reconfigure
+ dyn-param set /navigation$[]$velocity$[]$smoother
+ []
+
+
+Overfull \hbox (45.72244pt too wide) in paragraph at lines 87--89
+\OT1/ptm/m/n/10 vaja na[]s zvok. int i = sys-tem("rosrun sound$[]$play play.py 
+/home/team$[]$zeta/catkin$[]$ws/src/horn.wav"); 
+ []
+
+[3] [4]
+Overfull \hbox (8.4437pt too wide) in paragraph at lines 125--126
+ \OT1/ptm/b/n/10 WAIT-FOR-TRANS-FORM:[] \OT1/ptm/m/n/10 Funkcija 'Wait-For-Tran
+s-form()', ki []caka, dok-ler ni pretvorba
+ []
+
+[5]
+Overfull \hbox (4.91287pt too wide) in paragraph at lines 130--131
+ \OT1/ptm/b/n/10 Doku-mentacija:[] \OT1/ptm/m/n/10 Neka-teri deli ROS-a so zelo
+ slabo doku-men-ti-rani, ali pa doku-mentacije
+ []
+
+<aze.png, id=20, 385.44pt x 433.62pt>
+File: aze.png Graphic file (type png)
+ <use aze.png>
+Package pdftex.def Info: aze.png used on input line 137.
+(pdftex.def)             Requested size: 347.12354pt x 390.51244pt.
+
+<cil.png, id=21, 660.21657pt x 633.11531pt>
+File: cil.png Graphic file (type png)
+ <use cil.png>
+Package pdftex.def Info: cil.png used on input line 145.
+(pdftex.def)             Requested size: 347.12354pt x 332.8832pt.
+ [6] [7 <./aze.png>]
+[8 <./cil.png>] (./prota.aux) ) 
 Here is how much of TeX's memory you used:
- 4463 strings out of 493304
- 65694 string characters out of 6139871
- 140708 words of memory out of 5000000
- 7844 multiletter control sequences out of 15000+600000
- 21939 words of font info for 45 fonts, out of 8000000 for 9000
+ 4477 strings out of 493304
+ 65843 string characters out of 6139871
+ 142724 words of memory out of 5000000
+ 7856 multiletter control sequences out of 15000+600000
+ 20313 words of font info for 43 fonts, out of 8000000 for 9000
  957 hyphenation exceptions out of 8191
- 38i,4n,38p,871b,152s stack positions out of 5000i,500n,10000p,200000b,80000s
-{/usr/share/texlive/texmf-dist/fonts/enc/dvips/base/8r.enc}<
-/usr/share/texlive/texmf-dist/fonts/type1/urw/times/utmb8a.pfb></usr/share/texl
-ive/texmf-dist/fonts/type1/urw/times/utmr8a.pfb>
-Output written on prota.pdf (2 pages, 32995 bytes).
+ 38i,5n,38p,1359b,254s stack positions out of 5000i,500n,10000p,200000b,80000s
+{/usr/share/texlive/texmf-dist/fonts/enc/dvips/b
+ase/8r.enc}</usr/share/texlive/texmf-dist/fonts/type1/urw/times/utmb8a.pfb></us
+r/share/texlive/texmf-dist/fonts/type1/urw/times/utmr8a.pfb>
+Output written on prota.pdf (8 pages, 92695 bytes).
 PDF statistics:
- 20 PDF objects out of 1000 (max. 8388607)
- 13 compressed objects within 1 object stream
+ 45 PDF objects out of 1000 (max. 8388607)
+ 28 compressed objects within 1 object stream
  0 named destinations out of 1000 (max. 500000)
- 1 words of extra memory for PDF output out of 10000 (max. 10000000)
+ 11 words of extra memory for PDF output out of 10000 (max. 10000000)
 
